@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:handheld="clr-namespace:MauiApp1.Pages.Handheld"
+             x:Class="MauiApp1.Pages.Handheld.MobileLoginPage"
+             x:DataType="handheld:MobileLoginViewModel"
+             NavigationPage.HasNavigationBar="False"
+             >
+
+    <ContentPage.BindingContext>
+        <handheld:MobileLoginViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="*,140,60,*" RowSpacing="20" HorizontalOptions="Center">
+        
+        <Image Source="jajangmyeon.png" HorizontalOptions="Center"
+               SemanticProperties.Description="Yousuf Panjabi Tailor"
+               Grid.Row="1"/>
+
+        <Button
+            Text="Let's Go"
+            Command="{Binding LoginCommand}"
+            MinimumWidthRequest="240"
+            Grid.Row="2"
+            SemanticProperties.Description="tap this button to login"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </Grid>
+</ContentPage>
