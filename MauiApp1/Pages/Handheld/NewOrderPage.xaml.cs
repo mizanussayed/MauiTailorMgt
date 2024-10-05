@@ -205,23 +205,20 @@ public partial class NewOrderPage : ContentPage
             AutomationId = "MeasurementForm" + (++childFormIdCounter),
         };
 
-        // Create the main stack layout
         var mainLayout = new StackLayout
         {
             HorizontalOptions = LayoutOptions.Fill
         };
 
-        // Create the header grid
         var headerGrid = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitionCollection
-            {
+            ColumnDefinitions =
+            [
                 new ColumnDefinition { Width = GridLength.Star },
                 new ColumnDefinition { Width = GridLength.Auto }
-            }
+            ]
         };
 
-        // Add Measurement label
         var measurementLabel = new Label
         {
             Text = "Measurement",
@@ -229,7 +226,6 @@ public partial class NewOrderPage : ContentPage
             HorizontalOptions = LayoutOptions.Start
         };
 
-        // Add Remove button
         var removeButton = new Button
         {
             Text = "X",
@@ -238,24 +234,23 @@ public partial class NewOrderPage : ContentPage
             HorizontalOptions = LayoutOptions.End
         };
 
-        // Add elements to header grid
         headerGrid.Add(measurementLabel, 0, 0);
         headerGrid.Add(removeButton, 1, 0);
 
         // Create the measurement fields grid
         var measurementGrid = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitionCollection
-            {
+            ColumnDefinitions =
+            [
                 new ColumnDefinition { Width = GridLength.Star },
                 new ColumnDefinition { Width = GridLength.Star }
-            },
-            RowDefinitions = new RowDefinitionCollection
-            {
+            ],
+            RowDefinitions =
+            [
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto }
-            },
+            ],
             ColumnSpacing = 10,
             RowSpacing = 10
         };
@@ -308,8 +303,7 @@ public partial class NewOrderPage : ContentPage
         // Event handler for remove button
         removeButton.Clicked += (s, e) =>
         {
-            // Logic to remove this measurement frame from the parent layout
-            ((StackLayout)Parent)?.Children.Remove(this);
+            DynamicFormFields.Children.Remove(frame);
         };
     }
 }

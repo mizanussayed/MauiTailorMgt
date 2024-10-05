@@ -108,50 +108,6 @@
                         <Button Text="Add + " FontAttributes="Bold" Clicked="OnAddMeasurementType" Grid.Column="1"  HorizontalOptions="End"/>
                     </Grid>
                     <StackLayout x:Name="DynamicFormFields">
-                        <Frame BorderColor="{StaticResource Primary}"
-                               Padding="10"
-                               Margin="0, 10"
-                               CornerRadius="10"
-                               BackgroundColor="Transparent"
-                               >
-                            <StackLayout HorizontalOptions="FillAndExpand">
-                                <Grid ColumnDefinitions="*, *">
-                                    <Label Text="Measurement" 
-                                           FontAttributes="Bold" HorizontalOptions="Start"/>
-                                    <Button Text="X" Background="Red" Grid.Column="1"
-                                            TextColor="White"
-                                            HorizontalOptions="End"
-                                            />
-                                </Grid>
-                                <Grid ColumnDefinitions="*, *" 
-                                      RowDefinitions="Auto, Auto, Auto"
-                                      ColumnSpacing="10"
-                                      RowSpacing="10"
-                                      >
-                                    <Label Text="Lenght" Grid.Column="0" Grid.Row="0" />
-                                    <Border Grid.Column="1" Grid.Row="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle />
-                                        </Border.StrokeShape>
-                                        <Entry />
-                                    </Border>
-                                    <Label Text="Chest" Grid.Column="0" Grid.Row="1" />
-                                    <Border Grid.Column="1" Grid.Row="1">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle />
-                                        </Border.StrokeShape>
-                                        <Entry />
-                                    </Border>
-                                    <Label Text="Stomach" Grid.Column="0" Grid.Row="2" />
-                                    <Border Grid.Column="1" Grid.Row="2">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle />
-                                        </Border.StrokeShape>
-                                        <Entry />
-                                    </Border>
-                                </Grid>
-                            </StackLayout>
-                        </Frame>
                     </StackLayout>
                 </VerticalStackLayout>
             </ScrollView>
