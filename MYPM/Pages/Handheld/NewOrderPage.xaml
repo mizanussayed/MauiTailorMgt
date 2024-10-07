@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:customlayouts="clr-namespace:CustomLayouts"
+             xmlns:vm="clr-namespace:MYPM.Pages.Handheld"
+             xmlns:model="clr-namespace:MYPM.Models"
+             x:Class="MYPM.Pages.Handheld.NewOrderPage"
+             x:DataType="vm:NewOrderPageViewModel"
+             Shell.NavBarIsVisible="True"
+             Shell.BackgroundColor="{StaticResource DarkBg2}"
+             Background="{StaticResource DarkBg1Transparent}"
+             Title="Order Form">
+
+    <ContentPage.BindingContext>
+        <vm:NewOrderPageViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <Style TargetType="RadioButton">
+            <Setter Property="ControlTemplate" Value="{StaticResource ButtonRadioTemplate}"/>
+        </Style>
+        <Style TargetType="Entry">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
+            <Setter Property="TextColor" Value="{StaticResource Text_Light}" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="Margin" Value="8,0" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource Text_Dark}"/>
+        </Style>
+        <Style TargetType="Border">
+            <Setter Property="HeightRequest" Value="48" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+            <Setter Property="Stroke" Value="{StaticResource SecondaryBrush}" />
+            <Setter Property="StrokeThickness" Value="1" />
+        </Style>
+        <Style TargetType="RoundRectangle">
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid RowDefinitions="*,108" ColumnDefinitions="*,*" ColumnSpacing="0">
+            <ScrollView Grid.ColumnSpan="2">
+                <VerticalStackLayout Spacing="20" Margin="24">
+                    <Label Text="Mobile Number"/>
+                    <Border>
+                        <Border.StrokeShape>
+                            <RoundRectangle />
+                        </Border.StrokeShape>
+                        <Entry  Placeholder="01730-298184" Text="{Binding MobileNumber}"  />
+                    </Border>
+                    <Label Text="Name"/>
+                    <Border>
+                        <Border.StrokeShape>
+                            <RoundRectangle />
+                        </Border.StrokeShape>
+                        <Entry Placeholder="Enter  Name" Text="{Binding CustomerName}" />
+                    </Border>
+                    <Label Text="Address"/>
+                    <Border HeightRequest="100">
+                        <Border.StrokeShape>
+                            <RoundRectangle />
+                        </Border.StrokeShape>
+                        <Entry  Text="{Binding Address}" />
+                    </Border>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <VerticalStackLayout>
+                            <Label Text="Order Date"/>
+                            <Border>
+                                <Border.StrokeShape>
+                                    <RoundRectangle />
+                                </Border.StrokeShape>
+                                <DatePicker  Date="{Binding OrderDate}" />
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Delivery Date"/>
+                            <Border>
+                                <Border.StrokeShape>
+                                    <RoundRectangle />
+                                </Border.StrokeShape>
+                                <DatePicker Date="{Binding DeliveryDate}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="Measurement For"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <customlayouts:HorizontalWrapLayout
+                                  Spacing="8"
+                                  RadioButtonGroup.GroupName="OrderFor"
+                                  RadioButtonGroup.SelectedValue="{Binding OrderFor}"
+                         >
+                            <BindableLayout.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Arabian</x:String>
+                                    <x:String>Panjabi</x:String>
+                                    <x:String>Selowar</x:String>
+                                </x:Array>
+                            </BindableLayout.ItemsSource>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <RadioButton Content="{Binding .}"
+                                                 Value="{Binding .}" 
+                                                 BackgroundColor="{StaticResource Primary}"
+                                                />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </customlayouts:HorizontalWrapLayout>
+                        <Button Text="Add + " FontAttributes="Bold" Clicked="OnAddMeasurementType" Grid.Column="1"  HorizontalOptions="End"/>
+                    </Grid>
+                    <StackLayout x:Name="DynamicFormFields">
+                    </StackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <Button Text="Cancel" 
+                    Grid.Row="1" Grid.Column="0" 
+                    Margin="24,24,12,24" 
+                    Style="{StaticResource SecondaryButtonOutline}" 
+                    HorizontalOptions="Fill"
+                    Command="{Binding CancelCommand}"/>
+
+            <Button Text="Save"
+                     Grid.Row="1" 
+                     Grid.Column="1" 
+                     Margin="12,24,24,24"
+                     Command="{Binding SaveCommand}"
+                     HorizontalOptions="Fill"/>
+        </Grid>
+    </ScrollView>
+</ContentPage>

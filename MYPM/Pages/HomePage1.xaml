@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:a="clr-namespace:MYPM"
+             x:Class="MYPM.Pages.HomePage1"
+             Shell.NavBarIsVisible="False"
+             Background="{StaticResource DarkBg1Transparent}"
+             Title="Dashboard">
+    <ContentPage.Resources>
+        <Style TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="{StaticResource Neutral}" />
+            <Setter Property="CornerRadius" Value="15" />
+            <Setter Property="Padding" Value="10" />
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout Padding="15">
+            <!-- Header Section -->
+            <Grid Padding="10" ColumnSpacing="5" RowSpacing="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- User Greeting and Logo -->
+                <HorizontalStackLayout  Grid.Column="0">
+                    <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.User}}"
+                           WidthRequest="50"
+                           HeightRequest="50" />
+                    <StackLayout Padding="10,0,0,0" VerticalOptions="Center">
+                        <Label Text="Hello!" FontSize="Medium" FontAttributes="Bold"  Style="{StaticResource Title2}" />
+                        <Label Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat='{0:dddd, MMMM dd yyyy}'}" />
+                    </StackLayout>
+                </HorizontalStackLayout>
+                <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Cog},Size=24}"
+                       VerticalOptions="Center"
+                       Grid.Column="1"
+                       HorizontalOptions="End"
+                       />
+            </Grid>
+
+            <!-- Buttons Section -->
+            <Grid ColumnSpacing="20" RowSpacing="20" Padding="5, 30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Add Customer -->
+                <Frame Grid.Row="0" Grid.Column="0">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" >
+                        <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.UserPlus}}"
+                               BackgroundColor="{StaticResource Secondary}" 
+                               WidthRequest="60"
+                               />
+                        <Label Text="Add Customer" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <!--<HorizontalStackLayout>
+                            <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
+                            <Label Text=" see details" HorizontalTextAlignment="Center" FontSize="Small"/>
+                        </HorizontalStackLayout>-->
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="AddNewCustomerTapped" />
+                        </StackLayout.GestureRecognizers>
+                    </StackLayout>
+                </Frame>
+
+                <Frame Grid.Row="0" Grid.Column="1">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Users}}"
+                               BackgroundColor="{StaticResource Secondary}" 
+                               WidthRequest="60"
+                               />
+                        <Label Text="View Customer" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="1" Grid.Column="0">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.AddressBook}}"
+                               BackgroundColor="{StaticResource Secondary}" 
+                               WidthRequest="60"
+                               />
+                        <Label Text="Add New Order" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="AddNewOrderTapped" />
+                        </StackLayout.GestureRecognizers>
+                    </StackLayout>
+                </Frame>
+
+                <Frame Grid.Row="1" Grid.Column="1">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Box}}"
+                               BackgroundColor="{StaticResource Secondary}" 
+                               WidthRequest="60"
+                               />
+                        <Label Text="Delivery Orders" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                    </StackLayout>
+                </Frame>
+
+                <Frame Grid.Row="2" Grid.Column="0">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.SortAmountUp}}"
+                               BackgroundColor="{StaticResource Secondary}" 
+                               WidthRequest="60"
+                               />
+                        <Label Text="Total Orders" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="2" Grid.Column="1">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Images}}"
+                               BackgroundColor="{StaticResource Secondary}" 
+                               WidthRequest="60"
+                               />
+                        <Label Text="Gallery" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                    </StackLayout>
+                </Frame>
+
+                <Frame Grid.Row="3" Grid.Column="0">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.UserCheck}}"
+                               BackgroundColor="{StaticResource Secondary}" 
+                               WidthRequest="60"
+                               />
+                        <Label Text="Assign Order" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                    </StackLayout>
+                </Frame>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
