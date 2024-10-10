@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:m="clr-namespace:MYPM.Models"
+             xmlns:vm="clr-namespace:MYPM.Pages.Handheld"
+             x:Class="MYPM.Pages.Handheld.AddCustomer"
+             x:DataType="vm:AddCustomerViewModel"
+             Title="New Customer"
+             Shell.BackgroundColor="{StaticResource DarkBg1}"
+             Shell.NavBarHasShadow="False"
+             Background="{StaticResource DarkBg1}"
+             >
+
+    <ContentPage.BindingContext>
+        <vm:AddCustomerViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <Style TargetType="RadioButton">
+            <Setter Property="ControlTemplate" Value="{StaticResource ButtonRadioTemplate}"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,108" ColumnDefinitions="*,*" ColumnSpacing="0">
+        <ScrollView Grid.ColumnSpan="2">
+            <VerticalStackLayout Spacing="20" Margin="24">
+                <Label Text="Name" TextColor="{StaticResource Text_Dark}"/>
+                <Border
+                    Grid.Row="1"
+                    HeightRequest="48"
+                    HorizontalOptions="FillAndExpand"
+                    Background="{StaticResource WhiteBrush}"
+                    Stroke="{StaticResource SecondaryBrush}"
+                    StrokeThickness="1"
+                    >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+
+                    <Entry Background="Transparent"
+                            Placeholder="Enter  Name"
+                            Text="{Binding Customer.Name}"
+                            PlaceholderColor="{StaticResource TextSecondary}"
+                            TextColor="{StaticResource Text_Light}"
+                            HorizontalOptions="FillAndExpand"
+                            Margin="8,0"
+                            FontSize="14"/>
+                </Border>
+
+                <Label Text="Mobile" TextColor="{StaticResource Text_Dark}"/>
+                <Border
+                        Grid.Row="1"
+                        HeightRequest="48"
+                        HorizontalOptions="FillAndExpand"
+                        Background="{StaticResource WhiteBrush}"
+                        Stroke="{StaticResource SecondaryBrush}"
+                        StrokeThickness="1"
+                        >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <Entry  Background="Transparent"
+                            Placeholder="01730-298148"
+                            Text="{Binding Customer.Mobile}"
+                            PlaceholderColor="{StaticResource TextSecondary}"
+                            TextColor="{StaticResource Text_Light}"
+                            HorizontalOptions="FillAndExpand"
+                            Margin="8,0"
+                            FontSize="14" 
+                            Keyboard="Telephone"/>
+                </Border>
+                <Label Text="Address" TextColor="{StaticResource Text_Dark}"/>
+                <Border
+                        Grid.Row="1"
+                        HeightRequest="48"
+                        HorizontalOptions="FillAndExpand"
+                        Background="{StaticResource WhiteBrush}"
+                        Stroke="{StaticResource SecondaryBrush}"
+                        StrokeThickness="1"
+                        >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <Entry  Background="Transparent"
+                            Text="{Binding Customer.Address}"
+                            PlaceholderColor="{StaticResource TextSecondary}"
+                            TextColor="{StaticResource Text_Light}"
+                            HorizontalOptions="FillAndExpand"
+                            Margin="8,0"
+                            FontSize="14" 
+                            />
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Text="Cancel" 
+                Grid.Row="1" Grid.Column="0" 
+                Margin="24,24,12,24" 
+                Style="{StaticResource SecondaryButtonOutline}" 
+                HorizontalOptions="Fill"
+                Command="{Binding CancelCommand}" />
+
+        <Button Text="Save" Grid.Row="1" Grid.Column="1" Margin="12,24,24,24" Command="{Binding SaveCommand}"
+                HorizontalOptions="Fill"
+                />
+    </Grid>
+</ContentPage>
