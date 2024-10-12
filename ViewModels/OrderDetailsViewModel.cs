@@ -1,4 +1,6 @@
-namespace MYPM.Pages.Handheld;
+using MYPM.Pages.Handheld;
+
+namespace MYPM.ViewModels;
 
 [QueryProperty("Order", "Order")]
 [QueryProperty("Added", "Added")]

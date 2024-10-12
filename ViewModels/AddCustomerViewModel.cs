@@ -1,6 +1,6 @@
 ﻿using MYPM.Messages;
 
-namespace MYPM.Pages.Handheld;
+namespace MYPM.ViewModels;
 
 public partial class AddCustomerViewModel : ObservableObject
 {

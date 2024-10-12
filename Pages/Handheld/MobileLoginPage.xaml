@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:handheld="clr-namespace:MYPM.Pages.Handheld"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MYPM.Pages.Handheld.MobileLoginPage"
-             x:DataType="handheld:MobileLoginViewModel"
+             x:DataType="vm:MobileLoginViewModel"
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{StaticResource DarkBg2}" StatusBarStyle="LightContent" />
     </ContentPage.Behaviors>
     <ContentPage.BindingContext>
-        <handheld:MobileLoginViewModel/>
+        <vm:MobileLoginViewModel/>
     </ContentPage.BindingContext>
 
     <Grid RowDefinitions="*,4*,2*,*" RowSpacing="20" BackgroundColor="{StaticResource DarkBg2}">

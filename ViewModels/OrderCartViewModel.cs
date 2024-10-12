@@ -1,6 +1,6 @@
 ﻿using MYPM.Messages;
 using MYPM.Pages.Handheld;
-namespace MYPM.Pages.Views;
+namespace MYPM.ViewModels;
 
 public partial class OrderCartViewModel : ObservableObject
 {

@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:m="clr-namespace:MYPM.Models"
-             xmlns:vm="clr-namespace:MYPM.Pages.Handheld"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
+             xmlns:zxing="clr-namespace:ZXing;assembly=ZXing"
              x:Class="MYPM.Pages.Handheld.AddCustomer"
              x:DataType="vm:AddCustomerViewModel"
              Title="New Customer"
@@ -21,7 +22,7 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="*,108" ColumnDefinitions="*,*" ColumnSpacing="0">
+    <Grid RowDefinitions="5*,*, *" ColumnDefinitions="*,*" ColumnSpacing="0">
         <ScrollView Grid.ColumnSpan="2">
             <VerticalStackLayout Spacing="20" Margin="24">
                 <Label Text="Name" TextColor="{StaticResource Text_Dark}"/>
@@ -67,7 +68,7 @@
                             HorizontalOptions="FillAndExpand"
                             Margin="8,0"
                             FontSize="14" 
-                            Keyboard="Telephone"/>
+                            Keyboard="Numeric"/>
                 </Border>
                 <Label Text="Address" TextColor="{StaticResource Text_Dark}"/>
                 <Border
@@ -90,18 +91,25 @@
                             FontSize="14" 
                             />
                 </Border>
+                <Button Text="Insert"  Margin="12,24,24,24" Clicked="OnCreateInvoiceClicked"
+                HorizontalOptions="Fill"
+                />
+                <Button Text="View"  Margin="12,24,24,24" Clicked="OnViewInvoicesClicked"
+                HorizontalOptions="Fill"
+                />
             </VerticalStackLayout>
         </ScrollView>
-
         <Button Text="Cancel" 
-                Grid.Row="1" Grid.Column="0" 
+                Grid.Row="2" Grid.Column="0" 
                 Margin="24,24,12,24" 
                 Style="{StaticResource SecondaryButtonOutline}" 
                 HorizontalOptions="Fill"
                 Command="{Binding CancelCommand}" />
 
-        <Button Text="Save" Grid.Row="1" Grid.Column="1" Margin="12,24,24,24" Command="{Binding SaveCommand}"
+        <Button Text="Save" Grid.Row="2" Grid.Column="1" Margin="12,24,24,24" Command="{Binding SaveCommand}"
                 HorizontalOptions="Fill"
                 />
+
+
     </Grid>
 </ContentPage>

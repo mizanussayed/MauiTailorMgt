@@ -1,6 +1,4 @@
-
-
-namespace MYPM.Pages.Handheld;
+namespace MYPM.ViewModels;
 
 public partial class OrdersViewModel : ObservableObject
 {
@@ -22,7 +20,7 @@ public partial class OrdersViewModel : ObservableObject
     [RelayCommand]
     public async Task LogOut()
     {
-        var result = await App.Current.MainPage.DisplayAlert("", "Do you want to logout?", "Yes", "Ooops, no");
+        var result = await Application.Current.MainPage.DisplayAlert("", "Do you want to logout?", "Yes", "Ooops, no");
         if (!result)
             return;
 

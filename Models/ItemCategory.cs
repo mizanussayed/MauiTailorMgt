@@ -1,12 +1,11 @@
-﻿namespace MYPM.Models
+﻿namespace MYPM.Models;
+
+public enum ItemCategory
 {
-    public enum ItemCategory
-    {
-        Noodles,
-        Rice,
-        Appetizers,
-        Desserts,
-        Beverages
-    }
+    Noodles,
+    Rice,
+    Appetizers,
+    Desserts,
+    Beverages
 }
 

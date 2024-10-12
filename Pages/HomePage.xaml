@@ -68,10 +68,10 @@
                             <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                             <Label Text=" see details" HorizontalTextAlignment="Center" FontSize="Small"/>
                         </HorizontalStackLayout>-->
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="AddNewCustomerTapped" />
-                        </StackLayout.GestureRecognizers>
                     </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="AddNewCustomerTapped" />
+                    </Frame.GestureRecognizers>
                 </Frame>
 
                 <Frame Grid.Row="0" Grid.Column="1">
@@ -90,10 +90,10 @@
                                WidthRequest="60"
                                />
                         <Label Text="Add New Order" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="AddNewOrderTapped" />
-                        </StackLayout.GestureRecognizers>
                     </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="AddNewOrderTapped" />
+                    </Frame.GestureRecognizers>
                 </Frame>
 
                 <Frame Grid.Row="1" Grid.Column="1">
@@ -104,6 +104,9 @@
                                />
                         <Label Text="Delivery Orders" HorizontalTextAlignment="Center" FontAttributes="Bold" />
                     </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ViewInvoicesTapped"/>
+                    </Frame.GestureRecognizers>
                 </Frame>
 
                 <Frame Grid.Row="2" Grid.Column="0">
@@ -133,6 +136,9 @@
                                />
                         <Label Text="Assign Order" HorizontalTextAlignment="Center" FontAttributes="Bold" />
                     </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="AssignOrderTapped" />
+                    </Frame.GestureRecognizers>
                 </Frame>
             </Grid>
         </StackLayout>

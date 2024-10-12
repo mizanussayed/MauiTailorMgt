@@ -1,6 +1,7 @@
 ﻿using MYPM.Messages;
+using MYPM.Pages;
 
-namespace MYPM.Pages;
+namespace MYPM.ViewModels;
 
 public partial class HomeViewModel : ObservableObject
 {

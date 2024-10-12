@@ -2,13 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:MYPM.Models"
-             xmlns:handheld="clr-namespace:MYPM.Pages.Handheld"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
              x:Class="MYPM.Pages.Handheld.OrderDetailsPage"
              Shell.NavBarIsVisible="False"
-             x:DataType="handheld:OrderDetailsViewModel"
+             x:DataType="vm:OrderDetailsViewModel"
              Title="OrdersPage">
     <ContentPage.BindingContext>
-        <handheld:OrderDetailsViewModel/>
+        <vm:OrderDetailsViewModel/>
     </ContentPage.BindingContext>
     
     <Grid RowDefinitions="Auto, 400, 66" Margin="20">

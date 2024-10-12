@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Platform;
+using ZXing.Net.Maui.Controls;
 
 namespace MYPM;
 public static class MauiProgram
@@ -17,6 +18,8 @@ public static class MauiProgram
                 fonts.AddFont("fa_solid.ttf", "FontAwesome");
                 fonts.AddFont("fabmdl2.ttf", "Fabric");
             })
+            .UseBarcodeReader()
+
             .ConfigureMauiHandlers(handlers =>
             {
                 ModifyEntry();

@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel;
 
-namespace MYPM.Models
+namespace MYPM.Models;
+
+public enum OrderType
 {
-    public enum OrderType
-    {
-        [Description("Dine In")]
-        DineIn,
-        [Description("Carry Out")]
-        CarryOut,
-        [Description("Delivery")]
-        Delivery
-    }
+    [Description("Dine In")]
+    DineIn,
+    [Description("Carry Out")]
+    CarryOut,
+    [Description("Delivery")]
+    Delivery
 }
 

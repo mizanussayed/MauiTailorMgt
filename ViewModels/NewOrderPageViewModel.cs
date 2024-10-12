@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 
-namespace MYPM.Pages.Handheld;
+namespace MYPM.ViewModels;
 
 public partial class NewOrderPageViewModel : ObservableObject
 {

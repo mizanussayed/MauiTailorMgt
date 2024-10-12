@@ -1,5 +1,6 @@
 ﻿using MYPM.Pages;
 using MYPM.Pages.Handheld;
+using MYPM.Pages.Views;
 
 namespace MYPM;
 public partial class AppShell : Shell
@@ -19,5 +20,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(AddCustomer), typeof(AddCustomer));
         Routing.RegisterRoute(nameof(NewOrderPage), typeof(NewOrderPage));
+        Routing.RegisterRoute(nameof(InvoiceListPage), typeof(InvoiceListPage));
+        Routing.RegisterRoute(nameof(InvocieView), typeof(InvocieView));
     }
 }

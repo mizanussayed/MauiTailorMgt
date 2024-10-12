@@ -8,9 +8,6 @@ public partial class Order : ObservableObject
     private int table;
 
     [ObservableProperty]
-    private byte[] signatureData;
-
-    [ObservableProperty]
     private double tip;
 
     [ObservableProperty]
@@ -28,10 +25,10 @@ public partial class Order : ObservableObject
     }
 
     [ObservableProperty]
-    private List<Item> items;
+    private List<Item> items = [];
 
     [ObservableProperty]
-    private string status;
+    private string status = string.Empty;
 
     [ObservableProperty]
     private OrderType orderType = OrderType.DineIn;

@@ -1,13 +1,13 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pages="clr-namespace:MYPM.Pages"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
              xmlns:m="clr-namespace:MYPM.Models"
-             x:DataType="pages:SettingsViewModel"
+             x:DataType="vm:SettingsViewModel"
              x:Class="MYPM.Pages.SettingsPage"
              Shell.NavBarIsVisible="True">
 
     <ContentPage.BindingContext>
-        <pages:SettingsViewModel/>
+        <vm:SettingsViewModel/>
     </ContentPage.BindingContext>
 
     <VisualStateManager.VisualStateGroups>

@@ -1,4 +1,4 @@
-﻿namespace MYPM.Pages.Handheld;
+﻿namespace MYPM.ViewModels;
 
 public sealed class CustomerListViewModel : ObservableObject
 {

@@ -1,4 +1,4 @@
-﻿namespace MYPM.Pages;
+﻿namespace MYPM.ViewModels;
 
 public partial class SettingsViewModel : ObservableObject
 {
@@ -15,7 +15,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     async Task NotImplemented()
     {
-        await App.Current.MainPage.DisplayAlert("Not Implemented", "Wouldn't it be nice tho?", "Okay");
+        await Application.Current.MainPage.DisplayAlert("Not Implemented", "Wouldn't it be nice tho?", "Okay");
     }
 }
 
