@@ -49,21 +49,21 @@
                         <Border.StrokeShape>
                             <RoundRectangle />
                         </Border.StrokeShape>
-                        <Entry  Placeholder="01730-298184" Text="{Binding MobileNumber}"  />
+                        <Entry  Placeholder="01730-298184" Text="{Binding Order.MobileNumber}"  />
                     </Border>
                     <Label Text="Name"/>
                     <Border>
                         <Border.StrokeShape>
                             <RoundRectangle />
                         </Border.StrokeShape>
-                        <Entry Placeholder="Enter  Name" Text="{Binding CustomerName}" />
+                        <Entry Placeholder="Enter  Name" Text="{Binding Order.CustomerName}" />
                     </Border>
                     <Label Text="Address"/>
                     <Border HeightRequest="100">
                         <Border.StrokeShape>
                             <RoundRectangle />
                         </Border.StrokeShape>
-                        <Entry  Text="{Binding Address}" />
+                        <Entry  Text="{Binding Order.Address}" />
                     </Border>
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                         <VerticalStackLayout>
@@ -72,7 +72,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle />
                                 </Border.StrokeShape>
-                                <DatePicker  Date="{Binding OrderDate}" TextColor="{StaticResource TextSecondary_Light}"/>
+                                <DatePicker  Date="{Binding Order.OrderDate}" TextColor="{StaticResource TextSecondary_Light}"/>
                             </Border>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="1">
@@ -81,23 +81,22 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle />
                                 </Border.StrokeShape>
-                                <DatePicker Date="{Binding DeliveryDate}" TextColor="{StaticResource TextSecondary_Light}" />
+                                <DatePicker Date="{Binding Order.DeliveryDate}" TextColor="{StaticResource TextSecondary_Light}" />
                             </Border>
                         </VerticalStackLayout>
                     </Grid>
-
                     <Label Text="Measurement For"/>
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout 
                                Spacing="8"
                                RadioButtonGroup.GroupName="OrderFor"
-                               RadioButtonGroup.SelectedValue="{Binding OrderFor}">
+                               RadioButtonGroup.SelectedValue="{Binding Order.OrderFor}">
                             <RadioButton 
                                     Content="Arabian" 
                                     Value="Arabian" 
                                     GroupName="OrderFor" 
                                     BackgroundColor="{StaticResource Primary}"
-                                    />  
+                                    />
                             <RadioButton 
                                     Content="Panjabi" 
                                     Value="Panjabi" 
@@ -112,28 +111,6 @@
                                     />
                         </HorizontalStackLayout>
                         
-                        <!--<HorizontalStackLayout
-                               Spacing="8"
-                               RadioButtonGroup.GroupName="OrderFor"
-                               RadioButtonGroup.SelectedValue="{Binding OrderFor}"
-                             >
-                            <BindableLayout.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Arabian</x:String>
-                                    <x:String>Panjabi</x:String>
-                                    <x:String>Selowar</x:String>
-                                </x:Array>
-                            </BindableLayout.ItemsSource>
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <RadioButton Content="{Binding .}"
-                                     Value="{Binding .}" 
-                                     BackgroundColor="{StaticResource Primary}"
-                                 />
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </HorizontalStackLayout>-->
-
                         <Button Text="Add + " FontAttributes="Bold" Clicked="OnAddMeasurementType" Grid.Column="1"  HorizontalOptions="End"/>
                     </Grid>
                     <StackLayout x:Name="DynamicFormFields">

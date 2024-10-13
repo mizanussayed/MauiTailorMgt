@@ -13,18 +13,65 @@ public partial class NewOrderPage : ContentPage
         BindingContext = new NewOrderPageViewModel();
     }
 
-
-
     private void OnAddMeasurementType(object sender, EventArgs e)
     {
-        var orderFor = (BindingContext as NewOrderPageViewModel)?.OrderFor;
-        var frame = CreateMeasurementFrame();
-        frame.Content = CreateMainLayout(frame, orderFor);
-        if (frame.Content is not null)
+        var context = (BindingContext as NewOrderPageViewModel);
+        var orderFor = context?.Order.OrderFor?.ToLower();
+
+        if (orderFor is null) return;
+
+        string headerText = string.Empty;
+        Func<Grid>? createGrid = null;
+
+        switch (orderFor)
         {
-            DynamicFormFields.Children.Add(frame);
+            case "arabian":
+                if (context?.ArabianOrder == null)
+                {
+                    context.ArabianOrder = new ArabianOrder();
+                    headerText = "এরাবিয়ান এর";
+                    createGrid = CreateArabianGrid;
+                }
+                break;
+            case "panjabi":
+                if (context?.PanjabiOrder == null)
+                {
+                    context.PanjabiOrder = new PanjabiOrder();
+                    headerText = "পাঞ্জাবির";
+                    createGrid = CreatePanjabiGrid;
+                }
+                break;
+            case "selowar":
+                if (context?.SelowerOrder == null)
+                {
+                    context.SelowerOrder = new SelowerOrder();
+                    headerText = "সেলোয়ার এর";
+                    createGrid = CreateSelowarGrid;
+                }
+                break;
+            default:
+                return;
+        }
+
+        if (createGrid is not null)
+        {
+            var frame = CreateMeasurementFrame();
+            var mainLayout = new StackLayout
+            {
+                HorizontalOptions = LayoutOptions.Fill
+            };
+
+            var removeButton = CreateRemoveButton(frame);
+            mainLayout.Add(CreateHeaderGrid(removeButton, headerText, context));
+            mainLayout.Add(createGrid());
+            frame.Content = mainLayout;
+            if (frame.Content is not null)
+            {
+                DynamicFormFields.Children.Add(frame);
+            }
         }
     }
+
 
     private Frame CreateMeasurementFrame()
     {
@@ -38,34 +85,6 @@ public partial class NewOrderPage : ContentPage
             AutomationId = "MeasurementForm" + (++childFormIdCounter),
             HasShadow = true,
         };
-    }
-
-    private StackLayout CreateMainLayout(Frame frame, string? orderFor)
-    {
-        var mainLayout = new StackLayout
-        {
-            HorizontalOptions = LayoutOptions.Fill
-        };
-        var removeButton = CreateRemoveButton(frame);
-        if (orderFor is not null)
-        {
-            switch (orderFor.ToLower())
-            {
-                case "arabian":
-                    mainLayout.Add(CreateHeaderGrid(removeButton, "এরাবিয়ান এর"));
-                    mainLayout.Add(CreateArabianGrid());
-                    break;
-                case "panjabi":
-                    mainLayout.Add(CreateHeaderGrid(removeButton, "পাঞ্জাবির"));
-                    mainLayout.Add(CreatePanjabiGrid());
-                    break;
-                default:
-                    mainLayout.Add(CreateHeaderGrid(removeButton, "সেলোয়ার এর"));
-                    mainLayout.Add(CreateSelowarGrid());
-                    break;
-            }
-        }
-        return mainLayout;
     }
 
     private Button CreateRemoveButton(Frame frame)
@@ -92,7 +111,7 @@ public partial class NewOrderPage : ContentPage
         };
     }
 
-    private static Grid CreateHeaderGrid(Button button, string headerTxt)
+    private static Grid CreateHeaderGrid(Button button, string headerTxt, NewOrderPageViewModel? binding)
     {
         var headerGrid = new Grid
         {
@@ -113,8 +132,8 @@ public partial class NewOrderPage : ContentPage
 
         headerGrid.Add(CreateLabel($"{headerTxt} মাপ"), 0, 0);
         headerGrid.Add(button, 1, 0);
-        headerGrid.AddWithSpan(EntryLabelGrid("টাকার পরিমান :"), 1, 0, 1, 2);
-        headerGrid.AddWithSpan(EntryLabelGrid($"{headerTxt} সংখ্যা :"), 2, 0, 1, 2);
+        headerGrid.AddWithSpan(EntryLabelGrid("টাকার পরিমান : ", "SelowerOrder.Amount"), 1, 0, 1, 2);
+        headerGrid.AddWithSpan(EntryLabelGrid($"{headerTxt} সংখ্যা :", "SelowerOrder.Quantity"), 2, 0, 1, 2);
 
         return headerGrid;
     }
@@ -138,8 +157,8 @@ public partial class NewOrderPage : ContentPage
         };
 
         var labels = new[] { "লম্বা", "হিপ", "কমর", "নেছ" };
-        var entries = labels.Select(EntryWithLabel).ToArray();
-
+        var bindings = new[] { "SelowerOrder.Length", "SelowerOrder.Hip", "SelowerOrder.Komor", "SelowerOrder.Ness" };
+        var entries = labels.Zip(bindings, EntryWithLabel).ToArray();
         for (int i = 0; i < entries.Length; i++)
         {
             measurementGrid.Add(entries[i], i % 2, i / 2);
@@ -169,9 +188,10 @@ public partial class NewOrderPage : ContentPage
             Padding = 10
         };
 
-        var labels = new[] { "লম্বা", "তিরা", "হাতা", "কফ", "মুহরী", "রাকাবা", "নেছ" };
-        var entries = labels.Select(EntryWithLabel).ToArray();
 
+        var labels = new[] { "লম্বা", "তিরা", "হাতা", "কফ", "মুহরী", "রাকাবা", "নেছ" };
+        var bindings = new[] { "ArabianOrder.Length", "ArabianOrder.Tira", "ArabianOrder.Hata", "ArabianOrder.Cuff", "ArabianOrder.Mohori", "ArabianOrder.Rakaba", "ArabianOrder.Ness" };
+        var entries = labels.Zip(bindings, EntryWithLabel).ToArray();
         for (int i = 0; i < entries.Length; i++)
         {
             measurementGrid.Add(entries[i], i % 2, i / 2);
@@ -200,43 +220,45 @@ public partial class NewOrderPage : ContentPage
             Padding = 10
         };
 
-        var labels = new[] { "লম্বা", "সিনা", "কমর", "হাতা", "কফ", "মুহরী", "রাকাবা" };
-        var entries = labels.Select(EntryWithLabel).ToArray();
 
+        var labels = new[] { "লম্বা", "সিনা", "কমর", "হাতা", "কফ", "মুহরী", "রাকাবা" };
+        var bindings = new[] { "PanjabiOrder.Length", "PanjabiOrder.Sina", "PanjabiOrder.Komor", "PanjabiOrder.Hata", "PanjabiOrder.Cuff", "PanjabiOrder.Mohori", "PanjabiOrder.Rakaba" };
+        var entries = labels.Zip(bindings, EntryWithLabel).ToArray();
         for (int i = 0; i < entries.Length; i++)
         {
             measurementGrid.Add(entries[i], i % 2, i / 2);
         }
-
         return measurementGrid;
     }
 
-    private static VerticalStackLayout EntryWithLabel(string label)
+    private static VerticalStackLayout EntryWithLabel(string label, string binding)
     {
         var vs = new VerticalStackLayout
         {
             CreateLabel(label),
-            CreateBorder()
+            CreateBorder(binding)
         };
         vs.Spacing = 10;
         vs.VerticalOptions = LayoutOptions.Start;
         return vs;
     }
 
-    private static Border CreateBorder()
+    private static Border CreateBorder(string binding)
     {
+        var entry = new Entry
+        {
+            Keyboard = Keyboard.Numeric,
+            MinimumWidthRequest = 140,
+        };
+        entry.SetBinding(Entry.TextProperty, binding);
         return new Border
         {
             StrokeShape = new RoundRectangle(),
-            Content = new Entry
-            {
-                Keyboard = Keyboard.Numeric,
-                MinimumWidthRequest = 140
-            }
+            Content = entry,
         };
     }
 
-    private static Grid EntryLabelGrid(string label)
+    private static Grid EntryLabelGrid(string label, string binding)
     {
         var entryGrid = new Grid
         {
@@ -249,7 +271,7 @@ public partial class NewOrderPage : ContentPage
         };
 
         entryGrid.Add(CreateLabel(label), 0, 0);
-        entryGrid.Add(CreateBorder(), 1, 0);
+        entryGrid.Add(CreateBorder(binding), 1, 0);
         return entryGrid;
     }
 }

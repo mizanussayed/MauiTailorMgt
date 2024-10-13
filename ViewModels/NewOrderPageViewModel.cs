@@ -1,41 +1,33 @@
-﻿using CommunityToolkit.Maui.Alerts;
-
-namespace MYPM.ViewModels;
+﻿namespace MYPM.ViewModels;
 
 public partial class NewOrderPageViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string customerName = string.Empty;
+    private NewOrderModel order = new();
 
     [ObservableProperty]
-    private string mobileNumber = string.Empty;
+    private ArabianOrder? arabianOrder;
 
     [ObservableProperty]
-    private string address = string.Empty;
+    private PanjabiOrder? panjabiOrder;
 
     [ObservableProperty]
-    private DateTime orderDate = DateTime.Today;
-
-    [ObservableProperty]
-    private DateTime deliveryDate = DateTime.Today.AddDays(7);
-
-    [ObservableProperty]
-    private string orderFor = "Arabian";
+    private SelowerOrder? selowerOrder;
 
     [RelayCommand]
     private async Task Save()
     {
-        var newOrder = new NewOrder
+        var newOrder = new NewOrderModel
         {
-            CustomerName = CustomerName,
-            MobileNumber = MobileNumber,
-            Address = Address,
-            OrderDate = OrderDate,
-            DeliveryDate = DeliveryDate
+            CustomerName = Order.CustomerName,
+            MobileNumber = Order.MobileNumber,
+            Address = Order.Address,
+            OrderDate = Order.OrderDate,
+            DeliveryDate = Order.DeliveryDate
         };
 
-        var response = Snackbar.Make("Successfully Order Saved", null, "Ok", TimeSpan.FromSeconds(3));
-        await response.Show();
+        //var response = Snackbar.Make("Successfully Order Saved", null, "Ok", TimeSpan.FromSeconds(3));
+       // await response.Show();
         await Shell.Current.Navigation.PopAsync();
     }
     [RelayCommand]
