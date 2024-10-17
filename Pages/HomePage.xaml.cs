@@ -21,7 +21,7 @@ public partial class HomePage : ContentPage
 
     private async void AssignOrderTapped(object sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(InvocieView));
+        await Shell.Current.GoToAsync(nameof(NewOrderListPage));
     }
 
     private async void ViewInvoicesTapped(object sender, TappedEventArgs e)

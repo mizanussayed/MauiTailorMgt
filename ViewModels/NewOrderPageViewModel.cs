@@ -1,4 +1,8 @@
-﻿namespace MYPM.ViewModels;
+﻿
+using CommunityToolkit.Maui.Alerts;
+using MYPM.Services;
+
+namespace MYPM.ViewModels;
 
 public partial class NewOrderPageViewModel : ObservableObject
 {
@@ -17,17 +21,11 @@ public partial class NewOrderPageViewModel : ObservableObject
     [RelayCommand]
     private async Task Save()
     {
-        var newOrder = new NewOrderModel
-        {
-            CustomerName = Order.CustomerName,
-            MobileNumber = Order.MobileNumber,
-            Address = Order.Address,
-            OrderDate = Order.OrderDate,
-            DeliveryDate = Order.DeliveryDate
-        };
+        var orderService = new OrderService();
+        var createdOrder = await orderService.CreateOrderWithSubCollections(Order, ArabianOrder, PanjabiOrder, SelowerOrder);
 
-        //var response = Snackbar.Make("Successfully Order Saved", null, "Ok", TimeSpan.FromSeconds(3));
-       // await response.Show();
+       // var response = Snackbar.Make("Successfully Order Saved", null, "Ok", TimeSpan.FromSeconds(3));
+        // await response.Show();
         await Shell.Current.Navigation.PopAsync();
     }
     [RelayCommand]

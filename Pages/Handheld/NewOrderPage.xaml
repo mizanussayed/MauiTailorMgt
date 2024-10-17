@@ -129,8 +129,15 @@
                      Grid.Row="1" 
                      Grid.Column="1" 
                      Margin="12,24,24,24"
+                     Clicked="BtnSaveClicked"
+                     HorizontalOptions="Fill"/>      
+            <!--<Button Text="Save"
+                     Grid.Row="1" 
+                     Grid.Column="1" 
+                     Margin="12,24,24,24"
+                     Clicked="Button_Clicked"
                      Command="{Binding SaveCommand}"
-                     HorizontalOptions="Fill"/>
+                     HorizontalOptions="Fill"/>-->
         </Grid>
     </ScrollView>
 </ContentPage>

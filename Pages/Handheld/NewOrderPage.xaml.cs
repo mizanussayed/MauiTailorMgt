@@ -1,4 +1,7 @@
-﻿using Microsoft.Maui.Controls.Shapes;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
+using Microsoft.Maui.Controls.Shapes;
 using MYPM.ViewModels;
 
 namespace MYPM.Pages.Handheld;
@@ -17,7 +20,8 @@ public partial class NewOrderPage : ContentPage
     {
         var context = (BindingContext as NewOrderPageViewModel);
         var orderFor = context?.Order.OrderFor?.ToLower();
-
+        var orderText = string.Empty;
+        int orderType = 0;
         if (orderFor is null) return;
 
         string headerText = string.Empty;
@@ -31,6 +35,8 @@ public partial class NewOrderPage : ContentPage
                     context.ArabianOrder = new ArabianOrder();
                     headerText = "এরাবিয়ান এর";
                     createGrid = CreateArabianGrid;
+                    orderText = "ArabianOrder";
+                    orderType = 1;
                 }
                 break;
             case "panjabi":
@@ -39,6 +45,8 @@ public partial class NewOrderPage : ContentPage
                     context.PanjabiOrder = new PanjabiOrder();
                     headerText = "পাঞ্জাবির";
                     createGrid = CreatePanjabiGrid;
+                    orderText = "PanjabiOrder";
+                    orderType = 2;
                 }
                 break;
             case "selowar":
@@ -47,6 +55,8 @@ public partial class NewOrderPage : ContentPage
                     context.SelowerOrder = new SelowerOrder();
                     headerText = "সেলোয়ার এর";
                     createGrid = CreateSelowarGrid;
+                    orderText = "SelowerOrder";
+                    orderType = 3;
                 }
                 break;
             default:
@@ -61,8 +71,8 @@ public partial class NewOrderPage : ContentPage
                 HorizontalOptions = LayoutOptions.Fill
             };
 
-            var removeButton = CreateRemoveButton(frame);
-            mainLayout.Add(CreateHeaderGrid(removeButton, headerText, context));
+            var removeButton = CreateRemoveButton(frame, context, orderType);
+            mainLayout.Add(CreateHeaderGrid(removeButton, headerText, orderText));
             mainLayout.Add(createGrid());
             frame.Content = mainLayout;
             if (frame.Content is not null)
@@ -87,7 +97,7 @@ public partial class NewOrderPage : ContentPage
         };
     }
 
-    private Button CreateRemoveButton(Frame frame)
+    private Button CreateRemoveButton(Frame frame, NewOrderPageViewModel binding, int orderType)
     {
         var removeButton = new Button
         {
@@ -97,7 +107,24 @@ public partial class NewOrderPage : ContentPage
             HorizontalOptions = LayoutOptions.End
         };
 
-        removeButton.Clicked += (s, e) => DynamicFormFields.Children.Remove(frame);
+
+
+        removeButton.Clicked += (s, e) =>
+        {
+            DynamicFormFields.Children.Remove(frame);
+            if (orderType == 1)
+            {
+                binding.ArabianOrder = null;
+            }
+            else if (orderType == 2)
+            {
+                binding.PanjabiOrder = null;
+            }
+            else if (orderType == 3)
+            {
+                binding.SelowerOrder = null;
+            }
+        };
         return removeButton;
     }
 
@@ -111,7 +138,7 @@ public partial class NewOrderPage : ContentPage
         };
     }
 
-    private static Grid CreateHeaderGrid(Button button, string headerTxt, NewOrderPageViewModel? binding)
+    private static Grid CreateHeaderGrid(Button button, string headerTxt, string orderFor)
     {
         var headerGrid = new Grid
         {
@@ -132,8 +159,8 @@ public partial class NewOrderPage : ContentPage
 
         headerGrid.Add(CreateLabel($"{headerTxt} মাপ"), 0, 0);
         headerGrid.Add(button, 1, 0);
-        headerGrid.AddWithSpan(EntryLabelGrid("টাকার পরিমান : ", "SelowerOrder.Amount"), 1, 0, 1, 2);
-        headerGrid.AddWithSpan(EntryLabelGrid($"{headerTxt} সংখ্যা :", "SelowerOrder.Quantity"), 2, 0, 1, 2);
+        headerGrid.AddWithSpan(EntryLabelGrid("টাকার পরিমান : ", $"{orderFor}.Amount"), 1, 0, 1, 2);
+        headerGrid.AddWithSpan(EntryLabelGrid($"{headerTxt} সংখ্যা :", $"{orderFor}.Quantity"), 2, 0, 1, 2);
 
         return headerGrid;
     }
@@ -273,5 +300,26 @@ public partial class NewOrderPage : ContentPage
         entryGrid.Add(CreateLabel(label), 0, 0);
         entryGrid.Add(CreateBorder(binding), 1, 0);
         return entryGrid;
+    }
+
+    private async void BtnSaveClicked(object sender, EventArgs e)
+    {
+        var context = (BindingContext as NewOrderPageViewModel);
+
+        if ((context?.ArabianOrder is not null) || (context?.ArabianOrder is not null) || context?.SelowerOrder is not null)
+        {
+           // await Shell.Current.DisplayPromptAsync()
+            await context.SaveCommand.ExecuteAsync(null);
+        }
+        else
+        {
+            Shell.Current.DisplayAlert("Add Measurement", "Arabian / Panjabi / Selower", "OK");
+#if ANDROID
+          //  Snackbar.Make("Please Select Any Order Measurement", null, "Ok", TimeSpan.FromSeconds(3));
+#elif WINDOWS
+           // Shell.Current.DisplayActionSheet("Add Measurement", "Ok", "", FlowDirection.LeftToRight);
+#endif
+
+        }
     }
 }

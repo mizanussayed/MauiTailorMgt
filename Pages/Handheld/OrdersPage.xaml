@@ -106,7 +106,7 @@
                                         Grid.Row="1"
                                         >
                             <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="models:Order">
+                                <DataTemplate x:DataType="models:NewOrderModel">
                                     <Grid ColumnDefinitions="80,*,100,*" ColumnSpacing="8" Margin="0,8">
                                         <Grid.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding PayCommand}"/>
@@ -117,17 +117,17 @@
                                                 HorizontalOptions="Start"
                                                 HeightRequest="60" 
                                                 WidthRequest="60" 
-                                                Background="{x:Static models:Order.RandomBrush}">
+                                                Background="{x:Static models:NewOrderModel.RandomBrush}">
                                             <Border.StrokeShape>
                                                 <Ellipse Frame="0,0,60,60"  />
                                             </Border.StrokeShape>
                                             <Grid>
-                                                <Label Text="{Binding Table}" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                                <Label Text="{Binding CustomerName}" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center"/>
                                             </Grid>
                                         </Border>
-                                        <Label Text="{Binding Quantity}" Grid.Column="1" VerticalOptions="Center"/>
-                                        <Label Text="{Binding Total, StringFormat='${0}'}" Grid.Column="2" VerticalOptions="Center" />
-                                        <Label Text="{Binding Status}" Grid.Column="3" VerticalOptions="Center" HorizontalOptions="EndAndExpand"/>
+                                        <Label Text="{Binding PaidAmount}" Grid.Column="1" VerticalOptions="Center"/>
+                                        <Label Text="{Binding TotalAmount, StringFormat='${0}'}" Grid.Column="2" VerticalOptions="Center" />
+                                        <Label Text="{Binding MobileNumber}" Grid.Column="3" VerticalOptions="Center" HorizontalOptions="EndAndExpand"/>
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
