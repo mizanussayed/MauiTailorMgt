@@ -1,4 +1,3 @@
-using MYPM.Common;
 using MYPM.Pages.Handheld;
 using MYPM.Services;
 
@@ -22,7 +21,7 @@ public partial class OrdersViewModel : ObservableObject
     [RelayCommand]
     private static async Task LogOut()
     {
-        var result = await Application.Current.MainPage.DisplayAlert("", "Do you want to logout?", "Yes", "Ooops, no");
+        var result = await Shell.Current.DisplayAlert("", "Do you want to logout?", "Yes", "Ooops, no");
         if (!result)
             return;
 
@@ -78,7 +77,16 @@ public partial class OrdersViewModel : ObservableObject
     [RelayCommand]
     private async Task GetDetails(string Id)
     {
-        var orderService = new OrderService();
-        NewOrder = await orderService.GetOrder(Id);
+
+        try
+        {
+            var orderService = new OrderService();
+            NewOrder = await orderService.GetOrder(Id);
+            await Shell.Current.Navigation.PushAsync(new OrderDetailsPage(NewOrder), true);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
     }
 }

@@ -30,9 +30,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#252836" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#EA7C69" />
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Images\panjabi.png" Color="#252836" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Images\panjabi.png" Color="#EA7C69" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -53,20 +53,5 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.4.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Pages\Views\InvoiceQR.xaml.cs">
-	    <DependentUpon>InvoiceQR.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="Pages\NewOrderListPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\Views\AddAdvanceAmount.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	</ItemGroup>
 </Project>

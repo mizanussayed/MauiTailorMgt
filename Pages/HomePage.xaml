@@ -10,13 +10,14 @@
 
     <ContentPage.Resources>
         <Style TargetType="Frame">
-            <Setter Property="BackgroundColor" Value="{StaticResource Neutral}" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Tertiary}" />
             <Setter Property="CornerRadius" Value="15" />
             <Setter Property="Padding" Value="10" />
         </Style>
         <Style TargetType="Label">
             <Setter Property="HorizontalTextAlignment" Value="Center" />
             <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{StaticResource Primary}" />
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -58,21 +59,20 @@
                 <Frame Grid.Row="0" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center" >
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.UserPlus}}"
-                               BackgroundColor="{StaticResource Secondary}" 
+                               BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="{Binding TodayOrders, StringFormat='Today Orders : {0}'}"  />
-                        <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
+                        <Label Text="Add New Order" />
                     </StackLayout>
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="AddNewCustomerTapped" />
+                        <TapGestureRecognizer Tapped="AddNewOrderTapped" />
                     </Frame.GestureRecognizers>
                 </Frame>
 
                 <Frame Grid.Row="0" Grid.Column="1">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Users}}"
-                               BackgroundColor="{StaticResource Secondary}" 
+                               BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="60"
                                />
                         <Label Text="{Binding TotalCustomer, StringFormat='Total Customers : {0}'}"  />
@@ -85,10 +85,10 @@
                 <Frame Grid.Row="1" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.AddressBook}}"
-                               BackgroundColor="{StaticResource Secondary}" 
+                               BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="Add New Order" />
+                        <Label Text="{Binding TodayOrders, StringFormat='Today Total : {0}'}"  />
                         <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
                     <Frame.GestureRecognizers>
@@ -99,7 +99,7 @@
                 <Frame Grid.Row="1" Grid.Column="1">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Box}}"
-                               BackgroundColor="{StaticResource Secondary}" 
+                               BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="60"
                                />
                         <Label Text="{Binding ReadyToDelivary, StringFormat='Ready For Delivery : {0}'}"  />
@@ -113,7 +113,7 @@
                 <Frame Grid.Row="2" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.SortAmountUp}}"
-                               BackgroundColor="{StaticResource Secondary}" 
+                               BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="60"
                                />
                         <Label Text="{Binding TotalOrders, StringFormat='Total Orders : {0}'}"  />
@@ -123,7 +123,7 @@
                 <Frame Grid.Row="2" Grid.Column="1">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Images}}"
-                               BackgroundColor="{StaticResource Secondary}" 
+                               BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="60"
                                />
                         <Label Text="Gallery" />
@@ -133,7 +133,7 @@
                 <Frame Grid.Row="3" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.UserCheck}}"
-                               BackgroundColor="{StaticResource Secondary}" 
+                               BackgroundColor="{StaticResource Primary}" 
                                WidthRequest="60"
                                />
                         <Label Text="Assign Order" />

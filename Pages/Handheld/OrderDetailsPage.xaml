@@ -5,42 +5,21 @@
              xmlns:vm="clr-namespace:MYPM.ViewModels"
              x:Class="MYPM.Pages.Handheld.OrderDetailsPage"
              Shell.NavBarIsVisible="False"
-             x:DataType="vm:OrderDetailsViewModel"
-             Title="OrdersPage">
-    <ContentPage.BindingContext>
-        <vm:OrderDetailsViewModel/>
-    </ContentPage.BindingContext>
+             x:DataType="models:NewOrderModel"
+             Title="{Binding CustomerName}">
+
     
-    <Grid RowDefinitions="Auto, 400, 66" Margin="20">
+    <Grid RowDefinitions="Auto, 400" Margin="20">
         <VerticalStackLayout VerticalOptions="Start" Spacing="8">
-            <Label Text="Current Order" Style="{StaticResource LargeTitle}"/>
-            <Label Text="{Binding Order.CustomerName, StringFormat='Name {0}'}"/>
+            <Label Text="{Binding CustomerName, StringFormat='Name {0}'}"/>
             <BoxView Style="{StaticResource HRule}"/>
         </VerticalStackLayout>
-
-        <!--<CollectionView Grid.Row="1" ItemsSource="{Binding Order}" VerticalScrollBarVisibility="Never" Background="Transparent">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Item">
-                    <Grid ColumnDefinitions="160,60,*" ColumnSpacing="8" Margin="0,8" HeightRequest="70">
-                        <Label Text="{Binding Title}" Grid.Column="0" VerticalOptions="Center"/>
-                        <Label Text="{Binding Quantity}" Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Start"/>
-                        <Label Text="{Binding Price, StringFormat='${0:N2}'}" Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Start"/>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-            <CollectionView.Header>
-                <Grid ColumnDefinitions="160,60,*" Margin="0,8" HeightRequest="40" ColumnSpacing="8">
-                        <Label Text="Item" Grid.Column="0" VerticalOptions="Center" Style="{StaticResource Headline}"/>
-                        <Label Text="Quantity" Grid.Column="1" VerticalOptions="Center" Style="{StaticResource Headline}"/>
-                        <Label Text="Price" Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Start" Style="{StaticResource Headline}"/>
-                        --><!-- <BoxView Style="{StaticResource HRule}" VerticalOptions="End" Grid.ColumnSpan="3" /> --><!--
-                    </Grid>
-            </CollectionView.Header>
-        </CollectionView>-->
-
-        <Grid Grid.Row="2">
-            <Button Text="Pay" Command="{Binding PayCommand}" HorizontalOptions="Fill"/>
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*,*"
+              ColumnSpacing="8" Margin="0,8">
+            <Label Text="{Binding MobileNumber, StringFormat='Mobile : {0}'}" Grid.Column="0" VerticalOptions="Center"/>
+            <Label Text="{Binding Address, StringFormat='Address : {0}'}" Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Start"/>
+            <Label Text="{Binding DueAmount, StringFormat='${0:N2}'}" Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Start"/>
         </Grid>
-
     </Grid>
 </ContentPage>

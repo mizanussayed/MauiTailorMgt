@@ -2,8 +2,9 @@
 
 public partial class OrderDetailsPage : ContentPage
 {
-    public OrderDetailsPage()
+    public OrderDetailsPage(NewOrderModel order)
     {
         InitializeComponent();
+        BindingContext = order;
     }
 }

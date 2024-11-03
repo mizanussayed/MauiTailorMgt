@@ -33,7 +33,7 @@
                         >
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:NewOrderModel">
-                    <Grid Padding="15" Margin="5" BackgroundColor="{StaticResource Secondary}">
+                    <Grid Padding="15" Margin="5" BackgroundColor="{StaticResource Tertiary}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -45,6 +45,7 @@
                         <Label Text="{Binding Id, StringFormat='SL : {0}'}" 
                                     FontAttributes="Bold" 
                                     FontSize="Medium"
+                                    TextColor="{StaticResource Primary}"
                                     />
 
                         <Label Text="{Binding CustomerName, StringFormat='Name : {0}'}" 
