@@ -1,3 +1,4 @@
+using MYPM.Common;
 using MYPM.Pages.Handheld;
 using MYPM.Services;
 
@@ -10,22 +11,16 @@ public partial class OrdersViewModel : ObservableObject
         DelayedLoad().ConfigureAwait(false);
     }
     [ObservableProperty]
-    private ObservableCollection<NewOrderModel> _orders;
+    private ObservableCollection<NewOrderModel>? _orders;
 
     [ObservableProperty]
-    private string? displayName;
-
-    [ObservableProperty]
-    private string? displayEmail;
-
-    [ObservableProperty]
-    private ImageSource? profilePhoto;
+    private NewOrderModel _newOrder = new();
 
     [ObservableProperty]
     private string? pageCurrentState = "Loading";
 
     [RelayCommand]
-    public async Task LogOut()
+    private static async Task LogOut()
     {
         var result = await Application.Current.MainPage.DisplayAlert("", "Do you want to logout?", "Yes", "Ooops, no");
         if (!result)
@@ -35,33 +30,19 @@ public partial class OrdersViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task GoToSetting()
-    {
-        await Shell.Current.GoToAsync($"//settings");
-    }
-    [RelayCommand]
     public async Task Refresh()
     {
-        await Task.Delay(1000);
         var orderService = new OrderService();
-        var dd = orderService.GetAllOrders().Result;
-        Orders = new ObservableCollection<NewOrderModel>(dd);
+        Orders = new ObservableCollection<NewOrderModel>( await orderService.GetAllOrders());
     }
-    [RelayCommand]
-    public async Task Search(string query)
-    {
-        await Task.Delay(1000);
-        // Orders = _orders.Contains( .Contains(query, StringComparison.CurrentCultureIgnoreCase));
-    }
-
 
     private async Task DelayedLoad()
     {
-
-        var orderService = new OrderService();
-        var dd = await orderService.GetAllOrders();
-        Orders = new ObservableCollection<NewOrderModel>(dd);
-        await Task.Delay(100);
+        if (Orders is null)
+        {
+            var orderService = new OrderService();
+            Orders = new ObservableCollection<NewOrderModel>(await orderService.GetAllOrders());
+        }
         PageCurrentState = "Loaded";
     }
 
@@ -92,5 +73,12 @@ public partial class OrdersViewModel : ObservableObject
         {
             Debug.WriteLine(ex.Message);
         }
+    }
+
+    [RelayCommand]
+    private async Task GetDetails(string Id)
+    {
+        var orderService = new OrderService();
+        NewOrder = await orderService.GetOrder(Id);
     }
 }

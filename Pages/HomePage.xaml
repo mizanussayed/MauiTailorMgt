@@ -7,11 +7,16 @@
              Shell.NavBarIsVisible="False"
              Background="{StaticResource DarkBg1Transparent}"
              Title="Dashboard">
+
     <ContentPage.Resources>
         <Style TargetType="Frame">
             <Setter Property="BackgroundColor" Value="{StaticResource Neutral}" />
             <Setter Property="CornerRadius" Value="15" />
             <Setter Property="Padding" Value="10" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="FontAttributes" Value="Bold" />
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -31,8 +36,8 @@
                     <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.User}}"
                            WidthRequest="50"
                            HeightRequest="50" />
-                    <StackLayout Padding="10,0,0,0" VerticalOptions="Center">
-                        <Label Text="Hello!" FontSize="Medium" FontAttributes="Bold"  Style="{StaticResource Title2}" />
+                    <StackLayout Padding="10,0,0,0" >
+                        <Label Text="Hello!" FontSize="Medium" FontAttributes="Bold"  Style="{StaticResource Title2}" HorizontalOptions="Start" />
                         <Label Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat='{0:dddd, MMMM dd yyyy}'}" />
                     </StackLayout>
                 </HorizontalStackLayout>
@@ -44,30 +49,20 @@
             </Grid>
 
             <!-- Buttons Section -->
-            <Grid ColumnSpacing="20" RowSpacing="20" Padding="5, 30">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Add Customer -->
+            <Grid ColumnSpacing="20"
+                  RowSpacing="20"
+                  Padding="5, 30" 
+                  ColumnDefinitions="*, *"
+                  RowDefinitions="*, *, *, *"
+                  >
                 <Frame Grid.Row="0" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center" >
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.UserPlus}}"
                                BackgroundColor="{StaticResource Secondary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="Add Customer" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-                        <!--<HorizontalStackLayout>
-                            <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
-                            <Label Text=" see details" HorizontalTextAlignment="Center" FontSize="Small"/>
-                        </HorizontalStackLayout>-->
+                        <Label Text="{Binding TodayOrders, StringFormat='Today Orders : {0}'}"  />
+                        <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AddNewCustomerTapped" />
@@ -80,8 +75,12 @@
                                BackgroundColor="{StaticResource Secondary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="View Customer" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <Label Text="{Binding TotalCustomer, StringFormat='Total Customers : {0}'}"  />
+                        <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ViewCustomerListTapped" />
+                    </Frame.GestureRecognizers>
                 </Frame>
                 <Frame Grid.Row="1" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
@@ -89,7 +88,8 @@
                                BackgroundColor="{StaticResource Secondary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="Add New Order" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <Label Text="Add New Order" />
+                        <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AddNewOrderTapped" />
@@ -102,7 +102,8 @@
                                BackgroundColor="{StaticResource Secondary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="Delivery Orders" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <Label Text="{Binding ReadyToDelivary, StringFormat='Ready For Delivery : {0}'}"  />
+                        <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="ViewInvoicesTapped"/>
@@ -115,7 +116,8 @@
                                BackgroundColor="{StaticResource Secondary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="Total Orders" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <Label Text="{Binding TotalOrders, StringFormat='Total Orders : {0}'}"  />
+                        <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Row="2" Grid.Column="1">
@@ -124,7 +126,7 @@
                                BackgroundColor="{StaticResource Secondary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="Gallery" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <Label Text="Gallery" />
                     </StackLayout>
                 </Frame>
 
@@ -134,7 +136,8 @@
                                BackgroundColor="{StaticResource Secondary}" 
                                WidthRequest="60"
                                />
-                        <Label Text="Assign Order" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                        <Label Text="Assign Order" />
+                        <Label Text="{x:Static a:IconFont.User}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AssignOrderTapped" />

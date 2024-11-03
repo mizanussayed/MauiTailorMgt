@@ -1,36 +1,20 @@
 using MYPM.Common.QRGeneration;
 
 namespace MYPM.Pages.Views;
-public partial class InvocieView : ContentPage
+public partial class InvoiceQR : ContentPage
 {
     private string _invoiceFilePath = string.Empty;
 
-    public InvocieView()
+    public InvoiceQR(NewOrderModel invoice)
     {
         InitializeComponent();
-    }
-
-    private async void OnGenerateInvoiceClicked(object sender, EventArgs e)
-    {
-        var invoice = new Invoice
-        {
-            InvoiceNumber = "INV-12345",
-            Date = DateTime.Now,
-            Customer = new Customer() { Address = "123 Main St", Mobile = "01730-298184", Name = "Md Abdur Rahman ted " },
-            Items =
-                [
-                    new() { Description = "Item 1", Quantity = 1, Price = 9.99m },
-                    new() { Description = "Item 2", Quantity = 2, Price = 19.99m }
-                ],
-        };
-
-        await GenerateInvoice(invoice);
+       GenerateInvoice(invoice).ConfigureAwait(true);
     }
 
 
-    private async Task GenerateInvoice(Invoice invoice)
+    private async Task GenerateInvoice(NewOrderModel invoice)
     {
-        Label header = new() { Text = "Invoice", FontSize = 24, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
+        Label header = new() { Text = "Yousuf Tailors", FontSize = 24, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
         var grid = new Grid()
         {
             ColumnDefinitions =
@@ -44,14 +28,14 @@ public partial class InvocieView : ContentPage
         };
 
         var stactlayout = new StackLayout
-        {   await CreateLabel($"Invoice Number: {invoice.InvoiceNumber}"),
-            await CreateLabel($"Date: {invoice.Date:dd-MMM-yyyy}"),
-            await CreateLabel($"Customer: {invoice.Customer.Name}"),
-            await CreateLabel($"Mobile: {invoice.Customer.Mobile}"),
+        {   await CreateLabel($"Invoice Number: {invoice.Id}"),
+            await CreateLabel($"Date: {invoice.DeliveryDate:dd-MMM-yyyy}"),
+            await CreateLabel($"Customer: {invoice.CustomerName}"),
+            await CreateLabel($"Mobile: {invoice.MobileNumber}"),
             await CreateLabel($"Total Amount: {invoice.TotalAmount} BDT")
         };
-       // var barcode = QrUtils.MakeQrCode(invoice.InvoiceNumber);
-        var barcode = QrUtils.MakeQrCodeResult(invoice.InvoiceNumber).QrCode;
+
+        var barcode = QrUtils.MakeQrCodeResult(createQRText(invoice)).QrCode;
         barcode.WidthRequest = 100;
         grid.Add(stactlayout, 0, 0);
         grid.Add(barcode, 1, 0);
@@ -68,7 +52,7 @@ public partial class InvocieView : ContentPage
             Content = new VerticalStackLayout() { header, grid }
         };
 
-        verticalstack.Add(frame);
+        qrBox.Add(frame);
         _invoiceFilePath = await SaveInvoiceAsImage(frame).ConfigureAwait(false);
     }
 
@@ -115,5 +99,14 @@ public partial class InvocieView : ContentPage
             TextColor = Colors.Black,
             FontSize = 12,
         });
+    }
+
+    private string createQRText(NewOrderModel invoice)
+    {
+        return $"Invoice Number: {invoice.Id}\n" +
+               $"Date: {invoice.DeliveryDate:d}\n" +
+               $"Customer: {invoice.CustomerName}\n" +
+               $"Mobile: {invoice.MobileNumber}\n" +
+               $"Total: {invoice.TotalAmount} BDT";
     }
 }

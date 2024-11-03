@@ -19,9 +19,10 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(OrdersPage), typeof(OrdersPage));
         Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(AddCustomer), typeof(AddCustomer));
+        Routing.RegisterRoute(nameof(CustomerListPage), typeof(CustomerListPage));
         Routing.RegisterRoute(nameof(NewOrderPage), typeof(NewOrderPage));
         Routing.RegisterRoute(nameof(InvoiceListPage), typeof(InvoiceListPage));
-        Routing.RegisterRoute(nameof(InvocieView), typeof(InvocieView));
+        Routing.RegisterRoute(nameof(InvoiceQR), typeof(InvoiceQR));
         Routing.RegisterRoute(nameof(NewOrderListPage), typeof(NewOrderListPage));
     }
 }

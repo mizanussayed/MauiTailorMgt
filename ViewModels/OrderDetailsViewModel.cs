@@ -7,7 +7,7 @@ namespace MYPM.ViewModels;
 public partial class OrderDetailsViewModel : ObservableObject
 {
     [ObservableProperty]
-    Order order = new();
+    NewOrderModel order;
 
     [ObservableProperty]
     Item? added;

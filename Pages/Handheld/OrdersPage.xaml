@@ -109,7 +109,7 @@
                                 <DataTemplate x:DataType="models:NewOrderModel">
                                     <Grid ColumnDefinitions="80,*,100,*" ColumnSpacing="8" Margin="0,8">
                                         <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding PayCommand}"/>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType= {x:Type vm:OrdersViewModel }}, Path= PayCommand}"/>
                                         </Grid.GestureRecognizers>
                                         <Border Stroke="Transparent" 
                                                 StrokeThickness="1" 
@@ -117,7 +117,7 @@
                                                 HorizontalOptions="Start"
                                                 HeightRequest="60" 
                                                 WidthRequest="60" 
-                                                Background="{x:Static models:NewOrderModel.RandomBrush}">
+                                                Background="{x:Static vm:OrdersViewModel.RandomBrush}">
                                             <Border.StrokeShape>
                                                 <Ellipse Frame="0,0,60,60"  />
                                             </Border.StrokeShape>

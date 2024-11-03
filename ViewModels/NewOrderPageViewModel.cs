@@ -1,6 +1,4 @@
-﻿
-using CommunityToolkit.Maui.Alerts;
-using MYPM.Services;
+﻿using MYPM.Services;
 
 namespace MYPM.ViewModels;
 
@@ -19,14 +17,10 @@ public partial class NewOrderPageViewModel : ObservableObject
     private SelowerOrder? selowerOrder;
 
     [RelayCommand]
-    private async Task Save()
+    private async Task<bool> Save()
     {
         var orderService = new OrderService();
-        var createdOrder = await orderService.CreateOrderWithSubCollections(Order, ArabianOrder, PanjabiOrder, SelowerOrder);
-
-       // var response = Snackbar.Make("Successfully Order Saved", null, "Ok", TimeSpan.FromSeconds(3));
-        // await response.Show();
-        await Shell.Current.Navigation.PopAsync();
+        return await orderService.CreateOrder(Order, ArabianOrder, PanjabiOrder, SelowerOrder);
     }
     [RelayCommand]
     private async Task Cancel()

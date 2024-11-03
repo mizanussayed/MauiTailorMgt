@@ -3,7 +3,6 @@ using Appwrite;
 using Appwrite.Models;
 using MYPM.Configurations;
 using System.Text.Json;
-using MYPM.Common;
 namespace MYPM.Services;
 public class OrderService
 {
@@ -13,8 +12,6 @@ public class OrderService
     private readonly string _arabianOrderCollectionId;
     private readonly string _panjabiOrderCollectionId;
     private readonly string _selowerOrderCollectionId;
-    private int CurrentMonthOrderId = 0;
-    public int CurrentMonthTotal { get; private set; } = 0;
 
     public OrderService()
     {
@@ -25,14 +22,14 @@ public class OrderService
         _selowerOrderCollectionId = AppWriteClient.SelowerCollectionId();
     }
 
-    public async Task<Document?> CreateOrderWithSubCollections(NewOrderModel order, ArabianOrder? arabianOrder, PanjabiOrder? panjabiOrder, SelowerOrder? selowerOrder)
+    public async Task<bool> CreateOrder(NewOrderModel order, ArabianOrder? arabianOrder, PanjabiOrder? panjabiOrder, SelowerOrder? selowerOrder)
     {
         try
         {
             var orderDoc = await _databases.CreateDocument(
                 _databaseId,
                 _ordersCollectionId,
-                GenerateOrderSerial.GetSL(CurrentMonthOrderId),
+                order.Id,
                 new Dictionary<string, object>
                 {
                 { "customerName", order.CustomerName },
@@ -120,11 +117,11 @@ public class OrderService
                     }
                 );
             }
-            return orderDoc;
+            return orderDoc is not null;
         }
         catch (Exception)
         {
-            return null;
+            return false;
         }
     }
 
@@ -145,16 +142,41 @@ public class OrderService
 
                 result = response.Documents.Select(document =>
                 {
-                    var obj = JsonSerializer.Serialize(document.Data, options);
-                    return JsonSerializer.Deserialize<NewOrderModel>(obj, options);
-                }).ToList();
+                    string res = JsonSerializer.Serialize(document.Data, options);
+                    return JsonSerializer.Deserialize<NewOrderModel>(res, options);
+                }).OrderByDescending(d => d.OrderDate).ToList();
             }
-            CurrentMonthOrderId = result.Where(o => o.OrderDate.Month == DateTime.Now.Month).Count() + 1;
             return result;
         }
         catch (Exception ex)
         {
-            throw new Exception("Error retrieving orders", ex);
+            _ = ex.Message.ToString();
+
+            return await Task.FromResult(Enumerable.Empty<NewOrderModel>().ToList());
+        }
+    }
+    public async  Task<NewOrderModel> GetOrder(string Id)
+    {
+        try
+        {
+            var result = new NewOrderModel();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+            };
+            var response = await _databases.GetDocument(_databaseId, _ordersCollectionId, Id);
+            if (response.Id  != null)
+            {
+                var obj = JsonSerializer.Serialize(response.Data, options);
+                result = JsonSerializer.Deserialize<NewOrderModel>(obj, options);
+            }
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _ = ex.Message.ToString();
+            return await Task.FromResult(new NewOrderModel());
         }
     }
 }

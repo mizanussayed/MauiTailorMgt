@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MYPM.Pages.Views.AddAdvanceAmount"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
+             Padding="20"
+             BackgroundColor="#80000000"
+             Shell.NavBarHasShadow="False"
+             Shell.NavBarIsVisible="False"
+             Title=""
+             x:DataType="vm:NewOrderPageViewModel"
+             >
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="Default" />
+            <Setter Property="HorizontalOptions" Value="Start" />
+        </Style>
+    </ContentPage.Resources>
+    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+        <Frame CornerRadius="10" BackgroundColor="{StaticResource Secondary}" Padding="0, 10">
+            <VerticalStackLayout Spacing="15">
+                <VerticalStackLayout>
+                    <Label Text="Add Amount"  HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Padding="30, 10" Spacing="10">
+                    <Label Text="{Binding Order.TotalAmount, StringFormat='Total       : {0}'}"  />
+                    <Label Text="{Binding Order.DueAmount, StringFormat='Due        : {0}'}" 
+                           x:Name="DueLbl"/>
+                    <Label Text="Advance :"/>
+                    <Border 
+                        HeightRequest="40"
+                        WidthRequest="200"
+                        HorizontalOptions="FillAndExpand"
+                        Background="{StaticResource WhiteBrush}"
+                        Stroke="{StaticResource SecondaryBrush}"
+                        StrokeThickness="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle  CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
+                            Keyboard="Numeric"
+                            Background="Transparent"
+                            x:Name="PaidEntry"
+                            TextChanged="PaidTextChanged"/>
+                    </Border>
+                    <Button Text="Save"  Clicked="Button_Clicked"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+    </VerticalStackLayout>
+</ContentPage>

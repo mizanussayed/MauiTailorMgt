@@ -1,23 +1,23 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
-using Microsoft.Maui.Controls.Shapes;
+﻿using Microsoft.Maui.Controls.Shapes;
+using MYPM.Pages.Views;
 using MYPM.ViewModels;
+using System.Web;
 
 namespace MYPM.Pages.Handheld;
 
+[QueryProperty("NextId", "NextId")]
 public partial class NewOrderPage : ContentPage
 {
     private int childFormIdCounter = 0;
-
+    public string NextId { get; set; } = string.Empty;
     public NewOrderPage()
-    {
+   {
         InitializeComponent();
-        BindingContext = new NewOrderPageViewModel();
     }
 
     private void OnAddMeasurementType(object sender, EventArgs e)
     {
+        OrderSerialText.Text = "Sn : " + NextId;
         var context = (BindingContext as NewOrderPageViewModel);
         var orderFor = context?.Order.OrderFor?.ToLower();
         var orderText = string.Empty;
@@ -304,12 +304,18 @@ public partial class NewOrderPage : ContentPage
 
     private async void BtnSaveClicked(object sender, EventArgs e)
     {
-        var context = (BindingContext as NewOrderPageViewModel);
+        if (BindingContext is not NewOrderPageViewModel context) return;
 
-        if ((context?.ArabianOrder is not null) || (context?.ArabianOrder is not null) || context?.SelowerOrder is not null)
+        context.Order.TotalAmount =
+            (context.ArabianOrder?.Amount ?? 0) * (context.ArabianOrder?.Quantity ?? 0) +
+            (context.SelowerOrder?.Amount ?? 0) * (context.SelowerOrder?.Quantity ?? 0) +
+            (context.PanjabiOrder?.Amount ?? 0) * (context.PanjabiOrder?.Quantity ?? 0);
+
+        if (context.Order.TotalAmount > 0)
         {
-           // await Shell.Current.DisplayPromptAsync()
-            await context.SaveCommand.ExecuteAsync(null);
+            context.Order.DueAmount = context.Order.TotalAmount - context.Order.PaidAmount;
+            context.Order.Id = NextId;
+            await Shell.Current.Navigation.PushModalAsync(new AddAdvanceAmount(context), true);
         }
         else
         {

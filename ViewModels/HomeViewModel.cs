@@ -1,41 +1,41 @@
-﻿using MYPM.Messages;
-using MYPM.Pages;
+﻿using MYPM.Common;
+using MYPM.Services;
 
 namespace MYPM.ViewModels;
-
 public partial class HomeViewModel : ObservableObject
 {
-    [ObservableProperty]
-    ObservableCollection<Item> _products;
-
-    [ObservableProperty]
-    string category = ItemCategory.Noodles.ToString();
-
-    partial void OnCategoryChanged(string value)
-    {
-        ItemCategory category = (ItemCategory)Enum.Parse(typeof(ItemCategory), value);
-        Products = new ObservableCollection<Item>(
-            AppData.Items.Where(x => x.Category == category).ToList()
-        );
-        OnPropertyChanged(nameof(Products));
-    }
-
     public HomeViewModel()
     {
-        Products = new ObservableCollection<Item>(
-            AppData.Items.Where(x => x.Category == ItemCategory.Noodles).ToList()
-        );
+        RefreshData().ConfigureAwait(true);
     }
+    [ObservableProperty]
+    private int _todayOrders = 0;  
+    [ObservableProperty]
+    private int _totalCustomer = 0;
+    [ObservableProperty]
+    private int _totalOrders = 0;  
+    [ObservableProperty]
+    private int _monthTotalOrders = 0;
+    [ObservableProperty]
+    private int _readyToDelivary = 0;
+    [ObservableProperty]
+    private ObservableCollection<NewOrderModel>? _orders;
 
-    [RelayCommand]
-    async Task Preferences()
-    {
-        await Shell.Current.GoToAsync($"{nameof(SettingsPage)}?sub=appearance");
-    }
+    [ObservableProperty]
+    private string _nextId = string.Empty;
 
-    [RelayCommand]
-    void AddProduct()
+    private async Task RefreshData()
     {
-        WeakReferenceMessenger.Default.Send<AddProductMessage>(new AddProductMessage(true));
+        if (Orders is null) {
+
+            var orderService = new OrderService();
+            Orders = new ObservableCollection<NewOrderModel>(await orderService.GetAllOrders());
+        }
+        TotalOrders = Orders.Count;
+        TotalCustomer = Orders.Select(c => c.MobileNumber).Distinct().Count();
+        MonthTotalOrders = Orders.Count(o => o.OrderDate.Month == DateTime.Now.Month);
+        TodayOrders = Orders.Count(o => o.OrderDate.Date == DateTime.Now.Date);
+        NextId = GenerateOrderSerial.GetSL(TodayOrders + 1);
+        ReadyToDelivary = Orders.Count(d => d.Status == OrderStatus.Completed);
     }
 }

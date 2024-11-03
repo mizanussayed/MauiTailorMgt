@@ -44,19 +44,20 @@
         <Grid RowDefinitions="*,108" ColumnDefinitions="*,*" ColumnSpacing="0">
             <ScrollView Grid.ColumnSpan="2">
                 <VerticalStackLayout Spacing="20" Margin="24">
-                    <Label Text="Mobile Number"/>
-                    <Border>
-                        <Border.StrokeShape>
-                            <RoundRectangle />
-                        </Border.StrokeShape>
-                        <Entry  Placeholder="01730-298184" Text="{Binding Order.MobileNumber}"  />
-                    </Border>
+                    <Label  Text="Sn : " x:Name="OrderSerialText"/>
                     <Label Text="Name"/>
                     <Border>
                         <Border.StrokeShape>
                             <RoundRectangle />
                         </Border.StrokeShape>
                         <Entry Placeholder="Enter  Name" Text="{Binding Order.CustomerName}" />
+                    </Border>
+                    <Label Text="Mobile Number"/>
+                    <Border>
+                        <Border.StrokeShape>
+                            <RoundRectangle />
+                        </Border.StrokeShape>
+                        <Entry  Placeholder="01730-298184" Text="{Binding Order.MobileNumber}" Keyboard="Numeric" />
                     </Border>
                     <Label Text="Address"/>
                     <Border HeightRequest="100">

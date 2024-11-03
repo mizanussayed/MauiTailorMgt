@@ -1,9 +1,8 @@
-﻿using MYPM.Pages.Handheld;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace MYPM.Models;
 
-public partial class NewOrderModel : ObservableObject
+public partial class NewOrderModel 
 {
     [JsonPropertyName("$id")]
     public string Id { get; set; } = string.Empty;
@@ -17,36 +16,9 @@ public partial class NewOrderModel : ObservableObject
     public long DueAmount { get; set; } = 0;
     public long TotalAmount { get; set; } = 0;
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
-
-
-    private static readonly Random _random = new Random();
-
-    private static readonly string[] brushes = ["#FFB572", "#65B0F6", "#FF7CA3", "#50D1AA", "#9290FE"];
-    public static Brush RandomBrush
-    {
-        get
-        {
-            var id = _random.Next(0, 4);
-            return new SolidColorBrush(Color.Parse(brushes[id]));
-        }
-    }
-
-    [RelayCommand]
-    private async Task Pay()
-    {
-        try
-        {
-            var navigationParameter = new Dictionary<string, object>
-            {
-                { "Order", this }
-            };
-            await Shell.Current.GoToAsync($"{nameof(OrderDetailsPage)}", navigationParameter);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex.Message);
-        }
-    }
+    //public ArabianOrder? ArabianOrder { get; set; }
+    //public SelowerOrder? SelowerOrder { get; set; }
+    //public PanjabiOrder? PanjabiOrder { get; set; }
 }
 
 public sealed class ArabianOrder

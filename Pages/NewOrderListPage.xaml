@@ -4,69 +4,71 @@
              xmlns:models="clr-namespace:MYPM.Models"
              xmlns:vm="clr-namespace:MYPM.ViewModels"
              x:Class="MYPM.Pages.NewOrderListPage"
-             Shell.NavBarIsVisible="False"
              x:DataType="vm:OrdersViewModel"
              Title="Orders">
 
-    <ContentPage.BindingContext>
-        <vm:OrdersViewModel/>
-    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Transparent" />
+                                <Setter Property="RowSpacing" Value="15" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
 
     <ScrollView Padding="10">
-        <CollectionView ItemsSource="{Binding Orders}">
+        <CollectionView ItemsSource="{Binding Orders}" 
+                        SelectionMode="Single"
+                        SelectionChanged="CollectionView_SelectionChanged"
+                        >
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:NewOrderModel">
-                    <SwipeView>
-                        <SwipeView.LeftItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Edit" BackgroundColor="LightBlue" Command="{Binding PayCommand}" />
-                                <SwipeItem Text="Delete" BackgroundColor="LightCoral" Command="{Binding PayCommand}" />
-                            </SwipeItems>
-                        </SwipeView.LeftItems>
-
-                        <Grid Padding="15" Margin="5" BackgroundColor="White">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Text="{Binding Id, StringFormat='Order Serial : {0}'}" 
+                    <Grid Padding="15" Margin="5" BackgroundColor="{StaticResource Secondary}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Text="{Binding Id, StringFormat='SL : {0}'}" 
                                     FontAttributes="Bold" 
                                     FontSize="Medium"
-                                    TextColor="Black"/>
-                            
-                            <Label Text="{Binding CustomerName, StringFormat='Name : {0}'}" 
+                                    />
+
+                        <Label Text="{Binding CustomerName, StringFormat='Name : {0}'}" 
                                    Grid.Row="1" 
                                    FontAttributes="Bold" 
                                    FontSize="Medium"
-                                   TextColor="Black"/>
-                           
-                            <Label Text="{Binding MobileNumber, StringFormat='Mobile No: {0}'}" 
+                                   />
+
+                        <Label Text="{Binding MobileNumber, StringFormat='Mobile No: {0}'}" 
                                    Grid.Row="2" 
-                                   TextColor="Gray" 
                                    FontSize="Small"/>
-                            <Label Text="{Binding Address, StringFormat='Address : {0}'}" Grid.Row="3" 
-                            TextColor="Gray" FontSize="Small"/>
+                        <Label Text="{Binding Address, StringFormat='Address : {0}'}" Grid.Row="3"  FontSize="Small"/>
 
-                            <StackLayout Orientation="Horizontal" Grid.Row="4" 
+                        <StackLayout Orientation="Horizontal" Grid.Row="4" 
                                   HorizontalOptions="Start">
-                                <Label Text="{Binding TotalAmount, StringFormat='Total: {0} tk'}" 
+                            <Label Text="{Binding TotalAmount, StringFormat='Total: {0} tk'}" 
                                 TextColor="Green" FontAttributes="Bold" />
-                                <Label Text="{Binding DueAmount, StringFormat='Due: {0} tk'}" 
+                            <Label Text="{Binding DueAmount, StringFormat='Due: {0} tk'}" 
                                 TextColor="Red" FontAttributes="Bold" Margin="10,0,0,0"/>
-                            </StackLayout>
+                        </StackLayout>
 
-                            <Label Text="{Binding OrderDate, StringFormat='Ordered on: {0:dd MMM yyyy}'}" 
-                            Grid.Row="5" TextColor="DarkGray" FontSize="Small"/>
-                            <Label Text="{Binding DeliveryDate, StringFormat='Delivery by : {0:dd MMM yyyy}'}" 
-                            Grid.Row="6"
-                            TextColor="DarkGray" FontSize="Small"/>
-                        </Grid>
-                    </SwipeView>
+                        <Label Text="{Binding OrderDate, StringFormat='Ordered on: {0:dd MMM yyyy}'}" 
+                            Grid.Row="5" FontSize="Small"/>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
