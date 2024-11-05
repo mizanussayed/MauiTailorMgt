@@ -2,7 +2,7 @@
 
 namespace MYPM.Models;
 
-public partial class NewOrderModel 
+public class NewOrderModel 
 {
     [JsonPropertyName("$id")]
     public string Id { get; set; } = string.Empty;
@@ -16,15 +16,65 @@ public partial class NewOrderModel
     public long DueAmount { get; set; } = 0;
     public long TotalAmount { get; set; } = 0;
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
-    //public ArabianOrder? ArabianOrder { get; set; }
-    //public SelowerOrder? SelowerOrder { get; set; }
-    //public PanjabiOrder? PanjabiOrder { get; set; }
+    public ArabianOrder? ArabianOrder { get; set; }
+    public SelowerOrder? SelowerOrder { get; set; }
+    public PanjabiOrder? PanjabiOrder { get; set; }
+
+    public void MapEmbeddedProperties(Dictionary<string, object> jsonData)
+    {
+        if (jsonData.TryGetValue("arabian.amount", out object? value))
+        {
+            ArabianOrder = new ArabianOrder
+            {
+                Amount = Convert.ToInt32(value),
+                Quantity = Convert.ToInt32(jsonData["arabian.quantity"]),
+                Length = Convert.ToDecimal(jsonData["arabian.length"]),
+                Tira = Convert.ToDecimal(jsonData["arabian.tira"]),
+                Hata = Convert.ToDecimal(jsonData["arabian.hata"]),
+                Cuff = Convert.ToDecimal(jsonData["arabian.cuff"]),
+                Mohori = Convert.ToDecimal(jsonData["arabian.mohori"]),
+                Rakaba = Convert.ToDecimal(jsonData["arabian.rakaba"]),
+                Ness = Convert.ToDecimal(jsonData["arabian.ness"]),
+                Note = jsonData["arabian.note"]?.ToString() ?? string.Empty
+            };
+        }
+
+        if (jsonData.TryGetValue("panjabi.amount", out _))
+        {
+            PanjabiOrder = new PanjabiOrder
+            {
+                Amount = Convert.ToInt32(value),
+                Quantity = Convert.ToInt32(jsonData["panjabi.quantity"]),
+                Length = Convert.ToDecimal(jsonData["panjabi.length"]),
+                Sina = Convert.ToDecimal(jsonData["panjabi.sina"]),
+                Komor = Convert.ToDecimal(jsonData["panjabi.komor"]),
+                Hata = Convert.ToDecimal(jsonData["panjabi.hata"]),
+                Cuff = Convert.ToDecimal(jsonData["panjabi.cuff"]),
+                Mohori = Convert.ToDecimal(jsonData["panjabi.mohori"]),
+                Rakaba = Convert.ToDecimal(jsonData["panjabi.rakaba"]),
+                Note = jsonData["panjabi.note"]?.ToString() ?? string.Empty
+            };
+        }
+
+        if (jsonData.TryGetValue("selower.amount", out _))
+        {
+            SelowerOrder = new SelowerOrder
+            {
+                Amount = Convert.ToInt32(value),
+                Quantity = Convert.ToInt32(jsonData["selower.quantity"]),
+                Length = Convert.ToDecimal(jsonData["selower.length"]),
+                Hip = Convert.ToDecimal(jsonData["selower.hip"]),
+                Komor = Convert.ToDecimal(jsonData["selower.komor"]),
+                Ness = Convert.ToDecimal(jsonData["selower.ness"]),
+                Note = jsonData["selower.note"]?.ToString() ?? string.Empty
+            };
+        }
+    }
+
 }
 
 public sealed class ArabianOrder
 {
-    public long Id { get; set; }
-    public long OrderId { get; set; }
     public int Amount { get; set; } = 500;
     public int Quantity { get; set; } = 1;
     public decimal Length { get; set; } = 50;
@@ -35,8 +85,6 @@ public sealed class ArabianOrder
     public decimal Rakaba { get; set; } = 10;
     public decimal Ness { get; set; } = 30;
     public string Note { get; set; } = string.Empty;
-    public long AssignTo { get; set; }
-    public OrderStatus Status { get; set; } = OrderStatus.Pending;
 }
 
 public sealed class PanjabiOrder
@@ -53,8 +101,6 @@ public sealed class PanjabiOrder
     public decimal Mohori { get; set; } = 22;
     public decimal Rakaba { get; set; } = 30;
     public string Note { get; set; } = string.Empty;
-    public long AssignTo { get; set; }
-    public OrderStatus Status { get; set; } = OrderStatus.Pending;
 }
 
 public sealed class SelowerOrder
@@ -68,8 +114,6 @@ public sealed class SelowerOrder
     public decimal Komor { get; set; } = 35;
     public decimal Ness { get; set; } = 15;
     public string Note { get; set; } = string.Empty;
-    public long AssignTo { get; set; }
-    public OrderStatus Status { get; set; } = OrderStatus.Pending;
 }
 
 public enum OrderStatus

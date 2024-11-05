@@ -9,6 +9,7 @@
             <VerticalStackLayout x:Name="qrBox" >
             </VerticalStackLayout>
             <Button Text="Share Invoice" Clicked="OnShareInvoiceClicked"/>
+            <Button Text="Back" Clicked="OnBackClicked"/>
         </StackLayout>
     </ScrollView>
 </ContentPage>

@@ -319,7 +319,7 @@ public partial class NewOrderPage : ContentPage
         }
         else
         {
-            Shell.Current.DisplayAlert("Add Measurement", "Arabian / Panjabi / Selower", "OK");
+           await Shell.Current.DisplayAlert("Add Measurement", "Arabian / Panjabi / Selower", "OK");
 #if ANDROID
           //  Snackbar.Make("Please Select Any Order Measurement", null, "Ok", TimeSpan.FromSeconds(3));
 #elif WINDOWS

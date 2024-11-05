@@ -9,114 +9,74 @@ public class OrderService
     private readonly Databases _databases = new AppWriteClient().GetDatabase();
     private readonly string _databaseId;
     private readonly string _ordersCollectionId;
-    private readonly string _arabianOrderCollectionId;
-    private readonly string _panjabiOrderCollectionId;
-    private readonly string _selowerOrderCollectionId;
 
     public OrderService()
     {
         _databaseId = AppWriteClient.DatabaseId();
         _ordersCollectionId = AppWriteClient.OrderCollectionId();
-        _arabianOrderCollectionId = AppWriteClient.ArabianCollectionId();
-        _panjabiOrderCollectionId = AppWriteClient.PanjabiCollectionId();
-        _selowerOrderCollectionId = AppWriteClient.SelowerCollectionId();
     }
 
     public async Task<bool> CreateOrder(NewOrderModel order, ArabianOrder? arabianOrder, PanjabiOrder? panjabiOrder, SelowerOrder? selowerOrder)
     {
         try
         {
-            var orderDoc = await _databases.CreateDocument(
-                _databaseId,
-                _ordersCollectionId,
-                order.Id,
-                new Dictionary<string, object>
-                {
+            Dictionary<string, object> data = new()
+            {
                 { "customerName", order.CustomerName },
                 { "mobileNumber", order.MobileNumber },
                 { "address", order.Address },
                 { "orderDate", order.OrderDate },
                 { "deliveryDate", order.DeliveryDate },
-                { "orderFor", order.OrderFor },
                 { "paidAmount", order.PaidAmount },
                 { "dueAmount", order.DueAmount },
                 { "totalAmount", order.TotalAmount },
-                { "status", (int)order.Status }
-                }
-            );
-
-
-            if (arabianOrder != null)
-            {
-                await _databases.CreateDocument(
-                    _databaseId,
-                    _arabianOrderCollectionId,
-                    ID.Unique(),
-                    new Dictionary<string, object>
-                    {
-                    { "orderId", orderDoc.Id },
-                    { "amount", arabianOrder.Amount },
-                    { "quantity", arabianOrder.Quantity },
-                    { "length", arabianOrder.Length },
-                    { "tira", arabianOrder.Tira },
-                    { "hata", arabianOrder.Hata },
-                    { "cuff", arabianOrder.Cuff },
-                    { "mohori", arabianOrder.Mohori },
-                    { "rakaba", arabianOrder.Rakaba },
-                    { "ness", arabianOrder.Ness },
-                    { "note", arabianOrder.Note },
-                    { "assignTo", arabianOrder.AssignTo },
-                    { "status", (int)arabianOrder.Status }
-                    }
-                );
-            }
+                { "status", (int)order.Status },
+                { "assignTo", 111 }
+            };
 
             if (panjabiOrder != null)
             {
-                await _databases.CreateDocument(
-                   _databaseId,
-                   _panjabiOrderCollectionId,
-                   ID.Unique(),
-                   new Dictionary<string, object>
-                   {
-                    { "orderId", orderDoc.Id },
-                    { "amount", panjabiOrder.Amount },
-                    { "quantity", panjabiOrder.Quantity },
-                    { "length", panjabiOrder.Length },
-                    { "sina", panjabiOrder.Sina },
-                    { "komor", panjabiOrder.Komor },
-                    { "hata", panjabiOrder.Hata },
-                    { "cuff", panjabiOrder.Cuff },
-                    { "mohori", panjabiOrder.Mohori },
-                    { "rakaba", panjabiOrder.Rakaba },
-                    { "note", panjabiOrder.Note },
-                    { "assignTo", panjabiOrder.AssignTo },
-                    { "status", (int)panjabiOrder.Status }
-                   }
-               );
+                data.Add("panjabi.amount", panjabiOrder.Amount);
+                data.Add("panjabi.quantity", panjabiOrder.Quantity);
+                data.Add("panjabi.length", panjabiOrder.Length);
+                data.Add("panjabi.sina", panjabiOrder.Sina);
+                data.Add("panjabi.komor", panjabiOrder.Komor);
+                data.Add("panjabi.hata", panjabiOrder.Hata);
+                data.Add("panjabi.cuff", panjabiOrder.Cuff);
+                data.Add("panjabi.mohori", panjabiOrder.Mohori);
+                data.Add("panjabi.rakaba", panjabiOrder.Rakaba);
+                data.Add("panjabi.note", panjabiOrder.Note);
             }
 
+            if (arabianOrder != null)
+            {
+                data.Add("arabian.amount", arabianOrder.Amount);
+                data.Add("arabian.quantity", arabianOrder.Quantity);
+                data.Add("arabian.length", arabianOrder.Length);
+                data.Add("arabian.tira", arabianOrder.Tira);
+                data.Add("arabian.hata", arabianOrder.Hata);
+                data.Add("arabian.cuff", arabianOrder.Cuff);
+                data.Add("arabian.mohori", arabianOrder.Mohori);
+                data.Add("arabian.rakaba", arabianOrder.Rakaba);
+                data.Add("arabian.ness", arabianOrder.Ness);
+                data.Add("arabian.note", arabianOrder.Note);
+            }
             if (selowerOrder != null)
             {
-                await _databases.CreateDocument(
-                    _databaseId,
-                    _selowerOrderCollectionId,
-                    ID.Unique(),
-                    new Dictionary<string, object>
-                    {
-                    { "orderId", orderDoc.Id },
-                    { "amount", selowerOrder.Amount },
-                    { "quantity", selowerOrder.Quantity },
-                    { "length", selowerOrder.Length },
-                    { "hip", selowerOrder.Hip },
-                    { "komor", selowerOrder.Komor },
-                    { "ness", selowerOrder.Ness },
-                    { "note", selowerOrder.Note },
-                    { "assignTo", selowerOrder.AssignTo },
-                    { "status", (int)selowerOrder.Status }
-                    }
-                );
+                data.Add("selower.amount", selowerOrder.Amount);
+                data.Add("selower.quantity", selowerOrder.Quantity);
+                data.Add("selower.length", selowerOrder.Length);
+                data.Add("selower.hip", selowerOrder.Hip);
+                data.Add("selower.komor", selowerOrder.Komor);
+                data.Add("selower.ness", selowerOrder.Ness);
+                data.Add("selower.note", selowerOrder.Note);
             }
+            var orderDoc = await _databases.CreateDocument(
+                _databaseId,
+                _ordersCollectionId,
+                order.Id,
+                data
+            );
             return orderDoc is not null;
         }
         catch (Exception)
@@ -140,11 +100,17 @@ public class OrderService
                     WriteIndented = true,
                 };
 
-                result = response.Documents.Select(document =>
+                foreach (var document in response.Documents)
                 {
-                    string res = JsonSerializer.Serialize(document.Data, options);
-                    return JsonSerializer.Deserialize<NewOrderModel>(res, options);
-                }).OrderByDescending(d => d.OrderDate).ToList();
+                    string res = JsonSerializer.Serialize(document.Data);
+                    var newOrder = JsonSerializer.Deserialize<NewOrderModel>(res, options);
+                    if (newOrder is not null)
+                    {
+                        newOrder.MapEmbeddedProperties(document.Data);
+                        result.Add(newOrder);
+                    }
+
+                }
             }
             return result;
         }
@@ -155,7 +121,7 @@ public class OrderService
             return await Task.FromResult(Enumerable.Empty<NewOrderModel>().ToList());
         }
     }
-    public async  Task<NewOrderModel> GetOrder(string Id)
+    public async Task<NewOrderModel> GetOrder(string Id)
     {
         try
         {
@@ -166,12 +132,12 @@ public class OrderService
                 WriteIndented = true,
             };
             var response = await _databases.GetDocument(_databaseId, _ordersCollectionId, Id);
-            if (response.Id  != null)
+            if (response.Data is not null)
             {
                 var obj = JsonSerializer.Serialize(response.Data, options);
                 result = JsonSerializer.Deserialize<NewOrderModel>(obj, options);
             }
-            return result;
+            return result ?? new NewOrderModel();
         }
         catch (Exception ex)
         {
@@ -179,6 +145,7 @@ public class OrderService
             return await Task.FromResult(new NewOrderModel());
         }
     }
+
 }
 
 

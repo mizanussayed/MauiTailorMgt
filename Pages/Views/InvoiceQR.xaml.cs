@@ -35,7 +35,7 @@ public partial class InvoiceQR : ContentPage
             await CreateLabel($"Total Amount: {invoice.TotalAmount} BDT")
         };
 
-        var barcode = QrUtils.MakeQrCodeResult(createQRText(invoice)).QrCode;
+        var barcode = QrUtils.MakeQrCodeResult(CreateQRText(invoice)).QrCode;
         barcode.WidthRequest = 100;
         grid.Add(stactlayout, 0, 0);
         grid.Add(barcode, 1, 0);
@@ -90,7 +90,12 @@ public partial class InvoiceQR : ContentPage
         {
             await DisplayActionSheet("Error", "OK", null, "No invoice to share.").ConfigureAwait(false);
         }
+    }  
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+       await Shell.Current.Navigation.PopAsync().ConfigureAwait(false);
     }
+
     private static Task<Label> CreateLabel(string text)
     {
         return Task.FromResult(new Label
@@ -101,7 +106,7 @@ public partial class InvoiceQR : ContentPage
         });
     }
 
-    private string createQRText(NewOrderModel invoice)
+    private static string CreateQRText(NewOrderModel invoice)
     {
         return $"Invoice Number: {invoice.Id}\n" +
                $"Date: {invoice.DeliveryDate:d}\n" +

@@ -4,11 +4,11 @@ namespace MYPM.Pages.Views;
 
 public partial class AddAdvanceAmount : ContentPage
 {
-	public AddAdvanceAmount(NewOrderPageViewModel context)
-	{
-		InitializeComponent();
-		BindingContext = context;
-	}
+    public AddAdvanceAmount(NewOrderPageViewModel context)
+    {
+        InitializeComponent();
+        BindingContext = context;
+    }
 
     private void PaidTextChanged(object sender, TextChangedEventArgs e)
     {
@@ -28,9 +28,12 @@ public partial class AddAdvanceAmount : ContentPage
         }
     }
 
-    private void Button_Clicked(object sender, EventArgs e)
+    private async void Button_Clicked(object sender, EventArgs e)
     {
-        var model = BindingContext as NewOrderPageViewModel;
-        Shell.Current.Navigation.PushAsync(new InvoiceQR(model.Order));
+        if (BindingContext is NewOrderPageViewModel model)
+        {
+            model.SaveCommand.Execute(this);
+            await Shell.Current.Navigation.PushAsync(new InvoiceQR(model.Order));
+        }
     }
 }
