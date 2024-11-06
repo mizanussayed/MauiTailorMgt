@@ -16,25 +16,25 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    # - name: Setup .NET
-    #   uses: actions/setup-dotnet@v4
-    #   with:
-    #     dotnet-version: 8.0.x
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-    # - name: Install MAUI Workload
-    #   run: dotnet workload install maui
+    - name: Install MAUI Workload
+      run: dotnet workload install maui
 
-    # - name: Restore Dependencies
-    #   run: dotnet restore "MYPM.csproj"
-    #   working-directory: ./ 
+    - name: Restore Dependencies
+      run: dotnet restore "MYPM.csproj"
+      working-directory: ./ 
         
-    # - name: Publish APK (with Signing)
-    #   run: |
-    #     $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
-    #     $ANDROID_KEY_PASS = "Dusp@12345"
-    #     keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $ANDROID_KEY_PASS -keypass $ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
-    #     dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
-    #   working-directory: ./ 
+    - name: Publish APK (with Signing)
+      run: |
+        $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
+        $ANDROID_KEY_PASS = "Dusp@12345"
+        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $ANDROID_KEY_PASS -keypass $ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
+        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
+      working-directory: ./ 
 
     - name: Extract Version
       id: extractVersion
@@ -52,16 +52,10 @@ jobs:
       shell: pwsh
       run: |
         $tagExists = $(git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l)
-        echo "tag is >>v${{ steps.extractVersion.outputs.version }}"
-        if ($tagExists -gt 0) {
-          echo "Tag v2.0 exists."
-        } else {
-          echo "Tag v2.0 does not exist."
-        }
         echo "tagExists=$($tagExists)" >> $env:GITHUB_OUTPUT
 
     - name: Create Tag
-      if: steps.checkTag.outputs.tagExists == '90'
+      if: steps.checkTag.outputs.tagExists == '0'
       uses: actions/github-script@v5
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,15 +67,16 @@ jobs:
             ref: 'refs/tags/v${{ steps.extractVersion.outputs.version }}'
           })
 
-    # - name: Rename APK
-    #   shell: pwsh
-    #   run: |
-    #      echo ls ./output
-    #      Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk panjabi_tailor.apk
+    - name: Rename APK
+      shell: pwsh
+      run: |
+         cd ./output
+         echo ls
+         Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk panjabi_tailor.apk
 
-    # - name: Create Release
-    #   uses: softprops/action-gh-release@v1
-    #   with:
-    #     tag_name: v${{ steps.extractVersion.outputs.version }}
-    #     files: |
-    #       ./output/panjabi_tailor.apk
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ steps.extractVersion.outputs.version }}
+        files: |
+          ./output/panjabi_tailor.apk
