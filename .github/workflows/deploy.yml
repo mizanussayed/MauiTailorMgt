@@ -35,10 +35,7 @@ jobs:
     - name: Generate Keystore (for Signing)
       run: |
         # Generate a new keystore for signing the APK
-        keytool -genkeypair -v -keystore /tmp/mizan.keystore -keyalg RSA -keysize 2048 -validity 10000 \
-          -storepass 1234 -keypass 1234 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" \
-          -alias Mizan
-
+        keytool -genkeypair -v -keystore /tmp/mizan.keystore -keyalg RSA -keysize 2048 -validity 10000 -storepass 1234 -keypass 1234 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan
     - name: Publish APK (with Signing)
       run: |
         # Use the generated keystore to sign the APK
