@@ -21,59 +21,53 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # - name: Install MAUI Workload
-    #   run: dotnet workload install maui
+    - name: Install MAUI Workload
+      run: dotnet workload install maui
 
-    # - name: Restore Dependencies
-    #   run: dotnet restore "MYPM.csproj"
-    #   working-directory: ./ 
+    - name: Restore Dependencies
+      run: dotnet restore "MYPM.csproj"
+      working-directory: ./ 
 
     - name: Generate Keystore (for Signing)
       id: generate_keystore
       run: |
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
         keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $env:ANDROID_KEY_PASS -keypass $env:ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
-        echo "keystorePath=$keystorePath" >> $GITHUB_OUTPUT
 
-    - name: Debug Keystore Path
+    - name: Publish APK (with Signing)
+      run: |
+         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
+         echo "Keystore Path : $keystorePath"
+         dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=${{ secrets.ANDROID_KEY_PASS }} /p:AndroidSigningKeyStore=$keystorePath
+      working-directory: ./ 
+
+    - name: Extract Version
+      id: extractVersion
       shell: pwsh
       run: |
-        $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
-        echo "Keystore Path 1: $keystorePath"
-        echo "Keystore Path 2: ${{ steps.generate_keystore.outputs.keystorePath }}"
+        $xml = [Xml] (Get-Content ./MYPM.csproj)
+        [string] $version = [Version] $xml.Project.PropertyGroup.ApplicationDisplayVersion
+        echo "version=$($version)" >> $env:GITHUB_OUTPUT
 
-    # - name: Publish APK (with Signing)
-    #   run: |
-    #     dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=${{ secrets.ANDROID_KEY_PASS }} /p:AndroidSigningKeyStore=${{ steps.generate_keystore.outputs.keystorePath }}  # Use the secret here
-    #   working-directory: ./ 
+    - name: Create Tag
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.sha,
+            ref: 'refs/tags/v${{ steps.extractVersion.outputs.version }}'
+          })
 
-    # - name: Extract Version
-    #   id: extractVersion
-    #   shell: pwsh
-    #   run: |
-    #     $xml = [Xml] (Get-Content ./MYPM.csproj)
-    #     [string] $version = [Version] $xml.Project.PropertyGroup.ApplicationDisplayVersion
-    #     echo "version=$($version)" >> $env:GITHUB_OUTPUT
+    - name: Rename APK
+      shell: pwsh
+      run: Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk MYPM.apk
 
-    # - name: Create Tag
-    #   uses: actions/github-script@v5
-    #   with:
-    #     github-token: ${{ secrets.GITHUB_TOKEN }}
-    #     script: |
-    #       github.rest.git.createRef({
-    #         owner: context.repo.owner,
-    #         repo: context.repo.repo,
-    #         sha: context.sha,
-    #         ref: 'refs/tags/v${{ steps.extractVersion.outputs.version }}'
-    #       })
-
-    # - name: Rename APK
-    #   shell: pwsh
-    #   run: Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk MYPM.apk
-
-    # - name: Create Release
-    #   uses: softprops/action-gh-release@v1
-    #   with:
-    #     tag_name: v${{ steps.extractVersion.outputs.version }}
-    #     files: |
-    #       ./output/MauiDeploy.apk
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ steps.extractVersion.outputs.version }}
+        files: |
+          ./output/MauiDeploy.apk
