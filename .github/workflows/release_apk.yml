@@ -41,12 +41,13 @@ jobs:
       shell: pwsh
       run: |
         $xml = [Xml] (Get-Content ./MYPM.csproj)
-        [string] $version = $xml.Project.PropertyGroup.ApplicationDisplayVersion[0]
+        [string] $version = $xml.Project.PropertyGroup.ApplicationDisplayVersion[0].Trim()
         echo "version=$($version)" >> $env:GITHUB_OUTPUT
         
     - name: Check if Tag Exists
       id: checkTag
       run: |
+        git fetch --tags
         $tagExists = $(git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l)
         if ($tagExists -gt 0) {
           echo "Tag v2.0 exists."
