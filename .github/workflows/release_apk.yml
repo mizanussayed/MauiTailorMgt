@@ -43,8 +43,15 @@ jobs:
         $xml = [Xml] (Get-Content ./MYPM.csproj)
         [string] $version = $xml.Project.PropertyGroup.ApplicationDisplayVersion[0]
         echo "version=$($version)" >> $env:GITHUB_OUTPUT
+        
+    - name: Check if Tag Exists
+      id: checkTag
+      run: |
+        $tagExists = git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l
+        echo "tagExists=$tagExists" >> $GITHUB_ENV
 
     - name: Create Tag
+      if: env.tagExists == '0'
       uses: actions/github-script@v5
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
