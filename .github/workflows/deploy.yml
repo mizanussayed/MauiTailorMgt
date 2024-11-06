@@ -32,7 +32,7 @@ jobs:
       run: |
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
         keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $env:ANDROID_KEY_PASS -keypass $env:ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
-        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASS }} /p:AndroidSigningKeyStore=$keystorePath
+        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan  /p:AndroidSigningStorePass=$env:ANDROID_KEY_PASS /p:AndroidSigningKeyPass=$env:ANDROID_KEY_PASS /p:AndroidSigningKeyStore=$keystorePath
       working-directory: ./ 
 
     - name: Extract Version
