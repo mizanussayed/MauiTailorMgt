@@ -41,7 +41,7 @@ jobs:
       shell: pwsh
       run: |
         $xml = [Xml] (Get-Content ./MYPM.csproj)
-        [string] $version = [Version] $xml.Project.PropertyGroup.ApplicationDisplayVersion
+        [string] $version = $xml.Project.PropertyGroup.ApplicationDisplayVersion[0]
         echo "versionsss ==> $version"
         echo "version=$($version)" >> $env:GITHUB_OUTPUT
 
