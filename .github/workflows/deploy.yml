@@ -32,14 +32,19 @@ jobs:
       run: dotnet build -c Release --no-restore -f net8.0-android
       working-directory: ./
 
+
     - name: Generate Keystore (for Signing)
       run: |
         # Generate a new keystore for signing the APK
-        keytool -genkeypair -v -keystore /tmp/mizan.keystore -keyalg RSA -keysize 2048 -validity 10000 -storepass Dusp@1239 -keypass Dusp@1239 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan
+        $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
+        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass Dusp@1239 -keypass Dusp@1239 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan
+        echo "Keystore created at $keystorePath"
+        
     - name: Publish APK (with Signing)
       run: |
         # Use the generated keystore to sign the APK
-        dotnet publish -c Release --no-build -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=/tmp/mizan.keystore
+        $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
+        dotnet publish -c Release --no-build -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=$keystorePath
       working-directory: ./
 
     - name: Extract Version
