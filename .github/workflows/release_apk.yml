@@ -47,8 +47,16 @@ jobs:
     - name: Check if Tag Exists
       id: checkTag
       run: |
-        $tagExists = git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l
-        echo $tagExists
+        $tagExists = $(git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l)
+        tagExists=$(git tag -l "v2.0" | wc -l)
+        if [ $tagExists -gt 0 ]; then
+          echo "Tag v2.0 exists."
+          # Perform actions if the tag exists
+        else
+          echo "Tag v2.0 does not exist."
+          # Perform actions if the tag does not exist
+        fi
+
         echo "tagExists=$($tagExists)" >> $env:GITHUB_OUTPUT
 
     - name: Create Tag
