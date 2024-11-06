@@ -70,7 +70,6 @@ jobs:
     - name: Rename APK
       shell: pwsh
       run: |
-         cd ./output
          echo ls
          Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk panjabi_tailor.apk
 
