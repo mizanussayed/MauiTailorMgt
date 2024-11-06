@@ -36,8 +36,9 @@ jobs:
         echo "keystorePath=$keystorePath" >> $GITHUB_ENV
 
     - name: Debug Keystore Path
+      shell: pwsh
       run: |
-           echo "Keystore Path: $env:keystorePath"
+          echo "Keystore Path: $env:keystorePath"
 
     - name: Publish APK (with Signing)
       run: |
