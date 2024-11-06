@@ -31,8 +31,9 @@ jobs:
     - name: Publish APK (with Signing)
       run: |
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
-        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $env:ANDROID_KEY_PASS -keypass $env:ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
-        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$env:ANDROID_KEY_PASS -p:AndroidSigningStorePass=$env:ANDROID_KEY_PASS 
+        $ANDROID_KEY_PASS = "Dusp@12345"
+        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $env:ANDROID_KEY_PASS -keypass $ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
+        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
       working-directory: ./ 
 
     - name: Extract Version
