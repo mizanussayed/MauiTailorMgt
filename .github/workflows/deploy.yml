@@ -21,20 +21,20 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # - name: Install MAUI Workload
-    #   run: dotnet workload install maui
+    - name: Install MAUI Workload
+      run: dotnet workload install maui
 
-    # - name: Restore Dependencies
-    #   run: dotnet restore "MYPM.csproj"
-    #   working-directory: ./ 
+    - name: Restore Dependencies
+      run: dotnet restore "MYPM.csproj"
+      working-directory: ./ 
         
-    # - name: Publish APK (with Signing)
-    #   run: |
-    #     $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
-    #     $ANDROID_KEY_PASS = "Dusp@12345"
-    #     keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $ANDROID_KEY_PASS -keypass $ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
-    #     dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
-    #   working-directory: ./ 
+    - name: Publish APK (with Signing)
+      run: |
+        $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
+        $ANDROID_KEY_PASS = "Dusp@12345"
+        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $ANDROID_KEY_PASS -keypass $ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
+        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
+      working-directory: ./ 
 
     - name: Extract Version
       id: extractVersion
@@ -42,7 +42,6 @@ jobs:
       run: |
         $xml = [Xml] (Get-Content ./MYPM.csproj)
         [string] $version = $xml.Project.PropertyGroup.ApplicationDisplayVersion[0]
-        echo "versionsss ==> $version"
         echo "version=$($version)" >> $env:GITHUB_OUTPUT
 
     - name: Create Tag
@@ -59,11 +58,13 @@ jobs:
 
     - name: Rename APK
       shell: pwsh
-      run: Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk MYPM.apk
+      run: |
+         echo ls ./output
+         Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk panjabi_tailor.apk
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: v${{ steps.extractVersion.outputs.version }}
         files: |
-          ./output/MauiDeploy.apk
+          ./output/panjabi_tailor.apk
