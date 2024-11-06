@@ -48,6 +48,7 @@ jobs:
       id: checkTag
       run: |
         $tagExists = git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l
+        echo $tagExists
         echo "tagExists=$($tagExists)" >> $env:GITHUB_OUTPUT
 
     - name: Create Tag
