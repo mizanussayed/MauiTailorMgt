@@ -43,25 +43,25 @@ jobs:
         $xml = [Xml] (Get-Content ./MYPM.csproj)
         [string] $version = $xml.Project.PropertyGroup.ApplicationDisplayVersion[0].Trim()
         echo "version=$($version)" >> $env:GITHUB_OUTPUT
+
+    - name: Fetch tags
+      run: git fetch --tags
         
     - name: Check if Tag Exists
       id: checkTag
+      shell: pwsh
       run: |
-        git fetch --tags
         $tagExists = $(git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l)
+        echo "tag is >>v${{ steps.extractVersion.outputs.version }}"
         if ($tagExists -gt 0) {
           echo "Tag v2.0 exists."
-          # Perform actions if the tag exists
         } else {
           echo "Tag v2.0 does not exist."
-          # Perform actions if the tag does not exist
         }
-
-
         echo "tagExists=$($tagExists)" >> $env:GITHUB_OUTPUT
 
     - name: Create Tag
-      if: steps.checkTag.outputs.tagExists == '0'
+      if: steps.checkTag.outputs.tagExists == '90'
       uses: actions/github-script@v5
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,15 +73,15 @@ jobs:
             ref: 'refs/tags/v${{ steps.extractVersion.outputs.version }}'
           })
 
-    - name: Rename APK
-      shell: pwsh
-      run: |
-         echo ls ./output
-         Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk panjabi_tailor.apk
+    # - name: Rename APK
+    #   shell: pwsh
+    #   run: |
+    #      echo ls ./output
+    #      Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk panjabi_tailor.apk
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ steps.extractVersion.outputs.version }}
-        files: |
-          ./output/panjabi_tailor.apk
+    # - name: Create Release
+    #   uses: softprops/action-gh-release@v1
+    #   with:
+    #     tag_name: v${{ steps.extractVersion.outputs.version }}
+    #     files: |
+    #       ./output/panjabi_tailor.apk
