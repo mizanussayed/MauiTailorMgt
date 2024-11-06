@@ -24,16 +24,21 @@ jobs:
     - name: Install MAUI Workload
       run: dotnet workload install maui
 
-    - name: Restore Dependencies
-      run: dotnet restore "MYPM.csproj"
-      working-directory: ./ 
+  #  - name: Restore Dependencies
+  #    run: dotnet restore "MYPM.csproj"
+   #   working-directory: ./ 
 
     - name: Generate Keystore (for Signing)
       run: |
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
         keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass Dusp@1239 -keypass Dusp@1239 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
+        echo "Keystore created at $keystorePath"
         echo "keystorePath=$keystorePath" >> $GITHUB_ENV
-        
+
+    - name: Debug Keystore Path
+      run: |
+           echo "Keystore Path: $env:keystorePath"
+
     - name: Publish APK (with Signing)
       run: |
         dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=$env:keystorePath
