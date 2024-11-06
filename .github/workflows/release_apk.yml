@@ -70,8 +70,8 @@ jobs:
     - name: Rename APK
       shell: pwsh
       run: |
-         echo ls
-         Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk panjabi_tailor.apk
+         Rename-Item ./output/com.companyname.ytailor.apk panjabi_tailor.apk
+         Rename-Item ./output/com.companyname.ytailor-Signed.apk panjabi_tailor_signed.apk
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
@@ -79,3 +79,5 @@ jobs:
         tag_name: v${{ steps.extractVersion.outputs.version }}
         files: |
           ./output/panjabi_tailor.apk
+          ./output/panjabi_tailor_signed.apk
+
