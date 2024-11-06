@@ -44,7 +44,7 @@ jobs:
       run: |
         # Use the generated keystore to sign the APK
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
-        dotnet publish -c Release --no-build -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=$keystorePath
+        dotnet publish -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=$keystorePath
       working-directory: ./
 
     - name: Extract Version
