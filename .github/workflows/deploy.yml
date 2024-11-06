@@ -26,24 +26,18 @@ jobs:
 
     - name: Restore Dependencies
       run: dotnet restore "MYPM.csproj"
-      working-directory: ./
+      working-directory: ./ 
 
     - name: Generate Keystore (for Signing)
       run: |
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
-        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass Dusp@1239 -keypass Dusp@1239 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan
-        echo "Keystore created at $keystorePath"
+        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass Dusp@1239 -keypass Dusp@1239 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
         echo "keystorePath=$keystorePath" >> $GITHUB_ENV
         
-    - name: Migrate Keystore to PKCS12
-      run: |
-        keytool -importkeystore -srckeystore $env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore -destkeystore $env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore -deststoretype pkcs12
-        echo "Keystore migrated to PKCS12 format"
-
     - name: Publish APK (with Signing)
       run: |
         dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=$env:keystorePath
-      working-directory: ./
+      working-directory: ./ 
 
     - name: Extract Version
       id: extractVersion
