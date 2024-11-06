@@ -1,0 +1,80 @@
+name: Deploy APK
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use Ubuntu for Android builds
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install MAUI Workload
+      run: dotnet workload install maui
+
+    - name: Restore Dependencies
+      run: dotnet restore
+      working-directory: ./
+
+    - name: Build for Android (Release APK)
+      run: dotnet build -c Release -f net8.0-android
+      working-directory: ./
+
+    - name: Generate Keystore (for Signing)
+      run: |
+        # Generate a new keystore for signing the APK
+        keytool -genkeypair -v -keystore /tmp/mizan.keystore -keyalg RSA -keysize 2048 -validity 10000 \
+          -storepass 1234 -keypass 1234 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" \
+          -alias Mizan
+
+    - name: Publish APK (with Signing)
+      run: |
+        # Use the generated keystore to sign the APK
+        dotnet publish -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true \
+        /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=1234 \
+        /p:AndroidSigningKeyStore=/tmp/mizan.keystore
+      working-directory: ./
+
+    - name: Extract Version
+      id: extractVersion
+      shell: pwsh
+      run: |
+        # Extract the version from MYPM.csproj
+        $xml = [Xml] (Get-Content ./MYPM.csproj)
+        [string] $version = [Version] $xml.Project.PropertyGroup.ApplicationDisplayVersion
+        echo "version=$($version)" >> $env:GITHUB_OUTPUT
+
+    - name: Create Tag
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.sha,
+            ref: 'refs/tags/v${{ steps.extractVersion.outputs.version }}'
+          })
+
+    - name: Rename APK
+      shell: pwsh
+      run: Rename-Item ./output/com.companyname.ytailor-${{ steps.extractVersion.outputs.version }}.apk MYPM.apk
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ steps.extractVersion.outputs.version }}
+        files: |
+          ./output/MauiDeploy.apk
