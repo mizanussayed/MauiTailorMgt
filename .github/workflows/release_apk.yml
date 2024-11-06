@@ -48,14 +48,14 @@ jobs:
       id: checkTag
       run: |
         $tagExists = $(git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l)
-        tagExists=$(git tag -l "v2.0" | wc -l)
-        if [ $tagExists -gt 0 ]; then
+        if ($tagExists -gt 0) {
           echo "Tag v2.0 exists."
           # Perform actions if the tag exists
-        else
+        } else {
           echo "Tag v2.0 does not exist."
           # Perform actions if the tag does not exist
-        fi
+        }
+
 
         echo "tagExists=$($tagExists)" >> $env:GITHUB_OUTPUT
 
