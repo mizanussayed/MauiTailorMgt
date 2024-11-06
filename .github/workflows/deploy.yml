@@ -25,33 +25,30 @@ jobs:
       run: dotnet workload install maui
 
     - name: Restore Dependencies
-      run: dotnet restore
+      run: dotnet restore "MYPM.csproj"
       working-directory: ./
-
-    - name: Build for Android (Release APK)
-      run: dotnet build -c Release --no-restore -f net8.0-android
-      working-directory: ./
-
 
     - name: Generate Keystore (for Signing)
       run: |
-        # Generate a new keystore for signing the APK
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
         keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass Dusp@1239 -keypass Dusp@1239 -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan
         echo "Keystore created at $keystorePath"
+        echo "keystorePath=$keystorePath" >> $GITHUB_ENV
         
+    - name: Migrate Keystore to PKCS12
+      run: |
+        keytool -importkeystore -srckeystore $env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore -destkeystore $env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore -deststoretype pkcs12
+        echo "Keystore migrated to PKCS12 format"
+
     - name: Publish APK (with Signing)
       run: |
-        # Use the generated keystore to sign the APK
-        $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
-        dotnet publish -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=$keystorePath
+        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=Mizan /p:AndroidSigningKeyPassword=Dusp@1239 /p:AndroidSigningKeyStore=$env:keystorePath
       working-directory: ./
 
     - name: Extract Version
       id: extractVersion
       shell: pwsh
       run: |
-        # Extract the version from MYPM.csproj
         $xml = [Xml] (Get-Content ./MYPM.csproj)
         [string] $version = [Version] $xml.Project.PropertyGroup.ApplicationDisplayVersion
         echo "version=$($version)" >> $env:GITHUB_OUTPUT
