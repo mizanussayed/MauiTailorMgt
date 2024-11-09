@@ -17,7 +17,7 @@
 		<ApplicationId>com.companyname.ytailor</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>2.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>2.1</ApplicationDisplayVersion>
 		<ApplicationVersion>2</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
