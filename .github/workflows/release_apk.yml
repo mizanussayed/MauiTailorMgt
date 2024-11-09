@@ -1,0 +1,83 @@
+name: Deploy APK
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install MAUI Workload
+      run: dotnet workload install maui
+
+    - name: Restore Dependencies
+      run: dotnet restore "MYPM.csproj"
+      working-directory: ./ 
+        
+    - name: Publish APK (with Signing)
+      run: |
+        $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
+        $ANDROID_KEY_PASS = "Dusp@12345"
+        keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $ANDROID_KEY_PASS -keypass $ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
+        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
+      working-directory: ./ 
+
+    - name: Extract Version
+      id: extractVersion
+      shell: pwsh
+      run: |
+        $xml = [Xml] (Get-Content ./MYPM.csproj)
+        [string] $version = $xml.Project.PropertyGroup.ApplicationDisplayVersion[0].Trim()
+        echo "version=$($version)" >> $env:GITHUB_OUTPUT
+
+    - name: Fetch tags
+      run: git fetch --tags
+        
+    - name: Check if Tag Exists
+      id: checkTag
+      shell: pwsh
+      run: |
+        $tagExists = $(git tag -l "v${{ steps.extractVersion.outputs.version }}" | wc -l)
+        echo "tagExists=$($tagExists)" >> $env:GITHUB_OUTPUT
+
+    - name: Create Tag
+      if: steps.checkTag.outputs.tagExists == '0'
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.sha,
+            ref: 'refs/tags/v${{ steps.extractVersion.outputs.version }}'
+          })
+
+    - name: Rename APK
+      shell: pwsh
+      run: |
+         Rename-Item ./output/com.companyname.ytailor.apk panjabi_tailor.apk
+         Rename-Item ./output/com.companyname.ytailor-Signed.apk panjabi_tailor_signed.apk
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ steps.extractVersion.outputs.version }}
+        files: |
+          ./output/panjabi_tailor.apk
+          ./output/panjabi_tailor_signed.apk
+

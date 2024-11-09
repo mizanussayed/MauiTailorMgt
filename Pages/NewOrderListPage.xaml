@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MYPM.Models"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
+             x:Class="MYPM.Pages.NewOrderListPage"
+             x:DataType="vm:OrdersViewModel"
+             Title="Orders">
+
+    <ContentPage.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Transparent" />
+                                <Setter Property="RowSpacing" Value="15" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView Padding="10">
+        <CollectionView ItemsSource="{Binding Orders}" 
+                        SelectionMode="Single"
+                        SelectionChanged="CollectionView_SelectionChanged"
+                        >
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:NewOrderModel">
+                    <Grid Padding="15" Margin="5" BackgroundColor="{StaticResource Tertiary}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Text="{Binding Id, StringFormat='SL : {0}'}" 
+                                    FontAttributes="Bold" 
+                                    FontSize="Medium"
+                                    TextColor="{StaticResource Primary}"
+                                    />
+
+                        <Label Text="{Binding CustomerName, StringFormat='Name : {0}'}" 
+                                   Grid.Row="1" 
+                                   FontAttributes="Bold" 
+                                   FontSize="Medium"
+                                   />
+
+                        <Label Text="{Binding MobileNumber, StringFormat='Mobile No: {0}'}" 
+                                   Grid.Row="2" 
+                                   FontSize="Small"/>
+                        <Label Text="{Binding Address, StringFormat='Address : {0}'}" Grid.Row="3"  FontSize="Small"/>
+
+                        <StackLayout Orientation="Horizontal" Grid.Row="4" 
+                                  HorizontalOptions="Start">
+                            <Label Text="{Binding TotalAmount, StringFormat='Total: {0} tk'}" 
+                                TextColor="Green" FontAttributes="Bold" />
+                            <Label Text="{Binding DueAmount, StringFormat='Due: {0} tk'}" 
+                                TextColor="Red" FontAttributes="Bold" Margin="10,0,0,0"/>
+                        </StackLayout>
+
+                        <Label Text="{Binding OrderDate, StringFormat='Ordered on: {0:dd MMM yyyy}'}" 
+                            Grid.Row="5" FontSize="Small"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </ScrollView>
+</ContentPage>
