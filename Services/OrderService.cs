@@ -1,6 +1,4 @@
 ﻿using Appwrite.Services;
-using Appwrite;
-using Appwrite.Models;
 using MYPM.Configurations;
 using System.Text.Json;
 namespace MYPM.Services;
@@ -9,6 +7,7 @@ public class OrderService
     private readonly Databases _databases = new AppWriteClient().GetDatabase();
     private readonly string _databaseId;
     private readonly string _ordersCollectionId;
+    private List<NewOrderModel> OrdersList { get; set; } = [];
 
     public OrderService()
     {
@@ -34,7 +33,7 @@ public class OrderService
                 { "assignTo", 111 }
             };
 
-            if (panjabiOrder != null)
+            if (panjabiOrder is not null)
             {
                 data.Add("panjabi.amount", panjabiOrder.Amount);
                 data.Add("panjabi.quantity", panjabiOrder.Quantity);
@@ -48,7 +47,7 @@ public class OrderService
                 data.Add("panjabi.note", panjabiOrder.Note);
             }
 
-            if (arabianOrder != null)
+            if (arabianOrder is not null)
             {
                 data.Add("arabian.amount", arabianOrder.Amount);
                 data.Add("arabian.quantity", arabianOrder.Quantity);
@@ -61,7 +60,7 @@ public class OrderService
                 data.Add("arabian.ness", arabianOrder.Ness);
                 data.Add("arabian.note", arabianOrder.Note);
             }
-            if (selowerOrder != null)
+            if (selowerOrder is not null)
             {
                 data.Add("selower.amount", selowerOrder.Amount);
                 data.Add("selower.quantity", selowerOrder.Quantity);
@@ -77,6 +76,7 @@ public class OrderService
                 order.Id,
                 data
             );
+            OrdersList.Add(order);
             return orderDoc is not null;
         }
         catch (Exception)
@@ -89,30 +89,31 @@ public class OrderService
     {
         try
         {
-            var result = new List<NewOrderModel>();
-            var response = await _databases.ListDocuments(_databaseId, _ordersCollectionId);
-
-            if (response.Documents != null)
+            if (OrdersList is null || OrdersList?.Count < 1)
             {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = true,
-                };
+                var response = await _databases.ListDocuments(_databaseId, _ordersCollectionId);
 
-                foreach (var document in response.Documents)
+                if (response.Documents != null)
                 {
-                    string res = JsonSerializer.Serialize(document.Data);
-                    var newOrder = JsonSerializer.Deserialize<NewOrderModel>(res, options);
-                    if (newOrder is not null)
+                    var options = new JsonSerializerOptions
                     {
-                        newOrder.MapEmbeddedProperties(document.Data);
-                        result.Add(newOrder);
-                    }
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        WriteIndented = true,
+                    };
 
+                    response.Documents.ForEach(response =>
+                    {
+                        string res = JsonSerializer.Serialize(response.Data);
+                        var newOrder = JsonSerializer.Deserialize<NewOrderModel>(res, options);
+                        if (newOrder is not null)
+                        {
+                            newOrder.MapEmbeddedProperties(response.Data);
+                            OrdersList?.Add(newOrder);
+                        }
+                    });
                 }
             }
-            return result;
+            return OrdersList!;
         }
         catch (Exception ex)
         {
@@ -135,9 +136,11 @@ public class OrderService
             if (response.Data is not null)
             {
                 var obj = JsonSerializer.Serialize(response.Data, options);
-                result = JsonSerializer.Deserialize<NewOrderModel>(obj, options);
+                var newOrder = JsonSerializer.Deserialize<NewOrderModel>(obj, options);
+                newOrder?.MapEmbeddedProperties(response.Data);
+                result = newOrder!;
             }
-            return result ?? new NewOrderModel();
+            return result;
         }
         catch (Exception ex)
         {
@@ -145,7 +148,6 @@ public class OrderService
             return await Task.FromResult(new NewOrderModel());
         }
     }
-
 }
 
 

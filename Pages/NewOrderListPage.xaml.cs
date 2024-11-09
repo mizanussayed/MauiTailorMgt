@@ -17,8 +17,8 @@ public partial class NewOrderListPage : ContentPage
 
     private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var v = (e.CurrentSelection.FirstOrDefault() as NewOrderModel).Id;
+        string v = (e.CurrentSelection.FirstOrDefault() as NewOrderModel).Id;
         var context = BindingContext as OrdersViewModel;
-        context.GetDetailsCommand.Execute(v);    
+        context?.GetDetailsCommand.Execute(v);    
     }
 }

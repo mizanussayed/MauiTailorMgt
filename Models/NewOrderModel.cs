@@ -26,7 +26,7 @@ public class NewOrderModel
         {
             ArabianOrder = new ArabianOrder
             {
-                Amount = Convert.ToInt32(value),
+                Amount = Convert.ToInt32(jsonData["arabian.amount"]),
                 Quantity = Convert.ToInt32(jsonData["arabian.quantity"]),
                 Length = Convert.ToDecimal(jsonData["arabian.length"]),
                 Tira = Convert.ToDecimal(jsonData["arabian.tira"]),
@@ -43,7 +43,7 @@ public class NewOrderModel
         {
             PanjabiOrder = new PanjabiOrder
             {
-                Amount = Convert.ToInt32(value),
+                Amount = Convert.ToInt32(jsonData["panjabi.amount"]),
                 Quantity = Convert.ToInt32(jsonData["panjabi.quantity"]),
                 Length = Convert.ToDecimal(jsonData["panjabi.length"]),
                 Sina = Convert.ToDecimal(jsonData["panjabi.sina"]),
@@ -60,7 +60,7 @@ public class NewOrderModel
         {
             SelowerOrder = new SelowerOrder
             {
-                Amount = Convert.ToInt32(value),
+                Amount = Convert.ToInt32(jsonData["selower.amount"]),
                 Quantity = Convert.ToInt32(jsonData["selower.quantity"]),
                 Length = Convert.ToDecimal(jsonData["selower.length"]),
                 Hip = Convert.ToDecimal(jsonData["selower.hip"]),
@@ -89,8 +89,6 @@ public sealed class ArabianOrder
 
 public sealed class PanjabiOrder
 {
-    public long Id { get; set; }
-    public long OrderId { get; set; }
     public int Amount { get; set; } = 300;
     public int Quantity { get; set; } = 1;
     public decimal Length { get; set; } = 30;
@@ -105,8 +103,6 @@ public sealed class PanjabiOrder
 
 public sealed class SelowerOrder
 {
-    public long Id { get; set; }
-    public long OrderId { get; set; }
     public int Amount { get; set; } = 200;
     public int Quantity { get; set; } = 1;
     public decimal Length { get; set; } = 40;

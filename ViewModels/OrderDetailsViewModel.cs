@@ -3,7 +3,7 @@ using MYPM.Pages.Handheld;
 namespace MYPM.ViewModels;
 
 [QueryProperty("Order", "Order")]
-[QueryProperty("Added", "Added")]
+
 public partial class OrderDetailsViewModel : ObservableObject
 {
     [ObservableProperty]

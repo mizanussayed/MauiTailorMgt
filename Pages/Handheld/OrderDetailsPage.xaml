@@ -1,25 +1,164 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fa="clr-namespace:MYPM"
              xmlns:models="clr-namespace:MYPM.Models"
-             xmlns:vm="clr-namespace:MYPM.ViewModels"
              x:Class="MYPM.Pages.Handheld.OrderDetailsPage"
              Shell.NavBarIsVisible="False"
              x:DataType="models:NewOrderModel"
-             Title="{Binding CustomerName}">
+             BackgroundColor="#1C1C1E">
 
-    
-    <Grid RowDefinitions="Auto, 400" Margin="20">
-        <VerticalStackLayout VerticalOptions="Start" Spacing="8">
-            <Label Text="{Binding CustomerName, StringFormat='Name {0}'}"/>
-            <BoxView Style="{StaticResource HRule}"/>
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="20">
+            <!-- Header Section -->
+            <Frame BackgroundColor="#333333" CornerRadius="20" Padding="20" HasShadow="True">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{Binding Id, StringFormat='{0}'}" FontSize="26" FontAttributes="Bold" TextColor="#FFFFFF" HorizontalOptions="Center" />
+                    <Grid ColumnDefinitions="*, *" 
+                          RowSpacing="8"
+                          Padding="0,10"
+                          RowDefinitions="*,*,*,* ,*,*,*,*, *">
+                        <Label Text="Customer Name " TextColor="#B0B0B0" Grid.Row="0" />
+                        <Label Text="{Binding CustomerName}" TextColor="#FFFFFF" Grid.Row="0" Grid.Column="1" />
+
+                        <Label Text="Mobile Number " TextColor="#B0B0B0" Grid.Row="1" />
+                        <Label Text="{Binding MobileNumber}" TextColor="#FFFFFF" Grid.Row="1" Grid.Column="1" />
+
+                        <Label Text="Address " TextColor="#B0B0B0" Grid.Row="2" />
+                        <Label Text="{Binding Address}" TextColor="#FFFFFF" Grid.Row="2" Grid.Column="1" />
+
+                        <Label Text="Order Date" TextColor="#B0B0B0" Grid.Row="3" />
+                        <Label Text="{Binding OrderDate, StringFormat='{0:dd-MMM-yyyy}'}" TextColor="#FFFFFF" Grid.Row="3" Grid.Column="1" />
+
+                        <Label Text="Delivery Date" TextColor="#B0B0B0" Grid.Row="4" />
+                        <Label Text="{Binding DeliveryDate, StringFormat='{0:dd-MMM-yyyy}'}" TextColor="#FFFFFF" Grid.Row="4" Grid.Column="1" />
+
+
+                        <Label Text="Total Amount" TextColor="#B0B0B0" Grid.Row="5" />
+                        <Label Text="{Binding TotalAmount, StringFormat='${0:N2}'}" TextColor="#FFFFFF" Grid.Row="5" Grid.Column="1" />
+
+                        <Label Text="Paid Amount" TextColor="#B0B0B0" Grid.Row="6" />
+                        <Label Text="{Binding PaidAmount, StringFormat='${0:N2}'}" TextColor="#FFFFFF" Grid.Row="6" Grid.Column="1" />
+
+                        <Label Text="Due Amount" TextColor="#B0B0B0" Grid.Row="7" />
+                        <Label Text="{Binding DueAmount, StringFormat='${0:N2}'}" TextColor="#FF453A" Grid.Row="7" Grid.Column="1" />
+
+                        <Label Text="Order Status" TextColor="#B0B0B0" Grid.Row="8" />
+                        <Label Text="{Binding Status}" TextColor="#5AC8FA" Grid.Row="8" Grid.Column="1" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <HorizontalStackLayout Spacing="12" HorizontalOptions="FillAndExpand">
+                <Button Text="Share"
+                        BackgroundColor="#007AFF" 
+                        Padding="12,12"
+                        Clicked="OnShareClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static fa:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+                <Button Text="Status" 
+                        BackgroundColor="Teal" 
+                        Padding="12,12" 
+                        Clicked="OnChangeStatusClicked"
+                        >
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static fa:IconFont.Edit}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+                <Button Text="Details" BackgroundColor="#34C759"
+                        TextColor="White"
+                        Padding="12,12"
+                        Clicked="OnViewDetailsClicked"
+                        >
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static fa:IconFont.InfoCircle}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+            </HorizontalStackLayout>
+
+            <!-- Order Details Sections -->
+            <Frame BackgroundColor="#333333" CornerRadius="20" Padding="20" HasShadow="True" IsVisible="false" x:Name="ArabinaOrderLayout">
+                <VerticalStackLayout>
+                    <Label Text="Arabian Order Details" FontSize="22" FontAttributes="Bold" TextColor="#FFFFFF" />
+                    <Grid ColumnDefinitions="*, *" RowSpacing="10" Padding="0,12" RowDefinitions="*, *, *, *, *, *, *, *, *, *">
+                        <Label Text="Amount " TextColor="#B0B0B0" />
+                        <Label Text="{Binding ArabianOrder.Amount}" TextColor="#FFFFFF" Grid.Column="1" />
+
+                        <Label Text="Quantity" TextColor="#B0B0B0" Grid.Row="1" />
+                        <Label Text="{Binding ArabianOrder.Quantity}" TextColor="#FFFFFF" Grid.Row="1" Grid.Column="1" />
+                        <Label Text="Length" TextColor="#B0B0B0" Grid.Row="2" />
+                        <Label Text="{Binding ArabianOrder.Length}" TextColor="#FFFFFF" Grid.Row="2" Grid.Column="1" />
+                        <Label Text="Tira" TextColor="#B0B0B0" Grid.Row="3" />
+                        <Label Text="{Binding ArabianOrder.Tira}" TextColor="#FFFFFF" Grid.Row="3" Grid.Column="1" />
+                        <Label Text="Hata" TextColor="#B0B0B0" Grid.Row="4" />
+                        <Label Text="{Binding ArabianOrder.Hata}" TextColor="#FFFFFF" Grid.Row="4" Grid.Column="1" />
+
+                        <Label Text="Cuff " TextColor="#B0B0B0" Grid.Row="5" />
+                        <Label Text="{Binding ArabianOrder.Cuff}" TextColor="#FFFFFF" Grid.Row="5" Grid.Column="1" />
+                        <Label Text="Mohori" TextColor="#B0B0B0" Grid.Row="6" />
+                        <Label Text="{Binding ArabianOrder.Mohori}" TextColor="#FFFFFF" Grid.Row="6" Grid.Column="1" />
+                        <Label Text="Rakaba " TextColor="#B0B0B0" Grid.Row="7" />
+                        <Label Text="{Binding ArabianOrder.Rakaba}" TextColor="#FFFFFF" Grid.Row="7" Grid.Column="1" />
+                        <Label Text="Ness " TextColor="#B0B0B0" Grid.Row="8" />
+                        <Label Text="{Binding ArabianOrder.Ness}" TextColor="#FFFFFF" Grid.Row="8" Grid.Column="1" />
+                        <Label Text="Note " TextColor="#B0B0B0" Grid.Row="9" />
+                        <Label Text="{Binding ArabianOrder.Note}" TextColor="#FFFFFF" Grid.Row="9" Grid.Column="1" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#333333" CornerRadius="20" Padding="20" HasShadow="True" IsVisible="false" x:Name="PanjabiOrderLayout">
+                <VerticalStackLayout>
+                    <Label Text="Panjabi Order Details" FontSize="22" FontAttributes="Bold" TextColor="#FFFFFF" />
+                    <Grid ColumnDefinitions="*, *" RowSpacing="10" Padding="0,12" RowDefinitions="*, *, *, *, *, *">
+                        <Label Text="Amount" TextColor="#B0B0B0" />
+                        <Label Text="{Binding PanjabiOrder.Amount}" TextColor="#FFFFFF" Grid.Column="1" />
+                        <Label Text="Quantity" TextColor="#B0B0B0" Grid.Row="1" />
+                        <Label Text="{Binding PanjabiOrder.Quantity}" TextColor="#FFFFFF" Grid.Row="1" Grid.Column="1" />
+                        <Label Text="Length" TextColor="#B0B0B0" Grid.Row="2" />
+                        <Label Text="{Binding PanjabiOrder.Length}" TextColor="#FFFFFF" Grid.Row="2" Grid.Column="1" />
+                        <Label Text="Sina" TextColor="#B0B0B0" Grid.Row="3" />
+                        <Label Text="{Binding PanjabiOrder.Sina}" TextColor="#FFFFFF" Grid.Row="3" Grid.Column="1" />
+                        <Label Text="Komor" TextColor="#B0B0B0" Grid.Row="2" />
+                        <Label Text="{Binding PanjabiOrder.Komor}" TextColor="#FFFFFF" Grid.Row="4" Grid.Column="1" />
+
+                        <Label Text="Cuff" TextColor="#B0B0B0" Grid.Row="1" />
+                        <Label Text="{Binding PanjabiOrder.Cuff}" TextColor="#FFFFFF" Grid.Row="5" Grid.Column="1" />
+                        <Label Text="Mohori" TextColor="#B0B0B0" Grid.Row="2" />
+                        <Label Text="{Binding PanjabiOrder.Mohori}" TextColor="#FFFFFF" Grid.Row="6" Grid.Column="1" />
+                        <Label Text="Rabaka" TextColor="#B0B0B0" Grid.Row="7" />
+                        <Label Text="{Binding PanjabiOrder.Rakaba}" TextColor="#FFFFFF" Grid.Row="7" Grid.Column="1" />
+                        <Label Text="Note" TextColor="#B0B0B0" Grid.Row="8" />
+                        <Label Text="{Binding PanjabiOrder.Note}" TextColor="#FFFFFF" Grid.Row="8" Grid.Column="1" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#333333" CornerRadius="20" Padding="20" HasShadow="True" IsVisible="false" x:Name="SelowerOrderLayout">
+                <VerticalStackLayout>
+                    <Label Text="Selower Order Details" FontSize="22" FontAttributes="Bold" TextColor="#FFFFFF" />
+                    <Grid ColumnDefinitions="*, *" RowSpacing="10" Padding="0,12" RowDefinitions="*, *, *, *, *, *, *">
+                        <Label Text="Amount" TextColor="#B0B0B0" />
+                        <Label Text="{Binding SelowerOrder.Amount}" TextColor="#FFFFFF" Grid.Column="1" />
+
+                        <Label Text="Quantity" TextColor="#B0B0B0" Grid.Row="1" />
+                        <Label Text="{Binding SelowerOrder.Quantity}" TextColor="#FFFFFF" Grid.Row="1" Grid.Column="1" />
+                        <Label Text="Length" TextColor="#B0B0B0" Grid.Row="2" />
+                        <Label Text="{Binding SelowerOrder.Length}" TextColor="#FFFFFF" Grid.Row="2" Grid.Column="1" />
+                        <Label Text="Hip" TextColor="#B0B0B0" Grid.Row="3" />
+                        <Label Text="{Binding SelowerOrder.Hip}" TextColor="#FFFFFF" Grid.Row="3" Grid.Column="1" />
+                        <Label Text="Komor" TextColor="#B0B0B0" Grid.Row="4" />
+                        <Label Text="{Binding SelowerOrder.Komor}" TextColor="#FFFFFF" Grid.Row="4" Grid.Column="1" />
+                        <Label Text="Ness" TextColor="#B0B0B0" Grid.Row="5" />
+                        <Label Text="{Binding SelowerOrder.Ness}" TextColor="#FFFFFF" Grid.Row="5" Grid.Column="1" />
+                        <Label Text="Note" TextColor="#B0B0B0" Grid.Row="6" />
+                        <Label Text="{Binding SelowerOrder.Note}" TextColor="#FFFFFF" Grid.Row="6" Grid.Column="1" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
         </VerticalStackLayout>
-        <Grid Grid.Row="1"
-              ColumnDefinitions="*,*,*"
-              ColumnSpacing="8" Margin="0,8">
-            <Label Text="{Binding MobileNumber, StringFormat='Mobile : {0}'}" Grid.Column="0" VerticalOptions="Center"/>
-            <Label Text="{Binding Address, StringFormat='Address : {0}'}" Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Start"/>
-            <Label Text="{Binding DueAmount, StringFormat='${0:N2}'}" Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Start"/>
-        </Grid>
-    </Grid>
+    </ScrollView>
 </ContentPage>

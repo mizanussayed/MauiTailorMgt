@@ -2,14 +2,30 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:fa="clr-namespace:MYPM"
              Title="Share Order Invoice"
              x:Class="MYPM.Pages.Views.InvoiceQR">
     <ScrollView>
         <StackLayout Padding="20">
             <VerticalStackLayout x:Name="qrBox" >
             </VerticalStackLayout>
-            <Button Text="Share Invoice" Clicked="OnShareInvoiceClicked"/>
-            <Button Text="Back" Clicked="OnBackClicked"/>
+            <HorizontalStackLayout Spacing="12" HorizontalOptions="CenterAndExpand">
+
+                <Button Text="Share Invoice"
+                    BackgroundColor="#007AFF" 
+                    Clicked="OnShareInvoiceClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static fa:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+                <Button Text="Back" 
+                    BackgroundColor="teal" 
+                    Clicked="OnBackClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static fa:IconFont.CaretLeft}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+            </HorizontalStackLayout>
         </StackLayout>
     </ScrollView>
 </ContentPage>
