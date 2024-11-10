@@ -18,32 +18,32 @@
                           RowSpacing="8"
                           Padding="0,10"
                           RowDefinitions="*,*,*,* ,*,*,*,*, *">
-                        <Label Text="Customer Name " TextColor="#B0B0B0" Grid.Row="0" />
+                        <Label Text="Name" TextColor="#B0B0B0" Grid.Row="0" />
                         <Label Text="{Binding CustomerName}" TextColor="#FFFFFF" Grid.Row="0" Grid.Column="1" />
 
-                        <Label Text="Mobile Number " TextColor="#B0B0B0" Grid.Row="1" />
+                        <Label Text="Mobile" TextColor="#B0B0B0" Grid.Row="1" />
                         <Label Text="{Binding MobileNumber}" TextColor="#FFFFFF" Grid.Row="1" Grid.Column="1" />
 
-                        <Label Text="Address " TextColor="#B0B0B0" Grid.Row="2" />
+                        <Label Text="Address" TextColor="#B0B0B0" Grid.Row="2" />
                         <Label Text="{Binding Address}" TextColor="#FFFFFF" Grid.Row="2" Grid.Column="1" />
 
                         <Label Text="Order Date" TextColor="#B0B0B0" Grid.Row="3" />
                         <Label Text="{Binding OrderDate, StringFormat='{0:dd-MMM-yyyy}'}" TextColor="#FFFFFF" Grid.Row="3" Grid.Column="1" />
 
-                        <Label Text="Delivery Date" TextColor="#B0B0B0" Grid.Row="4" />
+                        <Label Text="Delivery" TextColor="#B0B0B0" Grid.Row="4" />
                         <Label Text="{Binding DeliveryDate, StringFormat='{0:dd-MMM-yyyy}'}" TextColor="#FFFFFF" Grid.Row="4" Grid.Column="1" />
 
 
-                        <Label Text="Total Amount" TextColor="#B0B0B0" Grid.Row="5" />
+                        <Label Text="Total" TextColor="#B0B0B0" Grid.Row="5" />
                         <Label Text="{Binding TotalAmount, StringFormat='${0:N2}'}" TextColor="#FFFFFF" Grid.Row="5" Grid.Column="1" />
 
-                        <Label Text="Paid Amount" TextColor="#B0B0B0" Grid.Row="6" />
+                        <Label Text="Paid" TextColor="#B0B0B0" Grid.Row="6" />
                         <Label Text="{Binding PaidAmount, StringFormat='${0:N2}'}" TextColor="#FFFFFF" Grid.Row="6" Grid.Column="1" />
 
-                        <Label Text="Due Amount" TextColor="#B0B0B0" Grid.Row="7" />
+                        <Label Text="Due" TextColor="#B0B0B0" Grid.Row="7" />
                         <Label Text="{Binding DueAmount, StringFormat='${0:N2}'}" TextColor="#FF453A" Grid.Row="7" Grid.Column="1" />
 
-                        <Label Text="Order Status" TextColor="#B0B0B0" Grid.Row="8" />
+                        <Label Text="Status" TextColor="#B0B0B0" Grid.Row="8" />
                         <Label Text="{Binding Status}" TextColor="#5AC8FA" Grid.Row="8" Grid.Column="1" />
                     </Grid>
                 </VerticalStackLayout>

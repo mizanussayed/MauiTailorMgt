@@ -7,7 +7,7 @@ namespace MYPM.ViewModels;
 public partial class OrderDetailsViewModel : ObservableObject
 {
     [ObservableProperty]
-    NewOrderModel order;
+    NewOrderModel? order;
 
     [ObservableProperty]
     Item? added;
@@ -17,7 +17,7 @@ public partial class OrderDetailsViewModel : ObservableObject
     {
         try
         {
-            var navigationParameter = new Dictionary<string, object>
+            var navigationParameter = new Dictionary<string, object?>
             {
                 { "Order", Order }
             };

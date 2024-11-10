@@ -7,26 +7,31 @@ public partial class AddAdvanceAmount : ContentPage
     private readonly NewOrderPageViewModel context;
     public AddAdvanceAmount(NewOrderPageViewModel ctx)
     {
-        InitializeComponent();
         BindingContext = ctx;
         context = ctx;
+        InitializeComponent();
     }
 
     private void PaidTextChanged(object sender, TextChangedEventArgs e)
     {
-
-        if (long.TryParse(PaidEntry.Text, out long paidAmount))
+        try
         {
-            context.Order.PaidAmount = paidAmount;
-            context.Order.DueAmount = context.Order.TotalAmount - context.Order.PaidAmount;
-            DueLbl.Text = $"Due        : {(context.Order.TotalAmount - context.Order.PaidAmount).ToString()}";
+            if (long.TryParse(PaidEntry?.Text, out long paidAmount))
+            {
+                context.Order.PaidAmount = paidAmount;
+                context.Order.DueAmount = context.Order.TotalAmount - context.Order.PaidAmount;
+                DueLbl.Text = $"Due        : {(context.Order.TotalAmount - context.Order.PaidAmount).ToString()}";
+            }
+            else
+            {
+                context.Order.PaidAmount = 0;
+                context.Order.DueAmount = context.Order.TotalAmount;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            context.Order.PaidAmount = 0;
-            context.Order.DueAmount = context.Order.TotalAmount;
+            _ = ex.Message;
         }
-
     }
 
     private async void Button_Clicked(object sender, EventArgs e)

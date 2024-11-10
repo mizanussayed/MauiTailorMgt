@@ -16,8 +16,8 @@ public partial class CustomerListPage : ContentPage
         var searchText = SearchBar.Text.ToLower();
         var bc = BindingContext as OrdersViewModel;
 
-        var filteredInvoices =  bc.Orders.ToList().FindAll(i => i.CustomerName.ToLower().Contains(searchText) ||
-                                                       i.MobileNumber.ToLower().Contains(searchText));
+        var filteredInvoices =  bc?.Orders?.ToList().FindAll(i => i.CustomerName.Contains(searchText, StringComparison.CurrentCultureIgnoreCase) ||
+                                                       i.MobileNumber.Contains(searchText, StringComparison.CurrentCultureIgnoreCase));
         InvoiceListView.ItemsSource = filteredInvoices;
     }
 

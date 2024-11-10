@@ -23,7 +23,7 @@ public class AppWriteDatabaseSetup(Client client)
         await AddArabianAttributes(orderDatabase.Id, ordersCollection.Id);
         await AddPanjabiAttributes(orderDatabase.Id, ordersCollection.Id);
         await AddSelowerAttributes(orderDatabase.Id, ordersCollection.Id);
-        //await CreateRelationship(orderDatabase.Id, ordersCollection.Id, selowerOrderCollection.Id, "selowerOrder");
+        //await CreateRelationship(orderDatabase.Id, ordersCollection.Id, selowerrderCollection.Id, "selowerrder");
         Console.WriteLine("Database setup completed with relationships.");
     }
 
@@ -43,40 +43,40 @@ public class AppWriteDatabaseSetup(Client client)
 
     private async Task AddArabianAttributes(string databaseId, string collectionId)
     {
-        await _databases.CreateIntegerAttribute(databaseId, collectionId, "arabian.amount", required: false);
-        await _databases.CreateIntegerAttribute(databaseId, collectionId, "arabian.quantity", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabian.length", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabian.tira", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabian.hata", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabian.cuff", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabian.mohori", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabian.rakaba", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabian.ness", required: false);
-        await _databases.CreateStringAttribute(databaseId, collectionId, "arabian.note", 500, required: false);
+        await _databases.CreateIntegerAttribute(databaseId, collectionId, "arabianAmount", required: false);
+        await _databases.CreateIntegerAttribute(databaseId, collectionId, "arabianQuantity", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabianLength", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabianTira", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabianHata", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabianCuff", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabianMohori", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabianRakaba", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "arabianNess", required: false);
+        await _databases.CreateStringAttribute(databaseId, collectionId, "arabianNote", 500, required: false);
     }
 
     private async Task AddPanjabiAttributes(string databaseId, string collectionId)
     {
-        await _databases.CreateIntegerAttribute(databaseId, collectionId, "panjabi.amount", required: false);
-        await _databases.CreateIntegerAttribute(databaseId, collectionId, "panjabi.quantity", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabi.length", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabi.sina", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabi.komor", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabi.hata", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabi.cuff", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabi.mohori", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabi.rakaba", required: false);
-        await _databases.CreateStringAttribute(databaseId, collectionId, "panjabi.note", 500, required: false);
+        await _databases.CreateIntegerAttribute(databaseId, collectionId, "panjabiAmount", required: false);
+        await _databases.CreateIntegerAttribute(databaseId, collectionId, "panjabiQuantity", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabiLength", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabiSina", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabiKomor", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabiHata", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabiCuff", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabiMohori", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "panjabiRakaba", required: false);
+        await _databases.CreateStringAttribute(databaseId, collectionId, "panjabiNote", 500, required: false);
     }
 
     private async Task AddSelowerAttributes(string databaseId, string collectionId)
     {
-        await _databases.CreateIntegerAttribute(databaseId, collectionId, "selower.amount", required: false);
-        await _databases.CreateIntegerAttribute(databaseId, collectionId, "selower.quantity", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "selower.length", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "selower.hip", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "selower.komor", required: false);
-        await _databases.CreateFloatAttribute(databaseId, collectionId, "selower.ness", required: false);
-        await _databases.CreateStringAttribute(databaseId, collectionId, "selower.note", 500, required: false);
+        await _databases.CreateIntegerAttribute(databaseId, collectionId, "selowerAmount", required: false);
+        await _databases.CreateIntegerAttribute(databaseId, collectionId, "selowerQuantity", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "selowerLength", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "selowerHip", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "selowerKomor", required: false);
+        await _databases.CreateFloatAttribute(databaseId, collectionId, "selowerNess", required: false);
+        await _databases.CreateStringAttribute(databaseId, collectionId, "selowerNote", 500, required: false);
     }
 }

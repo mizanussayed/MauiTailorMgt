@@ -1,4 +1,6 @@
-﻿using Appwrite.Services;
+﻿using Appwrite;
+using Appwrite.Models;
+using Appwrite.Services;
 using MYPM.Configurations;
 using System.Text.Json;
 namespace MYPM.Services;
@@ -7,6 +9,7 @@ public class OrderService
     private readonly Databases _databases = new AppWriteClient().GetDatabase();
     private readonly string _databaseId;
     private readonly string _ordersCollectionId;
+    private readonly Storage _storage = new AppWriteClient().GetStorage();
     private List<NewOrderModel> OrdersList { get; set; } = [];
 
     public OrderService()
@@ -35,40 +38,40 @@ public class OrderService
 
             if (panjabiOrder is not null)
             {
-                data.Add("panjabi.amount", panjabiOrder.Amount);
-                data.Add("panjabi.quantity", panjabiOrder.Quantity);
-                data.Add("panjabi.length", panjabiOrder.Length);
-                data.Add("panjabi.sina", panjabiOrder.Sina);
-                data.Add("panjabi.komor", panjabiOrder.Komor);
-                data.Add("panjabi.hata", panjabiOrder.Hata);
-                data.Add("panjabi.cuff", panjabiOrder.Cuff);
-                data.Add("panjabi.mohori", panjabiOrder.Mohori);
-                data.Add("panjabi.rakaba", panjabiOrder.Rakaba);
-                data.Add("panjabi.note", panjabiOrder.Note);
+                data.Add("panjabiAmount", panjabiOrder.Amount);
+                data.Add("panjabiQuantity", panjabiOrder.Quantity);
+                data.Add("panjabiLength", panjabiOrder.Length);
+                data.Add("panjabiSina", panjabiOrder.Sina);
+                data.Add("panjabiKomor", panjabiOrder.Komor);
+                data.Add("panjabiHata", panjabiOrder.Hata);
+                data.Add("panjabiCuff", panjabiOrder.Cuff);
+                data.Add("panjabiMohori", panjabiOrder.Mohori);
+                data.Add("panjabiRakaba", panjabiOrder.Rakaba);
+                data.Add("panjabiNote", panjabiOrder.Note);
             }
 
             if (arabianOrder is not null)
             {
-                data.Add("arabian.amount", arabianOrder.Amount);
-                data.Add("arabian.quantity", arabianOrder.Quantity);
-                data.Add("arabian.length", arabianOrder.Length);
-                data.Add("arabian.tira", arabianOrder.Tira);
-                data.Add("arabian.hata", arabianOrder.Hata);
-                data.Add("arabian.cuff", arabianOrder.Cuff);
-                data.Add("arabian.mohori", arabianOrder.Mohori);
-                data.Add("arabian.rakaba", arabianOrder.Rakaba);
-                data.Add("arabian.ness", arabianOrder.Ness);
-                data.Add("arabian.note", arabianOrder.Note);
+                data.Add("arabianAmount", arabianOrder.Amount);
+                data.Add("arabianQuantity", arabianOrder.Quantity);
+                data.Add("arabianLength", arabianOrder.Length);
+                data.Add("arabianTira", arabianOrder.Tira);
+                data.Add("arabianHata", arabianOrder.Hata);
+                data.Add("arabianCuff", arabianOrder.Cuff);
+                data.Add("arabianMohori", arabianOrder.Mohori);
+                data.Add("arabianRakaba", arabianOrder.Rakaba);
+                data.Add("arabianNess", arabianOrder.Ness);
+                data.Add("arabianNote", arabianOrder.Note);
             }
             if (selowerOrder is not null)
             {
-                data.Add("selower.amount", selowerOrder.Amount);
-                data.Add("selower.quantity", selowerOrder.Quantity);
-                data.Add("selower.length", selowerOrder.Length);
-                data.Add("selower.hip", selowerOrder.Hip);
-                data.Add("selower.komor", selowerOrder.Komor);
-                data.Add("selower.ness", selowerOrder.Ness);
-                data.Add("selower.note", selowerOrder.Note);
+                data.Add("selowerAmount", selowerOrder.Amount);
+                data.Add("selowerQuantity", selowerOrder.Quantity);
+                data.Add("selowerLength", selowerOrder.Length);
+                data.Add("selowerHip", selowerOrder.Hip);
+                data.Add("selowerKomor", selowerOrder.Komor);
+                data.Add("selowerNess", selowerOrder.Ness);
+                data.Add("selowerNote", selowerOrder.Note);
             }
             var orderDoc = await _databases.CreateDocument(
                 _databaseId,
@@ -91,6 +94,8 @@ public class OrderService
         {
             if (OrdersList is null || OrdersList?.Count < 1)
             {
+                //var query = Query.Select(["$id", "customerName", "mobileNumber", "orderDate", "deliveryDate", "paidAmount", "dueAmount", "totalAmount", "status"]);
+                //var response = await _databases.ListDocuments(_databaseId, _ordersCollectionId, [query]);
                 var response = await _databases.ListDocuments(_databaseId, _ordersCollectionId);
 
                 if (response.Documents != null)
@@ -146,6 +151,54 @@ public class OrderService
         {
             _ = ex.Message.ToString();
             return await Task.FromResult(new NewOrderModel());
+        }
+    }
+
+    public async Task<NewOrderModel> UpdateStatus(string Id, OrderStatus status)
+    {
+        try
+        {
+            Dictionary<string, object> data = new()
+            {
+                { "status", (int)status },
+            };
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+            };
+            var response = await _databases.UpdateDocument(
+                  _databaseId,
+                  _ordersCollectionId,
+                  Id,
+                  data
+             );
+            if (response.Data is not null)
+            {
+                var obj = JsonSerializer.Serialize(response.Data, options);
+                var newOrder = JsonSerializer.Deserialize<NewOrderModel>(obj, options);
+                newOrder?.MapEmbeddedProperties(response.Data);
+                return newOrder!;
+            }
+            return await Task.FromResult(new NewOrderModel());
+        }
+        catch (Exception)
+        {
+            return await Task.FromResult(new NewOrderModel());
+        }
+    }
+
+    public async Task<bool> UplaodGelleryImages(InputFile fileUrl)
+    {
+        try
+        {
+            var response = await _storage.CreateFile("673104ef0029440a9c01", ID.Unique(), fileUrl);
+            return response is not null;
+        }
+        catch (Exception)
+        {
+            return false;
         }
     }
 }

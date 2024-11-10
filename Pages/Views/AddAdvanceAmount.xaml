@@ -37,7 +37,7 @@
                         <Border.StrokeShape>
                             <RoundRectangle  CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
+                        <Entry Text="{Binding Order.PaidAmount, Mode=OneWay}" 
                             Keyboard="Numeric"
                             Background="Transparent"
                             x:Name="PaidEntry"

@@ -93,7 +93,7 @@ public partial class InvoiceQR : ContentPage
     }  
     private async void OnBackClicked(object sender, EventArgs e)
     {
-       await Shell.Current.Navigation.PopAsync().ConfigureAwait(false);
+       await Shell.Current.Navigation.PopToRootAsync().ConfigureAwait(false);
     }
 
     private static Task<Label> CreateLabel(string text)
