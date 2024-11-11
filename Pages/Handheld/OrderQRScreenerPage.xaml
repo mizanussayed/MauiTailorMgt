@@ -1,0 +1,14 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+	x:Class="MYPM.Pages.Handheld.OrderQRScreenerPage"
+	>
+    <Grid RowDefinitions="3*,1*" Padding="20" Margin="20" HorizontalOptions="Center">
+        <zxing:CameraBarcodeReaderView
+          WidthRequest="250" HeightRequest="250"
+          Margin="20"
+	      x:Name="barcodeView"
+	      BarcodesDetected="BarcodesDetected"
+	    />
+    </Grid>
+</ContentPage>

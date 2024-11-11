@@ -108,7 +108,8 @@ public partial class InvoiceQR : ContentPage
 
     private static string CreateQRText(NewOrderModel invoice)
     {
-        return $"Invoice Number: {invoice.Id}\n" +
+        return $"Yousuf_Panjabi_tailor\n" +
+               $"Invoice Number:~{invoice.Id}~\n" +
                $"Date: {invoice.DeliveryDate:d}\n" +
                $"Customer: {invoice.CustomerName}\n" +
                $"Mobile: {invoice.MobileNumber}\n" +

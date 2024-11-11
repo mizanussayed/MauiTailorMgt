@@ -14,7 +14,7 @@ public partial class HomePage : ContentPage
     private async void AddNewOrderTapped(object sender, TappedEventArgs e)
     {
         var total = BindingContext as HomeViewModel;
-        await Shell.Current.GoToAsync($"{nameof(NewOrderPage)}?NextId={total.NextId}");
+        await Shell.Current.GoToAsync($"{nameof(NewOrderPage)}?NextId={total?.NextId}");
     }
     private async void AddNewCustomerTapped(object sender, TappedEventArgs e)
     {
@@ -35,5 +35,9 @@ public partial class HomePage : ContentPage
     private async void ViewInvoicesTapped(object sender, TappedEventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(NewOrderListPage));
+    } 
+    private async void ViewGalleryTapped(object sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(GalleryListPage));
     }
 }

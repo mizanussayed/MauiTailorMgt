@@ -16,13 +16,13 @@
               Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate p:HomePage}" />
         </Tab>
+        <Tab Title="QR"
+             Icon="qr_code.png">
+            <ShellContent ContentTemplate="{DataTemplate h:OrderQRScreenerPage}" />
+        </Tab>
         <Tab Title="Order"
              Icon="order.svg">
             <ShellContent ContentTemplate="{DataTemplate h:OrdersPage}" />
-        </Tab>
-        <Tab Title="Setting"
-             Icon="setting.svg">
-            <ShellContent ContentTemplate="{DataTemplate p:SettingsPage}" />
         </Tab>
     </TabBar>
 </Shell>

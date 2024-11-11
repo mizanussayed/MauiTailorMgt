@@ -128,6 +128,9 @@
                                />
                         <Label Text="Gallery" />
                     </StackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ViewGalleryTapped" />
+                    </Frame.GestureRecognizers>
                 </Frame>
 
                 <Frame Grid.Row="3" Grid.Column="0">

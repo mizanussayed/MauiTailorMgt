@@ -188,19 +188,6 @@ public class OrderService
             return await Task.FromResult(new NewOrderModel());
         }
     }
-
-    public async Task<bool> UplaodGelleryImages(InputFile fileUrl)
-    {
-        try
-        {
-            var response = await _storage.CreateFile("673104ef0029440a9c01", ID.Unique(), fileUrl);
-            return response is not null;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
 }
 
 
