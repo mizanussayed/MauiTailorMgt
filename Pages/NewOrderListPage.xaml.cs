@@ -12,13 +12,12 @@ public partial class NewOrderListPage : ContentPage
 
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-	
-    }
-
-    private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        string v = (e.CurrentSelection.FirstOrDefault() as NewOrderModel).Id;
-        var context = BindingContext as OrdersViewModel;
-        context?.GetDetailsCommand.Execute(v);    
+        if (e.Parameter is not null)
+        {
+            var border = sender as Border;
+            border!.Background = Colors.Transparent;
+            var context = BindingContext as OrdersViewModel;
+            context?.GetDetailsCommand.Execute(e.Parameter);
+        }
     }
 }

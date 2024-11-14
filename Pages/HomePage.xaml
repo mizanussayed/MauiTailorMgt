@@ -9,9 +9,8 @@
              Title="Dashboard">
 
     <ContentPage.Resources>
-        <Style TargetType="Frame">
+        <Style TargetType="Border">
             <Setter Property="BackgroundColor" Value="{StaticResource Tertiary}" />
-            <Setter Property="CornerRadius" Value="15" />
             <Setter Property="Padding" Value="10" />
         </Style>
         <Style TargetType="Label">
@@ -56,7 +55,7 @@
                   ColumnDefinitions="*, *"
                   RowDefinitions="*, *, *, *"
                   >
-                <Frame Grid.Row="0" Grid.Column="0">
+                <Border Grid.Row="0" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center" >
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.UserPlus}}"
                                BackgroundColor="{StaticResource Primary}" 
@@ -64,12 +63,12 @@
                                />
                         <Label Text="Add New Order" />
                     </StackLayout>
-                    <Frame.GestureRecognizers>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AddNewOrderTapped" />
-                    </Frame.GestureRecognizers>
-                </Frame>
+                    </Border.GestureRecognizers>
+                </Border>
 
-                <Frame Grid.Row="0" Grid.Column="1">
+                <Border Grid.Row="0" Grid.Column="1">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Users}}"
                                BackgroundColor="{StaticResource Primary}" 
@@ -78,11 +77,11 @@
                         <Label Text="{Binding TotalCustomer, StringFormat='Total Customers : {0}'}"  />
                         <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
-                    <Frame.GestureRecognizers>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="ViewCustomerListTapped" />
-                    </Frame.GestureRecognizers>
-                </Frame>
-                <Frame Grid.Row="1" Grid.Column="0">
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.AddressBook}}"
                                BackgroundColor="{StaticResource Primary}" 
@@ -91,12 +90,12 @@
                         <Label Text="{Binding TodayOrders, StringFormat='Today Total : {0}'}"  />
                         <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
-                    <Frame.GestureRecognizers>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AddNewOrderTapped" />
-                    </Frame.GestureRecognizers>
-                </Frame>
+                    </Border.GestureRecognizers>
+                </Border>
 
-                <Frame Grid.Row="1" Grid.Column="1">
+                <Border Grid.Row="1" Grid.Column="1">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Box}}"
                                BackgroundColor="{StaticResource Primary}" 
@@ -105,12 +104,12 @@
                         <Label Text="{Binding ReadyToDelivary, StringFormat='Ready For Delivery : {0}'}"  />
                         <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
-                    <Frame.GestureRecognizers>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="ViewInvoicesTapped"/>
-                    </Frame.GestureRecognizers>
-                </Frame>
+                    </Border.GestureRecognizers>
+                </Border>
 
-                <Frame Grid.Row="2" Grid.Column="0">
+                <Border Grid.Row="2" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.SortAmountUp}}"
                                BackgroundColor="{StaticResource Primary}" 
@@ -119,8 +118,8 @@
                         <Label Text="{Binding TotalOrders, StringFormat='Total Orders : {0}'}"  />
                         <Label Text="{x:Static a:IconFont.Eye}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
-                </Frame>
-                <Frame Grid.Row="2" Grid.Column="1">
+                </Border>
+                <Border Grid.Row="2" Grid.Column="1">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Images}}"
                                BackgroundColor="{StaticResource Primary}" 
@@ -128,12 +127,12 @@
                                />
                         <Label Text="Gallery" />
                     </StackLayout>
-                    <Frame.GestureRecognizers>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="ViewGalleryTapped" />
-                    </Frame.GestureRecognizers>
-                </Frame>
+                    </Border.GestureRecognizers>
+                </Border>
 
-                <Frame Grid.Row="3" Grid.Column="0">
+                <Border Grid.Row="3" Grid.Column="0">
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                         <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.UserCheck}}"
                                BackgroundColor="{StaticResource Primary}" 
@@ -142,10 +141,10 @@
                         <Label Text="Assign Order" />
                         <Label Text="{x:Static a:IconFont.User}" FontFamily="FontAwesome" VerticalOptions="Center"/>
                     </StackLayout>
-                    <Frame.GestureRecognizers>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AssignOrderTapped" />
-                    </Frame.GestureRecognizers>
-                </Frame>
+                    </Border.GestureRecognizers>
+                </Border>
             </Grid>
         </StackLayout>
     </ContentPage.Content>

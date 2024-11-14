@@ -1,4 +1,4 @@
-﻿namespace MYPM.Pages.Handheld;
+﻿namespace MYPM.Pages;
 
 public partial class OrdersPage : ContentPage
 {

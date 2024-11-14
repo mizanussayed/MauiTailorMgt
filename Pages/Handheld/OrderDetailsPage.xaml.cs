@@ -1,34 +1,45 @@
-﻿using MYPM.Pages.Views;
+﻿using CommunityToolkit.Maui.Views;
+using MYPM.Pages.Views;
 using MYPM.Services;
 
 namespace MYPM.Pages.Handheld;
 
+[QueryProperty(nameof(Order), "Order")]
 public partial class OrderDetailsPage : ContentPage
 {
-    private readonly NewOrderModel OrderModel;
-    public OrderDetailsPage(NewOrderModel order)
+    private NewOrderModel? OrderModel;
+
+    public NewOrderModel? Order
+    {
+        get => OrderModel;
+        set
+        {
+            OrderModel = value;
+            BindingContext = OrderModel;
+        }
+    }
+
+    public OrderDetailsPage()
     {
         InitializeComponent();
-        BindingContext = order;
-        OrderModel = order;
     }
 
     private async void OnShareClicked(object sender, EventArgs e)
     {
-        await Shell.Current.Navigation.PushAsync(new InvoiceQR(OrderModel));
+        await Shell.Current.Navigation.PushAsync(new InvoiceQR(OrderModel!));
     }
     private async void OnChangeStatusClicked(object sender, EventArgs e)
     {
         try
         {
-            var action = await DisplayActionSheet("Change Order Status", "Update", "Cancel",
-                                        "Pending", "Processing", "Completed", "Delivered");
-            if (action is not null && action != "Cancel")
-            {
-                var orderStatus = Enum.Parse<OrderStatus>(action);
-                await UpdateOrderStatus(orderStatus);
-                await DisplayAlert("Status Updated", $"Order status changed to {orderStatus}", "OK");
-            }
+            var statusValues = Enum.GetValues<OrderStatus>().ToList();
+            var actionSheet = await DisplayActionSheet("Change Order Status", "Cancel", null, statusValues.Select(s => s.ToString()).ToArray());
+
+            if (actionSheet == "Cancel") return;
+
+            var selectedStatus = Enum.Parse<OrderStatus>(actionSheet);
+            await UpdateOrderStatus(selectedStatus);
+            await DisplayAlert("Status Updated", $"Order status changed to {selectedStatus}", "OK");
         }
         catch (Exception ex)
         {
@@ -49,7 +60,7 @@ public partial class OrderDetailsPage : ContentPage
     private async Task UpdateOrderStatus(OrderStatus status)
     {
         var service = new OrderService();
-        var response = await service.UpdateStatus(OrderModel.Id, status);
+        var response = await service.UpdateStatus(OrderModel!.Id, status);
         BindingContext = response;
     }
 }

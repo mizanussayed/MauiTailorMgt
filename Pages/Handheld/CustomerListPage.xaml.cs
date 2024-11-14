@@ -1,4 +1,4 @@
-using MYPM.Pages.Views;
+
 using MYPM.ViewModels;
 
 namespace MYPM.Pages.Handheld;
@@ -28,11 +28,5 @@ public partial class CustomerListPage : ContentPage
             var invoice = (NewOrderModel)e.Item;
             await DisplayAlert("Invoice Details", $"Invoice Number: {invoice.CustomerName}\nCustomer: {invoice.MobileNumber}", "OK");
         }
-    }
-
-    private async void OnScanQRCodeClicked(object sender, EventArgs e)
-    {
-        var vw = new QRScreenerView();
-        await Shell.Current.Navigation.PushAsync(vw, true);
     }
 }

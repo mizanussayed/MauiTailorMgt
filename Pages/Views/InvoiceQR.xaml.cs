@@ -1,18 +1,22 @@
+using Microsoft.Maui.Controls.Shapes;
 using MYPM.Common.QRGeneration;
+using MYPM.Pages.Handheld;
+using Path = System.IO.Path;
 
 namespace MYPM.Pages.Views;
 public partial class InvoiceQR : ContentPage
 {
-    private string _invoiceFilePath = string.Empty;
-
-    public InvoiceQR(NewOrderModel invoice)
+    private string _orderModelFilePath = string.Empty;
+    private readonly NewOrderModel? orderModel;
+    public InvoiceQR(NewOrderModel order)
     {
         InitializeComponent();
-       GenerateInvoice(invoice).ConfigureAwait(true);
+        orderModel = order;
+        GenerateInvoice().ConfigureAwait(true);
     }
 
 
-    private async Task GenerateInvoice(NewOrderModel invoice)
+    private async Task GenerateInvoice()
     {
         Label header = new() { Text = "Yousuf Tailors", FontSize = 24, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
         var grid = new Grid()
@@ -28,38 +32,38 @@ public partial class InvoiceQR : ContentPage
         };
 
         var stactlayout = new StackLayout
-        {   await CreateLabel($"Invoice Number: {invoice.Id}"),
-            await CreateLabel($"Date: {invoice.DeliveryDate:dd-MMM-yyyy}"),
-            await CreateLabel($"Customer: {invoice.CustomerName}"),
-            await CreateLabel($"Mobile: {invoice.MobileNumber}"),
-            await CreateLabel($"Total Amount: {invoice.TotalAmount} BDT")
+        {   await CreateLabel($"Order Number: {orderModel!.Id}"),
+            await CreateLabel($"Date: {orderModel.DeliveryDate:dd-MMM-yyyy}"),
+            await CreateLabel($"Customer: {orderModel.CustomerName}"),
+            await CreateLabel($"Mobile: {orderModel.MobileNumber}"),
+            await CreateLabel($"Total Amount: {orderModel.TotalAmount} BDT")
         };
 
-        var barcode = QrUtils.MakeQrCodeResult(CreateQRText(invoice)).QrCode;
+        var barcode = QrUtils.MakeQrCodeResult(CreateQRText(orderModel)).QrCode;
         barcode.WidthRequest = 100;
         grid.Add(stactlayout, 0, 0);
         grid.Add(barcode, 1, 0);
 
-        var frame = new Frame
+        var border = new Border
         {
-            BorderColor = Application.Current?.Resources["Primary"] as Color ?? Colors.Orange,
+
+            Stroke = Application.Current?.Resources["Primary"] as Color ?? Colors.Orange,
             Padding = new Thickness(10),
             Margin = new Thickness(0, 10),
-            CornerRadius = 10,
+            StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10) },
             BackgroundColor = Colors.White,
             HorizontalOptions = LayoutOptions.Center,
-            HasShadow = true,
             Content = new VerticalStackLayout() { header, grid }
         };
 
-        qrBox.Add(frame);
-        _invoiceFilePath = await SaveInvoiceAsImage(frame).ConfigureAwait(false);
+        qrBox.Add(border);
+        _orderModelFilePath = await SaveInvoiceAsImage(border).ConfigureAwait(false);
     }
 
     private static async Task<string> SaveInvoiceAsImage(VisualElement visualElement)
     {
         await Task.Delay(100);
-        string fileName = Path.Combine(FileSystem.CacheDirectory, "invoice.png");
+        string fileName = Path.Combine(FileSystem.CacheDirectory, "orderModel.png");
         try
         {
             var image = await visualElement.CaptureAsync();
@@ -77,23 +81,26 @@ public partial class InvoiceQR : ContentPage
 
     private async void OnShareInvoiceClicked(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(_invoiceFilePath))
+        if (!string.IsNullOrEmpty(_orderModelFilePath))
         {
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = "Share Invoice",
-                File = new ShareFile(_invoiceFilePath)
+                File = new ShareFile(_orderModelFilePath)
             }).ConfigureAwait(false);
-          // File.Delete(_invoiceFilePath);
         }
         else
         {
-            await DisplayActionSheet("Error", "OK", null, "No invoice to share.").ConfigureAwait(false);
+            await DisplayActionSheet("Error", "OK", null, "No orderModel to share.").ConfigureAwait(false);
         }
-    }  
+    }
     private async void OnBackClicked(object sender, EventArgs e)
     {
-       await Shell.Current.Navigation.PopToRootAsync().ConfigureAwait(false);
+        var navigationParameter = new Dictionary<string, object>
+        {
+          { "Order", orderModel! }
+        };
+        await Shell.Current.GoToAsync($"{nameof(OrderDetailsPage)}", navigationParameter);
     }
 
     private static Task<Label> CreateLabel(string text)
@@ -106,13 +113,13 @@ public partial class InvoiceQR : ContentPage
         });
     }
 
-    private static string CreateQRText(NewOrderModel invoice)
+    private static string CreateQRText(NewOrderModel orderModel)
     {
         return $"Yousuf_Panjabi_tailor\n" +
-               $"Invoice Number:~{invoice.Id}~\n" +
-               $"Date: {invoice.DeliveryDate:d}\n" +
-               $"Customer: {invoice.CustomerName}\n" +
-               $"Mobile: {invoice.MobileNumber}\n" +
-               $"Total: {invoice.TotalAmount} BDT";
+               $"Order Number:~{orderModel.Id}~\n" +
+               $"Date: {orderModel.DeliveryDate:d}\n" +
+               $"Customer: {orderModel.CustomerName}\n" +
+               $"Mobile: {orderModel.MobileNumber}\n" +
+               $"Total: {orderModel.TotalAmount} BDT";
     }
 }

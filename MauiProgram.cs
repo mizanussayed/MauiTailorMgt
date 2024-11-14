@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using Appwrite;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Platform;
 using ZXing.Net.Maui.Controls;

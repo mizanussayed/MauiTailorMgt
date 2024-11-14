@@ -4,19 +4,19 @@
              x:Class="MYPM.Pages.GalleryListPage"
              Title="Gallery">
     <Grid>
-            <!-- Gallery display -->
-            <CollectionView x:Name="ImageGallery" ItemsSource="{Binding Images}" SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame BorderColor="Gray" Padding="0" Margin="5">
-                            <Image Source="{Binding ImageUrl}" Aspect="AspectFill" WidthRequest="150" HeightRequest="150"/>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+        <!-- Gallery display -->
+        <CollectionView x:Name="ImageGallery" ItemsSource="{Binding Images}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="0" Margin="5" Stroke="Gray">
+                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" WidthRequest="150" HeightRequest="150"/>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-            <!-- Button to add new image -->
-            <Button Text="+" 
+        <!-- Button to add new image -->
+        <Button Text="+" 
                 HorizontalOptions="EndAndExpand" 
                 VerticalOptions="StartAndExpand"
                 BackgroundColor="DarkGray"
@@ -26,5 +26,5 @@
                 CornerRadius="25"
                 Clicked="OnAddImageClicked"
                 Margin="10"/>
-        </Grid>
-    </ContentPage>
+    </Grid>
+</ContentPage>

@@ -2,7 +2,6 @@
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:h="clr-namespace:MYPM.Pages.Handheld"
              xmlns:p="clr-namespace:MYPM.Pages"
              x:Class="MYPM.AppShell"
              Shell.TabBarIsVisible="True"
@@ -18,11 +17,11 @@
         </Tab>
         <Tab Title="QR"
              Icon="qr_code.png">
-            <ShellContent ContentTemplate="{DataTemplate h:OrderQRScreenerPage}" />
+            <ShellContent ContentTemplate="{DataTemplate p:OrderQRScreenerPage}" />
         </Tab>
         <Tab Title="Order"
              Icon="order.svg">
-            <ShellContent ContentTemplate="{DataTemplate h:OrdersPage}" />
+            <ShellContent ContentTemplate="{DataTemplate p:OrdersPage}" />
         </Tab>
     </TabBar>
 </Shell>

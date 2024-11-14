@@ -9,6 +9,7 @@ public partial class OrdersViewModel : ObservableObject
     {
         DelayedLoad().ConfigureAwait(false);
     }
+
     [ObservableProperty]
     private ObservableCollection<NewOrderModel>? _orders;
 
@@ -32,7 +33,7 @@ public partial class OrdersViewModel : ObservableObject
     public async Task Refresh()
     {
         var orderService = new OrderService();
-        Orders = new ObservableCollection<NewOrderModel>( await orderService.GetAllOrders());
+        Orders = new ObservableCollection<NewOrderModel>(await orderService.GetAllOrders());
     }
 
     private async Task DelayedLoad()
@@ -77,12 +78,15 @@ public partial class OrdersViewModel : ObservableObject
     [RelayCommand]
     private async Task GetDetails(string Id)
     {
-
         try
         {
             var orderService = new OrderService();
             NewOrder = await orderService.GetOrder(Id);
-            await Shell.Current.Navigation.PushAsync(new OrderDetailsPage(NewOrder), true);
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "Order", NewOrder }
+            };
+            await Shell.Current.GoToAsync($"{nameof(OrderDetailsPage)}", navigationParameter);
         }
         catch (Exception ex)
         {

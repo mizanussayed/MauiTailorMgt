@@ -3,73 +3,95 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:MYPM.Models"
              xmlns:vm="clr-namespace:MYPM.ViewModels"
+             xmlns:a="clr-namespace:MYPM"
              x:Class="MYPM.Pages.NewOrderListPage"
              x:DataType="vm:OrdersViewModel"
-             Title="Orders">
+             Title="Orders"
+             BackgroundColor="#1C1C1E">
 
     <ContentPage.Resources>
-        <Style TargetType="Grid">
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" />
-                        <VisualState x:Name="Selected">
-                            <VisualState.Setters>
-                                <Setter Property="BackgroundColor"
-                                        Value="Transparent" />
-                                <Setter Property="RowSpacing" Value="15" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
+        <Style TargetType="HorizontalStackLayout">
+            <Setter Property="Spacing" Value="15"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="Padding" Value="0,0,0,10"/>
+        </Style>
+
+        <Style TargetType="Image">
+            <Setter Property="WidthRequest" Value="22"/>
+            <Setter Property="HeightRequest" Value="22"/>
+            <Setter Property="Aspect" Value="AspectFit"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="Small"/>
+            <Setter Property="TextColor" Value="#FFFFFF"/>
         </Style>
     </ContentPage.Resources>
 
-    <ScrollView Padding="10">
-        <CollectionView ItemsSource="{Binding Orders}" 
-                        SelectionMode="Single"
-                        SelectionChanged="CollectionView_SelectionChanged"
-                        >
+    <ScrollView Padding="20">
+        <CollectionView ItemsSource="{Binding Orders}" SelectionMode="Single">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:NewOrderModel">
-                    <Grid Padding="15" Margin="5" BackgroundColor="{StaticResource Tertiary}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Text="{Binding Id, StringFormat='SL : {0}'}" 
-                                    FontAttributes="Bold" 
-                                    FontSize="Medium"
-                                    TextColor="{StaticResource Primary}"
-                                    />
+                    <Border StrokeShape="RoundRectangle 10"
+                            BackgroundColor="#2C2C2E"
+                            StrokeThickness="3"
+                            Stroke="#3C3C3E"
+                            Margin="10"
+                            Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <Label Text="{Binding CustomerName, StringFormat='Name : {0}'}" 
-                                   Grid.Row="1" 
-                                   FontAttributes="Bold" 
-                                   FontSize="Medium"
-                                   />
+                            <HorizontalStackLayout>
+                                <Image
+                                       Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.SortNumericUp}}"/>
+                                <Label Text="{Binding Id}" />
+                            </HorizontalStackLayout>
 
-                        <Label Text="{Binding MobileNumber, StringFormat='Mobile No: {0}'}" 
-                                   Grid.Row="2" 
-                                   FontSize="Small"/>
-                        <Label Text="{Binding Address, StringFormat='Address : {0}'}" Grid.Row="3"  FontSize="Small"/>
+                            <HorizontalStackLayout Grid.Row="1">
+                                <Image
+                                       Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.User}}"/>
+                                <Label Text="{Binding CustomerName}" FontSize="Medium"/>
+                            </HorizontalStackLayout>
 
-                        <StackLayout Orientation="Horizontal" Grid.Row="4" 
-                                  HorizontalOptions="Start">
-                            <Label Text="{Binding TotalAmount, StringFormat='Total: {0} tk'}" 
-                                TextColor="Green" FontAttributes="Bold" />
-                            <Label Text="{Binding DueAmount, StringFormat='Due: {0} tk'}" 
-                                TextColor="Red" FontAttributes="Bold" Margin="10,0,0,0"/>
-                        </StackLayout>
+                            <HorizontalStackLayout Grid.Row="2">
+                                <Image
+                                       Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.PhoneSquare}}"/>
+                                <Label Text="{Binding MobileNumber}" />
+                            </HorizontalStackLayout>
 
-                        <Label Text="{Binding OrderDate, StringFormat='Ordered on: {0:dd MMM yyyy}'}" 
-                            Grid.Row="5" FontSize="Small"/>
-                    </Grid>
+                            <HorizontalStackLayout Grid.Row="3">
+                                <Image
+                                       Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Home}}"/>
+                                <Label Text="{Binding Address}" />
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout Grid.Row="4">
+                                <Image BackgroundColor="Green"
+                                       Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.DollarSign}}"/>
+                                <Label Text="{Binding TotalAmount, StringFormat='Total : {0} tk'}" TextColor="Green" />
+
+                                <Image BackgroundColor="Red"
+                                       Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.DollarSign}}"/>
+                                <Label Text="{Binding DueAmount, StringFormat='Due : {0} tk'}" TextColor="Red"  />
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout Grid.Row="5">
+                                <Image
+                                       Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Clock}}"/>
+                                <Label Text="{Binding DeliveryDate, StringFormat='Delivery Date : {0:dd MMM yyyy}'}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding Id}" />
+                        </Border.GestureRecognizers>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

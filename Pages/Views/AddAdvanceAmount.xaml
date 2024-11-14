@@ -17,15 +17,17 @@
         </Style>
     </ContentPage.Resources>
     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-        <Frame CornerRadius="10" BackgroundColor="{StaticResource Secondary}" Padding="0, 10">
+        <Border Stroke="{StaticResource SecondaryBrush}" StrokeThickness="1" BackgroundColor="{StaticResource Secondary}" Padding="0, 10">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10"/>
+            </Border.StrokeShape>
             <VerticalStackLayout Spacing="15">
                 <VerticalStackLayout>
-                    <Label Text="Add Amount"  HorizontalOptions="Center" />
+                    <Label Text="Add Amount" HorizontalOptions="Center" />
                 </VerticalStackLayout>
                 <VerticalStackLayout Padding="30, 10" Spacing="10">
-                    <Label Text="{Binding Order.TotalAmount, StringFormat='Total       : {0}'}"  />
-                    <Label Text="{Binding Order.DueAmount, StringFormat='Due        : {0}'}" 
-                           x:Name="DueLbl"/>
+                    <Label Text="{Binding Order.TotalAmount, StringFormat='Total       : {0}'}" />
+                    <Label Text="{Binding Order.DueAmount, StringFormat='Due        : {0}'}" x:Name="DueLbl"/>
                     <Label Text="Advance :"/>
                     <Border 
                         HeightRequest="40"
@@ -35,7 +37,7 @@
                         Stroke="{StaticResource SecondaryBrush}"
                         StrokeThickness="1">
                         <Border.StrokeShape>
-                            <RoundRectangle  CornerRadius="8"/>
+                            <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <Entry Text="{Binding Order.PaidAmount, Mode=OneWay}" 
                             Keyboard="Numeric"
@@ -43,9 +45,9 @@
                             x:Name="PaidEntry"
                             TextChanged="PaidTextChanged"/>
                     </Border>
-                    <Button Text="Save"  Clicked="Button_Clicked"/>
+                    <Button Text="Save" Clicked="Button_Clicked"/>
                 </VerticalStackLayout>
             </VerticalStackLayout>
-        </Frame>
+        </Border>
     </VerticalStackLayout>
 </ContentPage>

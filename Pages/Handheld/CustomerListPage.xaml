@@ -23,6 +23,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Text="Scan QR Code" Clicked="OnScanQRCodeClicked" />
     </StackLayout>
 </ContentPage>

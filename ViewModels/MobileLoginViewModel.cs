@@ -4,20 +4,27 @@ namespace MYPM.ViewModels;
 public partial class MobileLoginViewModel : ObservableObject
 {
     [RelayCommand]
-    private async Task Login()
+    private static async Task Login()
     {
-        if (Application.Current is not null)
-            Application.Current.MainPage = new AppShell();
+        if (Application.Current is not null && Application.Current.Windows.Count > 0)
+            Application.Current.Windows[0].Page = new AppShell();
         else
             await ShowMessage("Error", "Something Went To Wrong");
     }
 
-    private async Task ShowMessage(string title, string message)
+    private static async Task ShowMessage(string title, string message)
     {
-        _ = Application.Current?.MainPage?.Dispatcher.Dispatch(async () =>
+        if (Application.Current?.Windows.Count > 0)
         {
-            await Application.Current.MainPage.DisplayAlert(title, message, "OK").ConfigureAwait(false);
-        });
+            var page = Application.Current.Windows[0].Page;
+            if (page != null)
+            {
+                _ = Application.Current.Windows[0].Dispatcher.Dispatch(async () =>
+                {
+                    await page.DisplayAlert(title, message, "OK").ConfigureAwait(false);
+                });
+            }
+        }
         await Task.CompletedTask;
     }
 }

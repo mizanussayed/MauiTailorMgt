@@ -37,6 +37,7 @@ public partial class AddAdvanceAmount : ContentPage
     private async void Button_Clicked(object sender, EventArgs e)
     {
         context.SaveCommand.Execute(this);
+
         await Shell.Current.Navigation.PushAsync(new InvoiceQR(context.Order));
     }
 }

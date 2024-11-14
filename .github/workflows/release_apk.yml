@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
 
     - name: Install MAUI Workload
       run: dotnet workload install maui
@@ -33,7 +33,7 @@ jobs:
         $keystorePath = "$env:USERPROFILE\\AppData\\Local\\Temp\\mizan.keystore"
         $ANDROID_KEY_PASS = "Dusp@12345"
         keytool -genkeypair -v -keystore $keystorePath -keyalg RSA -keysize 2048 -validity 10000 -storepass $ANDROID_KEY_PASS -keypass $ANDROID_KEY_PASS -dname "CN=Mizan, OU=Dev, O=Company, L=Dhaka, ST=Bangladesh, C=BD" -alias Mizan -deststoretype pkcs12
-        dotnet publish "MYPM.csproj" -c Release -f net8.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
+        dotnet publish "MYPM.csproj" -c Release -f net9.0-android -o ./output -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=$keystorePath -p:AndroidSigningKeyAlias=Mizan -p:AndroidSigningKeyPass=$ANDROID_KEY_PASS -p:AndroidSigningStorePass=$ANDROID_KEY_PASS 
       working-directory: ./ 
 
     - name: Extract Version
@@ -70,14 +70,14 @@ jobs:
     - name: Rename APK
       shell: pwsh
       run: |
-         Rename-Item ./output/com.companyname.ytailor.apk panjabi_tailor.apk
+       #  Rename-Item ./output/com.companyname.ytailor.apk panjabi_tailor.apk
          Rename-Item ./output/com.companyname.ytailor-Signed.apk panjabi_tailor_signed.apk
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: v${{ steps.extractVersion.outputs.version }}
-        files: |
-          ./output/panjabi_tailor.apk
-          ./output/panjabi_tailor_signed.apk
+        files: ./output/panjabi_tailor_signed.apk
+         # ./output/panjabi_tailor.apk
+         # ./output/panjabi_tailor_signed.apk
 
