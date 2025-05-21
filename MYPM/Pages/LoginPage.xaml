@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MYPM.Pages.LoginPage"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource DarkBg1Transparent}" StatusBarStyle="DarkContent" />
+    </ContentPage.Behaviors>
+    <ContentPage.BindingContext>
+        <vm:LoginViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="*,4*,2*,*" RowSpacing="20" BackgroundColor="{StaticResource DarkBg1Transparent}">
+        <Image Source="panjabi2.png" 
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               SemanticProperties.Description="Yousuf Panjabi Tailor"
+               Aspect="AspectFit"  
+               Grid.Row="1" />
+        <Button
+            Text="Let's Go"
+            Command="{Binding LoginCommand}"
+            MinimumWidthRequest="240"
+            Grid.Row="2"
+            SemanticProperties.Description="tap this button to login"
+            VerticalOptions="Start" 
+            HorizontalOptions="Center" />
+    </Grid>
+</ContentPage>

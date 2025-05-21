@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MYPM.Pages.Views.AddAdvanceAmount"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Shell.NavBarIsVisible="False"
+             x:DataType="vm:NewOrderPageViewModel"
+             Background="{StaticResource DarkBg1Transparent}"
+             >
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="#FFF" StatusBarStyle="DarkContent" />
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="Default" />
+            <Setter Property="TextColor" Value="Black" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HorizontalOptions" Value="Start" />
+        </Style>
+    </ContentPage.Resources>
+    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+        <Border Stroke="LightGray" StrokeThickness="1" BackgroundColor="LightGray" Padding="0, 10">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10"/>
+            </Border.StrokeShape>
+            <VerticalStackLayout Spacing="15">
+                <VerticalStackLayout>
+                    <Label Text="Add Advance Amount" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Padding="30, 10" Spacing="10">
+                    <Label Text="{Binding Order.TotalAmount, StringFormat='Total        :  {0}'}" />
+                    <Label Text="{Binding Order.DueAmount, StringFormat='Due          :  {0}'}" x:Name="DueLbl"/>
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="Advance :"/>
+                        <Border 
+                            HeightRequest="40"
+                            WidthRequest="100"
+                            Background="{StaticResource WhiteBrush}"
+                            Stroke="{StaticResource WhiteBrush }"
+                            StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
+                                 Keyboard="Numeric"
+                                 Background="Transparent"
+                                 TextColor="Black"
+                                 x:Name="PaidEntry"
+                                 PlaceholderColor="Transparent"
+                                 TextChanged="PaidTextChanged"/>
+                        </Border>
+                    </HorizontalStackLayout>
+                    <Button Text="Add" Clicked="Button_Clicked" HorizontalOptions="Center" Padding="30, 10" FontAttributes="Bold"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MYPM.Data.Models;assembly=MYPM.Data"
+             xmlns:vm="clr-namespace:MYPM.ViewModels"
+             xmlns:a="clr-namespace:MYPM"
+             x:Class="MYPM.Pages.CustomerOrderPage"
+             Background="{StaticResource DarkBg1Transparent}"
+             Shell.NavBarIsVisible="True"
+             Shell.TabBarIsVisible="False"
+             Title="Orders"
+            >
+
+    <ContentPage.Resources>
+        <Style TargetType="HorizontalStackLayout">
+            <Setter Property="Spacing" Value="15"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="Padding" Value="0,0,0,10"/>
+        </Style>
+
+        <Style TargetType="Image">
+            <Setter Property="WidthRequest" Value="22"/>
+            <Setter Property="HeightRequest" Value="22"/>
+            <Setter Property="Aspect" Value="AspectFit"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="Small"/>
+            <Setter Property="TextColor" Value="#000"/>
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="BackgroundColor" Value="LightGray" />
+            <Setter Property="TextColor" Value="Black" />
+            <Setter Property="BorderColor" Value="Gray" />
+            <Setter Property="Padding" Value="16, 8" />
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+        </Style>
+    </ContentPage.Resources>
+
+        <Grid RowDefinitions="*" Padding="0">
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Orders}" SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:NewOrderModel">
+                        <Border StrokeShape="RoundRectangle 10"
+                                BackgroundColor="White"
+                                StrokeThickness="1"
+                                Stroke="#E0E0E0"
+                                Margin="10, 5"
+                                Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <HorizontalStackLayout Grid.Row="0">
+                                    <Image Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.SortNumericUp}, Color=Black}"/>
+                                    <Label Text="{Binding SL}" />
+                                </HorizontalStackLayout>
+
+                                <HorizontalStackLayout Grid.Row="1">
+                                    <Image Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.User}, Color=Black }"/>
+                                    <Label Text="{Binding CustomerName}" FontSize="Medium"/>
+                                </HorizontalStackLayout>
+
+                                <HorizontalStackLayout Grid.Row="2">
+                                    <Image Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Phone}, Color=Black}"/>
+                                    <Label Text="{Binding MobileNumber}" />
+                                </HorizontalStackLayout>
+
+                                <HorizontalStackLayout Grid.Row="3">
+                                    <Image
+                               Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Home}, Color=Black}"/>
+                                    <Label Text="{Binding Address}" />
+                                </HorizontalStackLayout>
+
+                                <HorizontalStackLayout Grid.Row="4">
+                                    <Image  Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.DollarSign}, Color=Green }"/>
+                                    <Label Text="{Binding TotalAmount, StringFormat='Total : {0} tk'}" TextColor="Green" />
+                                    <Image Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.DollarSign}, Color=Red}"/>
+                                    <Label Text="{Binding DueAmount, StringFormat='Due : {0} tk'}" TextColor="Red"  />
+                                </HorizontalStackLayout>
+
+                                <HorizontalStackLayout Grid.Row="5">
+                                    <Image
+                               Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Clock}, Color=Black}"/>
+                                    <Label Text="{Binding DeliveryDate, StringFormat='Delivery Date : {0:dd MMM yyyy}'}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding Id}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+</ContentPage>

@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style TargetType="Layout"
+            ApplyToDerivedTypes="True"
+            Class="FlyoutItemGridStyle">
+
+        <Setter
+                Property="HeightRequest"
+                Value="44" />
+        <Setter
+                Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup
+                        x:Name="CommonStates">
+                    <VisualState
+                            x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter
+                                Property="BackgroundColor"
+                                Value="#FF9900" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState
+                            x:Name="Selected">
+                        <VisualState.Setters>
+                            <Setter
+                                    Property="BackgroundColor"
+                                    Value="#FF3300" />
+
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState
+                            x:Name="Disabled">
+                        <VisualState.Setters>
+
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Layout" Class="InnerContent">
+        <Setter Property="Margin" Value="15"/>
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize"
+                Value="17"/>
+        <Setter Property="TextColor" 
+            Value="{AppThemeBinding 
+                Dark={StaticResource White}, 
+                Light={StaticResource Black}}"/>
+    </Style>
+
+
+    <Style TargetType="Label"
+           x:Key="LargeTitle">
+        <Setter Property="FontSize"
+                Value="30"/>
+        <Setter Property="FontFamily" Value="OpenSansSemiBold"/>
+    </Style>
+    <Style TargetType="Label"
+            x:Key="Title1">
+        <Setter Property="FontSize"
+                Value="20"/>
+        <Setter Property="FontFamily" Value="OpenSansSemiBold"/>
+    </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource DarkTextPrimary}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource DarkTextSecondary}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkEntryBackground}"/>
+    </Style>
+
+    <Style TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkEntryBackground}"/>
+        <Setter Property="Stroke" Value="{StaticResource DarkStroke}"/>
+    </Style>
+
+
+    <Style TargetType="Button">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource Neutral}" />
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Button" x:Key="PrimaryButtonOutline">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="BorderColor" Value="{StaticResource Primary}"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BorderColor" Value="{StaticResource Neutral}" />
+                            <Setter Property="TextColor" Value="{StaticResource Neutral}" />
+                            <Setter Property="Background" Value="Transparent"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+
+      <Style TargetType="Button" x:Key="BorderlessButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource Neutral}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="BoxView" x:Key="HRule">
+        <Setter Property="Color" 
+            Value="{AppThemeBinding 
+                Dark={StaticResource Secondary},
+                Light={StaticResource Secondary}}"/>
+        <Setter Property="HeightRequest" Value="2"/>
+    </Style>
+
+
+    <Style TargetType="StackLayout" Class="CheckBoxContainer">
+        <Setter Property="Orientation" Value="Horizontal"/>
+    </Style>
+
+    <Style TargetType="StackLayout" Class="SwitchContainer">
+        <Setter Property="Orientation" Value="Horizontal"/>
+    </Style>
+
+
+    <Style TargetType="Picker" ApplyToDerivedTypes="True">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+    </Style>
+
+    <Style TargetType="Editor">
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style TargetType="Slider">
+        <Setter Property="MinimumTrackColor" Value="{StaticResource Primary}"/>
+        <Setter Property="MaximumTrackColor" Value="{StaticResource Neutral}"/>
+        <Setter Property="ThumbColor" Value="{StaticResource Primary}"/>
+    </Style>
+
+    <Style TargetType="Switch">
+        <Setter Property="OnColor" Value="{StaticResource Primary}"/>
+    </Style>
+
+    <Style TargetType="TextCell">
+        <Setter Property="TextColor" Value="Black"/>
+    </Style>
+
+    <Style TargetType="Image">
+        <Setter Property="Aspect" Value="Center"/>
+
+    </Style>
+
+    <Style x:Key="DarkBorderView" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource DarkBg2Brush}"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=8}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+    </Style>
+
+    <Style x:Key="LightBorderView" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource DarkBg1Brush}"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=8}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+    </Style>
+</ResourceDictionary>    
