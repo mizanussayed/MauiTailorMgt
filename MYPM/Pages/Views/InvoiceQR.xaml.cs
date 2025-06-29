@@ -19,42 +19,23 @@ public partial class InvoiceQR : ContentPage
     private async Task GenerateInvoice()
     {
         Label header = new() { Text = "Yousuf Tailors", FontSize = 24, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
-        var grid = new Grid()
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Star },
-            },
-            ColumnSpacing = 10,
-            Padding = 10,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-
-        var StackLayout = new StackLayout
-        {   await CreateLabel($"Order Number: {orderModel!.SL}"),
-            await CreateLabel($"Date: {orderModel.DeliveryDate:dd-MMM-yyyy}"),
-            await CreateLabel($"Customer: {orderModel.CustomerName}"),
-            await CreateLabel($"Mobile: {orderModel.MobileNumber}"),
-            await CreateLabel($"Total Amount: {orderModel.TotalAmount} BDT"),
-            await CreateLabel($"Advance Paid Amount: {orderModel.PaidAmount} BDT")
-        };
+        Label info = new() { Text = orderModel!.CustomerName, FontSize = 14, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
+        Label infoPhone = new() { Text = orderModel.MobileNumber, FontSize = 14, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
 
         var barcode = QrUtils.MakeQrCodeResult(CreateQRText(orderModel)).QrCode;
-        barcode.WidthRequest = 100;
-        grid.Add(StackLayout, 0, 0);
-        grid.Add(barcode, 1, 0);
+        barcode.WidthRequest = 200;
+        barcode.HeightRequest = 200;
+        barcode.HorizontalOptions = LayoutOptions.End;
 
         var border = new Border
         {
-
-            Stroke = Application.Current?.Resources["Primary"] as Color ?? Colors.Orange,
-            Padding = new Thickness(10),
-            Margin = new Thickness(0, 10),
+            Stroke = Colors.Orange,
+            Padding = new Thickness(2),
+            Margin = new Thickness(0, 1),
             StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10) },
             BackgroundColor = Colors.White,
             HorizontalOptions = LayoutOptions.Center,
-            Content = new VerticalStackLayout() { header, grid }
+            Content = new VerticalStackLayout { header, info, infoPhone, barcode }
         };
 
         qrBox.Add(border);
@@ -106,19 +87,12 @@ public partial class InvoiceQR : ContentPage
         {
             Text = text,
             TextColor = Colors.Black,
-            FontSize = 12,
+            FontSize = 14,
         });
     }
 
     private static string CreateQRText(NewOrderModel orderModel)
     {
-        return $"Yousuf_Panjabi_tailor\n" +
-               $"Order ID:~{orderModel.Id}~\n" +
-               $"Order Number:{orderModel.SL}\n" +
-               $"Date: {orderModel.DeliveryDate}\n" +
-               $"Customer: {orderModel.CustomerName}\n" +
-               $"Mobile: {orderModel.MobileNumber}\n" +
-               $"Total: {orderModel.TotalAmount} BDT \n"+
-               $"Paid: { orderModel.PaidAmount} BDT";
+        return $"Yousuf_Panjabi_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
     }
 }

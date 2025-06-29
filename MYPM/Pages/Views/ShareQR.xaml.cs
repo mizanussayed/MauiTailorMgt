@@ -21,43 +21,23 @@ public partial class ShareQR : Popup
     private async Task GenerateInvoice()
     {
         Label header = new() { Text = "Yousuf Tailors", FontSize = 24, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
-
-        var grid = new Grid
-        {
-            ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Star } },
-            ColumnSpacing = 10,
-            Padding = 10,
-            HorizontalOptions = LayoutOptions.Center,
-        };
-
-        var stackLayout = new StackLayout
-        {
-            Children =
-            {
-                CreateLabel($"Order Number: {orderModel.SL}"),
-                CreateLabel($"D Date: {orderModel.DeliveryDate:dd-MMM-yyyy}"),
-                CreateLabel($"Customer: {orderModel.CustomerName}"),
-                CreateLabel($"Mobile: {orderModel.MobileNumber}"),
-                CreateLabel($"Total Amount: {orderModel.TotalAmount} BDT"),
-                CreateLabel($"Advance Paid Amount: {orderModel.PaidAmount} BDT")
-            }
-        };
+        Label info = new() { Text = orderModel.CustomerName, FontSize = 14, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
+        Label infoPhone = new() { Text = orderModel.MobileNumber, FontSize = 14, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
 
         var barcode = QrUtils.MakeQrCodeResult(CreateQRText(orderModel)).QrCode;
-        barcode.WidthRequest = 100;
-
-        grid.Add(stackLayout, 0, 0);
-        grid.Add(barcode, 1, 0);
+        barcode.WidthRequest = 200;
+        barcode.HeightRequest = 200;
+        barcode.HorizontalOptions = LayoutOptions.End;
 
         var border = new Border
         {
             Stroke = Colors.Orange,
-            Padding = new Thickness(10),
-            Margin = new Thickness(0, 10),
+            Padding = new Thickness(2),
+            Margin = new Thickness(0, 1),
             StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10) },
             BackgroundColor = Colors.White,
             HorizontalOptions = LayoutOptions.Center,
-            Content = new VerticalStackLayout { header, grid }
+            Content = new VerticalStackLayout { header, info, infoPhone, barcode}
         };
 
         qrBox.Clear();
@@ -77,23 +57,14 @@ public partial class ShareQR : Popup
                     File = new ShareFile(_orderModelFilePath)
                 });
 
-                Close();      
+                Close();
             }
         });
     }
 
-    private static Label CreateLabel(string text) => new() { Text = text, FontSize = 12, TextColor = Colors.Black };
-
     private static string CreateQRText(NewOrderModel orderModel)
     {
-        return $"Yousuf_Panjabi_tailor\n" +
-               $"Order ID:~{orderModel.Id}~\n" +
-               $"Order Number:{orderModel.SL}\n" +
-               $"Date: {orderModel.DeliveryDate}\n" +
-               $"Customer: {orderModel.CustomerName}\n" +
-               $"Mobile: {orderModel.MobileNumber}\n" +
-               $"Total: {orderModel.TotalAmount} BDT \n" +
-               $"Paid: {orderModel.PaidAmount} BDT";
+        return $"Yousuf_Panjabi_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
     }
     private static async Task<string> SaveInvoiceAsImage(VisualElement visualElement)
     {
