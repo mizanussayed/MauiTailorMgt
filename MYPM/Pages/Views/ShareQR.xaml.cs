@@ -55,9 +55,7 @@ public partial class ShareQR : Popup
                 {
                     Title = "Share QR",
                     File = new ShareFile(_orderModelFilePath)
-                });
-
-                Close();
+                }).ConfigureAwait(false);
             }
         });
     }
