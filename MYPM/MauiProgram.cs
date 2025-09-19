@@ -21,9 +21,8 @@ public static class MauiProgram
                 fonts.AddFont("fa_solid.ttf", "FontAwesome");
             })
             .UseBarcodeReader();
-
         var connectionString = "";
-        builder.Services.AddDbContext<AppDbContext>(options =>
+        builder.Services.AddDbContextFactory<AppDbContext>(options =>
         {
             options.UseNpgsql(connectionString, sqlOptions =>
             {
@@ -32,14 +31,12 @@ public static class MauiProgram
             });
         });
 
-        // Register services
         builder.Services.AddTransient<IOrderService, OrderService>();
-
-        // Register ViewModels
         builder.Services.AddTransient<HomeViewModel>();
         builder.Services.AddTransient<OrdersViewModel>();
         builder.Services.AddTransient<CustomerViewModel>();
         builder.Services.AddTransient<NewOrderPageViewModel>();
+        builder.Services.AddTransient<EditOrderPageViewModel>();
 
         return builder.Build();
     }

@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-			 xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+			 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:fa="clr-namespace:MYPM"
              Title="Share QR Code"
              x:Class="MYPM.Pages.Views.InvoiceQR"
              Shell.NavBarIsVisible="False"
-             Background="{StaticResource DarkBg1Transparent}"
-             >
+             Background="{StaticResource SurfaceVariant}">
     <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="#FFF" StatusBarStyle="DarkContent" />
+        <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Light={StaticResource SurfaceVariant}, Dark={StaticResource Black}}" StatusBarStyle="Default" />
     </ContentPage.Behaviors>
-    <StackLayout Padding="20">
+    <StackLayout Padding="20" HorizontalOptions="Center" Orientation="Vertical" VerticalOptions="Center">
         <VerticalStackLayout x:Name="qrBox" />
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="12" HorizontalOptions="Center">
-            <Button Text="Share"
-                    Clicked="OnShareInvoiceClicked">
-                <Button.ImageSource>
-                    <FontImageSource Glyph="{x:Static fa:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
-                </Button.ImageSource>
-            </Button>
-            <Button Text="Back" Grid.Column="1"
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="40" >
+             <Button Text="Back" Grid.Column="0"
+                     Background="{StaticResource Warning}"
                     Clicked="OnBackClicked">
                 <Button.ImageSource>
                     <FontImageSource Glyph="{x:Static fa:IconFont.CaretLeft}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                </Button.ImageSource>
+            </Button>
+           <Button Text="Share"
+                    Grid.Column="1"
+                    Background="{StaticResource Info}"
+                    Clicked="OnShareInvoiceClicked">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{x:Static fa:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
                 </Button.ImageSource>
             </Button>
         </Grid>

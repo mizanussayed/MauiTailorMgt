@@ -1,4 +1,4 @@
-﻿using MYPM.Data.Models;
+﻿using MYPM.Models;
 using MYPM.Services;
 
 namespace MYPM.ViewModels;
@@ -25,6 +25,10 @@ public partial class NewOrderPageViewModel(IOrderService orderService) : Observa
         if (SelowerOrder is not null) Order.SelowerOrders.Add(SelowerOrder);
 
         var result = await orderService.CreateOrder(Order);
+        if (result)
+        {
+           await orderService.GetOrderSummary();
+        }
         return result;
     }
     [RelayCommand]

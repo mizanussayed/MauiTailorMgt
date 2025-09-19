@@ -1,4 +1,4 @@
-using MYPM.Data.Models;
+using MYPM.Models;
 using MYPM.Pages;
 using MYPM.Services;
 using System.Windows.Input;
@@ -11,7 +11,7 @@ public partial class OrdersViewModel(IOrderService _orderService) : ObservableOb
     private ObservableCollection<NewOrderModel>? _orders;
 
     [ObservableProperty]
-    private NewOrderModel _newOrder = new();
+    private NewOrderModel? _newOrder;
 
 
     [ObservableProperty]
@@ -28,18 +28,41 @@ public partial class OrdersViewModel(IOrderService _orderService) : ObservableOb
     {
         try
         {
-            NewOrder = await _orderService.GetOrder(Id);
             var navigationParameter = new Dictionary<string, object>
             {
-                { "Order", NewOrder }
+                { "Id", Id }
             };
             await Shell.Current.GoToAsync($"{nameof(OrderDetailsPage)}", navigationParameter);
         }
         catch (Exception ex)
         {
-            Debug.WriteLine(ex.Message);
+            _ = ex.Message;
         }
     }
+
+    public async Task<NewOrderModel> LoadOrderById(int id)
+    {
+        try
+        {
+            return await _orderService.GetOrder(id).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+           return NewOrder!;
+        }
+    }
+
+    public async Task<bool> Delete(int Id)
+    {
+        try
+        {
+            return await _orderService.DeleteOrder(Id).ConfigureAwait(false); }
+        catch (Exception)
+        {
+          return false;
+        }
+    }
+
     private string selectedFilter = "Week";
     public string SelectedFilter
     {
@@ -63,15 +86,15 @@ public partial class OrdersViewModel(IOrderService _orderService) : ObservableOb
             var allOrders = await _orderService.GetAllOrders().ConfigureAwait(false);
             MainThread.BeginInvokeOnMainThread(() =>
             {
-            DateTime today = DateTime.Today;
-            IEnumerable<NewOrderModel> filtered = selectedFilter switch
-            {
-                "Week" => allOrders.Where(o => o.OrderDate >= today.AddDays(-7)),
-                "Month" => allOrders.Where(o => o.OrderDate.Month == today.Month && o.OrderDate.Year == today.Year),
-                "Year" => allOrders.Where(o => o.OrderDate.Year == today.Year),
-                "All" => allOrders,
-                _ => allOrders
-            };
+                DateTime today = DateTime.Today;
+                IEnumerable<NewOrderModel> filtered = selectedFilter switch
+                {
+                    "Week" => allOrders.Where(o => o.OrderDate >= today.AddDays(-7)),
+                    "Month" => allOrders.Where(o => o.OrderDate.Month == today.Month && o.OrderDate.Year == today.Year),
+                    "Year" => allOrders.Where(o => o.OrderDate.Year == today.Year),
+                    "All" => allOrders,
+                    _ => allOrders
+                };
                 Orders = [.. filtered];
             });
 

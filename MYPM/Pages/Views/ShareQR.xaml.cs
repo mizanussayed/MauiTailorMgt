@@ -1,7 +1,7 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls.Shapes;
 using MYPM.Common.QRGeneration;
-using MYPM.Data.Models;
+using MYPM.Models;
 using Path = System.IO.Path;
 
 namespace MYPM.Pages.Views;

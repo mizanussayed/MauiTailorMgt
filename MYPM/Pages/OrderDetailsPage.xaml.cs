@@ -1,64 +1,46 @@
-﻿using CommunityToolkit.Maui.Views;
-using MYPM.Data.Models;
+﻿using CommunityToolkit.Maui.Extensions;
+using MYPM.Models;
 using MYPM.Pages.Views;
-using MYPM.Services;
+using MYPM.ViewModels;
 
 namespace MYPM.Pages;
 
-[QueryProperty(nameof(Order), "Order")]
+[QueryProperty(nameof(OrderId), "OrderId")]
 public partial class OrderDetailsPage : ContentPage
 {
+    private int NewId;
     private NewOrderModel? OrderModel;
-    private readonly IOrderService orderService;
-    public NewOrderModel? Order
+    private readonly OrdersViewModel _orderViewModel;
+    public int OrderId
     {
-        get => OrderModel;
+        get => NewId;
         set
         {
-            OrderModel = value;
-            BindingContext = OrderModel;
+            NewId = value;
+            _ = LoadData();
         }
     }
 
-    public OrderDetailsPage(IOrderService _orderService)
+    public OrderDetailsPage(OrdersViewModel viewModel)
     {
         InitializeComponent();
-        orderService = _orderService;
+        _orderViewModel = viewModel;
     }
 
-    private async void OnChangeStatusClicked(object sender, EventArgs e)
+    private async Task LoadData()
     {
-        try
-        {
-            var statusValues = Enum.GetValues<OrderStatus>().ToList();
-            var actionSheet = await DisplayActionSheet("Change Order Status", "Cancel", null, statusValues.Select(s => s.ToString()).ToArray());
+        OrderModel = await _orderViewModel.LoadOrderById(NewId);
+        BindingContext = OrderModel;
 
-            if (actionSheet == "Cancel") return;
-
-            var selectedStatus = Enum.Parse<OrderStatus>(actionSheet);
-            await UpdateOrderStatus(selectedStatus);
-            await DisplayAlert("Status Updated", $"Order status changed to {selectedStatus}", "OK");
-        }
-        catch (Exception ex)
-        {
-            _ = ex.Message;
-        }
-    }
-    private void OnViewDetailsClicked(object sender, EventArgs e)
-    {
         if (OrderModel?.ArabianOrders?.Count > 0)
-            ArabinaOrderLayout.IsVisible = !ArabinaOrderLayout.IsVisible;
+            ArabianOrderLayout.IsVisible = true;
 
         if (OrderModel?.PanjabiOrders?.Count > 0)
-            PanjabiOrderLayout.IsVisible = !PanjabiOrderLayout.IsVisible;
+            PanjabiOrderLayout.IsVisible = true;
 
         if (OrderModel?.SelowerOrders?.Count > 0)
-            SelowerOrderLayout.IsVisible = !SelowerOrderLayout.IsVisible;
-    }
-    private async Task UpdateOrderStatus(OrderStatus status)
-    {
-        var response = await orderService.UpdateStatus(OrderModel!.Id, status);
-        BindingContext = response;
+            SelowerOrderLayout.IsVisible = true;
+
     }
 
     private async void OnShareClicked(object sender, EventArgs e)
@@ -68,9 +50,32 @@ public partial class OrderDetailsPage : ContentPage
             await DisplayAlert("Error", "Order details are not available to share.", "OK");
             return;
         }
-
         var popup = new ShareQR(OrderModel);
-        await this.ShowPopupAsync(popup);
+        await this.ShowPopupAsync(popup).ConfigureAwait(false);
     }
 
+    private async void OnEditClicked(object sender, EventArgs e)
+    {
+        if (OrderModel is null) return;
+        var nav = new Dictionary<string, object> { ["Order"] = OrderModel };
+        await Shell.Current.GoToAsync(nameof(EditOrderPage), nav);
+    }
+
+    private async void OnDeleteClicked(object sender, EventArgs e)
+    {
+        if (OrderModel is null) return;
+        var confirm = await DisplayAlert("Delete", $"Delete order {OrderModel.SL}?", "Yes", "No");
+        if (!confirm) return;
+         var isDeleted =  await _orderViewModel.Delete(OrderModel.Id);
+
+        if (isDeleted)
+        {
+            await _orderViewModel.RefreshCommand.ExecuteAsync(null);
+            await Shell.Current.Navigation.PopToRootAsync();
+        }
+        else
+        {
+            await Shell.Current.DisplayAlert("Error", "Failed to delete order.", "OK");
+        }
+    }
 }

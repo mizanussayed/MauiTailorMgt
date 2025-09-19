@@ -8,17 +8,18 @@ public partial class NewOrderListPage : ContentPage
     public NewOrderListPage(OrdersViewModel ordersView)
     {
         InitializeComponent();
-        BindingContext = _viewModel= ordersView ;
+        BindingContext = _viewModel= ordersView;
         _viewModel.RefreshCommand.Execute(null);
     }
-
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        if (e.Parameter is not null)
+        if (e.Parameter is int id)
         {
-            var border = sender as Border;
-            border!.Background = Colors.Transparent;
-            _viewModel.GetDetailsCommand.Execute(e.Parameter);
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "OrderId", id }
+            };
+            Shell.Current.GoToAsync($"{nameof(OrderDetailsPage)}", navigationParameter);
         }
     }
 }

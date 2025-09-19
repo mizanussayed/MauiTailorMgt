@@ -2,15 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:a="clr-namespace:MYPM"
-             xmlns:models="clr-namespace:MYPM.Data.Models;assembly=MYPM.Data"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:model="clr-namespace:MYPM.Models"
              x:Class="MYPM.Pages.OrderDetailsPage"
-             x:DataType="models:NewOrderModel"
-             Background="{StaticResource DarkBg1Transparent}"
+             x:DataType="model:NewOrderModel"
+             Background="{StaticResource SurfaceVariant}"
+             Title="Order Details"
              Shell.TabBarIsVisible="False">
-    <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="#FFF" StatusBarStyle="DarkContent" />
-    </ContentPage.Behaviors>
     <ContentPage.Resources>
         <Style TargetType="HorizontalStackLayout">
             <Setter Property="Spacing" Value="15"/>
@@ -21,32 +18,48 @@
         <Style TargetType="Image">
             <Setter Property="WidthRequest" Value="22"/>
             <Setter Property="HeightRequest" Value="22"/>
-            <Setter Property="Aspect" Value="AspectFit"/>
         </Style>
 
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="Small"/>
-            <Setter Property="TextColor" Value="#000"/>
+            <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
             <Setter Property="FontAttributes" Value="Bold" />
         </Style>
 
         <Style x:Key="HeaderLabelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="28" />
             <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="TextColor" Value="#007AFF" />
+            <Setter Property="TextColor" Value="{StaticResource Primary}" />
             <Setter Property="HorizontalOptions" Value="Center" />
         </Style>
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Spacing="24" Padding="5">
-            <Border StrokeShape="RoundRectangle 10"
-                                BackgroundColor="White"
-                                StrokeThickness="1"
-                                Stroke="#E0E0E0"
-                                Margin="2"
-                                Padding="10">
-                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <VerticalStackLayout Spacing="10" Padding="5">
+            <Grid ColumnDefinitions="Auto,Auto,Auto" HorizontalOptions="Center" ColumnSpacing="12" Padding="5, 0" Margin="5">
+               <Button Text="Delete" BackgroundColor="{StaticResource Danger}" Padding="12"
+                        Clicked="OnDeleteClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static a:IconFont.Trash}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                        </Button.ImageSource>
+                </Button>
+                <Button Grid.Column="1" Text="Share" BackgroundColor="{StaticResource Primary}" Padding="12" Clicked="OnShareClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static a:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+                <Button Grid.Column="2" Text="Edit" BackgroundColor="{StaticResource Info}"  Padding="12"
+                        Clicked="OnEditClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static a:IconFont.Edit}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+              
+            </Grid>
+
+
+            <Border Style="{StaticResource CardBorder}" Margin="2" Padding="10">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
                     <Label Text="{Binding SL}" Style="{StaticResource HeaderLabelStyle}" />
 
                     <HorizontalStackLayout Grid.Row="1">
@@ -69,10 +82,10 @@
                         <Label Text="{Binding TotalAmount, StringFormat='{0} tk'}"  />
 
                         <Image Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.DollarSign}, Color=Green}"/>
-                        <Label Text="{Binding PaidAmount, StringFormat='{0} tk'}" TextColor="Green" />
+                        <Label Text="{Binding PaidAmount, StringFormat='{0} tk'}" TextColor="{StaticResource Success}" />
 
                         <Image Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.DollarSign}, Color=Red}"/>
-                        <Label Text="{Binding DueAmount, StringFormat='{0} tk'}" TextColor="Red"  />
+                        <Label Text="{Binding DueAmount, StringFormat='{0} tk'}" TextColor="{StaticResource Danger}"  />
                     </HorizontalStackLayout>
 
                     <HorizontalStackLayout Grid.Row="5">
@@ -82,152 +95,103 @@
                         <Image Grid.Column="0" Grid.Row="1" Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Clock}, Color=Black}"/>
                         <Label Grid.Column="1" Grid.Row="1" Text="{Binding DeliveryDate, StringFormat='{0:dd MMM yyyy}'}" />
                     </HorizontalStackLayout>
-                    <HorizontalStackLayout Grid.Row="6">
-                        <Image Grid.Column="0" Grid.Row="1" Source="{FontImage FontFamily=FontAwesome, Glyph={x:Static a:IconFont.Tasks}, Color=Black}"/>
-                        <Label Text="{Binding Status, StringFormat='Status : {0}'}" TextColor="Green" />
-                    </HorizontalStackLayout>
                 </Grid>
             </Border>
 
-            <Grid ColumnDefinitions="Auto,Auto,Auto" HorizontalOptions="Center" ColumnSpacing="12">
-                <Button Grid.Column="0" Text="Share" BackgroundColor="#007AFF" Padding="12,12" Clicked="OnShareClicked">
-                    <Button.ImageSource>
-                        <FontImageSource Glyph="{x:Static a:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
-                    </Button.ImageSource>
-                </Button>
-                <Button Grid.Column="1" Text="Status" BackgroundColor="Teal" Padding="12,12" Clicked="OnChangeStatusClicked">
-                    <Button.ImageSource>
-                        <FontImageSource Glyph="{x:Static a:IconFont.Edit}" FontFamily="FontAwesome" Size="20" Color="White"/>
-                    </Button.ImageSource>
-                </Button>
-                <Button Grid.Column="2" Text="Details" BackgroundColor="#34C759" TextColor="White" Padding="12,12" 		
-                        Clicked="OnViewDetailsClicked">
-                    <Button.ImageSource>
-                        <FontImageSource Glyph="{x:Static a:IconFont.InfoCircle}" FontFamily="FontAwesome" Size="20" Color="White"/>
-                    </Button.ImageSource>
-                </Button>
-            </Grid>
-
-            <Border StrokeShape="RoundRectangle 10"
-                    BackgroundColor="White"
-                    StrokeThickness="1"
-                    Stroke="#E0E0E0"
-                    Margin="2"
-                    Padding="15" 
-                    IsVisible="false"
-                    x:Name="ArabinaOrderLayout">
+            <Border Style="{StaticResource CardBorder}" Margin="2" Padding="15" IsVisible="false" x:Name="ArabianOrderLayout">
                 <VerticalStackLayout>
-                    <Label Text="আরবিয়ান অর্ডারের বিবরণ" FontSize="22" FontAttributes="Bold" TextColor="#007AFF" />
+                    <Label Text="এরাবিয়ান অর্ডারের বিবরণ" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
                     <Grid ColumnDefinitions="*,*,*,*" RowSpacing="10" Padding="0,12"
-      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                         RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
 
                         <!-- Row 0 -->
-                        <Label Text="এমাউন্ট" />
-                        <Label Text="{Binding ArabianOrders[0].Amount}" Grid.Column="1" />
-                        <Label Text="পরিমাণ" Grid.Column="2" />
-                        <Label Text="{Binding ArabianOrders[0].Quantity}" Grid.Column="3" />
+                        <Label Text="এমাউণ্ট" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding ArabianOrders[0].Amount}" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="পরিমাণ" TextColor="{StaticResource OnSurface}" Grid.Column="2" />
+                        <Label Text="{Binding ArabianOrders[0].Quantity}" Grid.Column="3" TextColor="{StaticResource Success}" />
 
                         <!-- Row 1 -->
-                        <Label Text="লম্বা" Grid.Row="1" />
-                        <Label Text="{Binding ArabianOrders[0].Length}" Grid.Row="1" Grid.Column="1" />
-                        <Label Text="তিরা" Grid.Row="1" Grid.Column="2" />
-                        <Label Text="{Binding ArabianOrders[0].Tira}" Grid.Row="1" Grid.Column="3" />
+                        <Label Text="লম্বা" TextColor="{StaticResource OnSurface}" Grid.Row="1" />
+                        <Label Text="{Binding ArabianOrders[0].Length}" Grid.Row="1" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="তিরা" TextColor="{StaticResource OnSurface}" Grid.Row="1" Grid.Column="2" />
+                        <Label Text="{Binding ArabianOrders[0].Tira}" Grid.Row="1" Grid.Column="3" TextColor="{StaticResource Success}" />
 
                         <!-- Row 2 -->
-                        <Label Text="হাতা" Grid.Row="2" />
-                        <Label Text="{Binding ArabianOrders[0].Hata}" Grid.Row="2" Grid.Column="1" />
-                        <Label Text="বের" Grid.Row="2" Grid.Column="2" />
-                        <Label Text="{Binding ArabianOrders[0].Ber}" Grid.Row="2" Grid.Column="3" />
+                        <Label Text="হাতা" TextColor="{StaticResource OnSurface}" Grid.Row="2" />
+                        <Label Text="{Binding ArabianOrders[0].Hata}" Grid.Row="2" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="বের" TextColor="{StaticResource OnSurface}" Grid.Row="2" Grid.Column="2" />
+                        <Label Text="{Binding ArabianOrders[0].Ber}" Grid.Row="2" Grid.Column="3" TextColor="{StaticResource Success}" />
 
                         <!-- Row 3 -->
-                        <Label Text="কফ" Grid.Row="3" />
-                        <Label Text="{Binding ArabianOrders[0].Cuff}" Grid.Row="3" Grid.Column="1" />
-                        <Label Text="মুহরী" Grid.Row="3" Grid.Column="2" />
-                        <Label Text="{Binding ArabianOrders[0].Mohori}" Grid.Row="3" Grid.Column="3" />
+                        <Label Text="কফ" TextColor="{StaticResource OnSurface}" Grid.Row="3" />
+                        <Label Text="{Binding ArabianOrders[0].Cuff}" Grid.Row="3" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="মুহরী" TextColor="{StaticResource OnSurface}" Grid.Row="3" Grid.Column="2" />
+                        <Label Text="{Binding ArabianOrders[0].Mohori}" Grid.Row="3" Grid.Column="3" TextColor="{StaticResource Success}" />
 
                         <!-- Row 4 -->
-                        <Label Text="কমর" Grid.Row="4" />
-                        <Label Text="{Binding ArabianOrders[0].Komor}" Grid.Row="4" Grid.Column="1" />
-                        <Label Text="রাকাবা" Grid.Row="4" Grid.Column="2" />
-                        <Label Text="{Binding ArabianOrders[0].Rakaba}" Grid.Row="4" Grid.Column="3" />
+                        <Label Text="কমর" TextColor="{StaticResource OnSurface}" Grid.Row="4" />
+                        <Label Text="{Binding ArabianOrders[0].Komor}" Grid.Row="4" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="রাকাবা" TextColor="{StaticResource OnSurface}" Grid.Row="4" Grid.Column="2" />
+                        <Label Text="{Binding ArabianOrders[0].Rakaba}" Grid.Row="4" Grid.Column="3" TextColor="{StaticResource Success}" />
 
                         <!-- Row 5 -->
-                        <Label Text="নেছ" Grid.Row="5" />
-                        <Label Text="{Binding ArabianOrders[0].Ness}" Grid.Row="5" Grid.Column="1" />
-                        <Label Text="নোট" Grid.Row="5" Grid.Column="2" />
-                        <Label Text="{Binding ArabianOrders[0].Note}" Grid.Row="5" Grid.Column="3" />
+                        <Label Text="নেছ" TextColor="{StaticResource OnSurface}" Grid.Row="5" />
+                        <Label Text="{Binding ArabianOrders[0].Ness}" Grid.Row="5" Grid.Column="1" TextColor="{StaticResource Success}" />
 
                     </Grid>
 
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 10"
-                    BackgroundColor="White"
-                    StrokeThickness="1"
-                    Stroke="#E0E0E0"
-                    Margin="2"
-                    Padding="15" 
-                    IsVisible="false" x:Name="PanjabiOrderLayout">
+            <Border Style="{StaticResource CardBorder}" Margin="2" Padding="15" IsVisible="false" x:Name="PanjabiOrderLayout">
                 <VerticalStackLayout>
-                    <Label Text="পাঞ্জাবি অর্ডারের বিস্তারিত" FontSize="22" FontAttributes="Bold" TextColor="#007AFF" />
+                    <Label Text="পাঞ্জাবি অর্ডারের বিস্তারিত" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
                     <Grid ColumnDefinitions="*, *, *, *" RowSpacing="10" Padding="0,12"
                           RowDefinitions="Auto,Auto,Auto,Auto, Auto">
-                        <Label Text="এমাউন্ট" />
-                        <Label Text="{Binding PanjabiOrders[0].Amount}" Grid.Column="1" />
-                        <Label Text="Quantity" Grid.Column="2" />
-                        <Label Text="{Binding PanjabiOrders[0].Quantity}" Grid.Column="3" />
+                        <Label Text="এমাউণ্ট" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding PanjabiOrders[0].Amount}" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="পরিমাণ" TextColor="{StaticResource OnSurface}" Grid.Column="2" />
+                        <Label Text="{Binding PanjabiOrders[0].Quantity}" Grid.Column="3" TextColor="{StaticResource Success}" />
 
-                        <Label Text="লম্বা" Grid.Row="1" />
-                        <Label Text="{Binding PanjabiOrders[0].Length}" Grid.Row="1" Grid.Column="1" />
-                        <Label Text="সিনা" Grid.Row="1" Grid.Column="2" />
-                        <Label Text="{Binding PanjabiOrders[0].Sina}" Grid.Row="1" Grid.Column="3" />
+                        <Label Text="লম্বা" Grid.Row="1" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding PanjabiOrders[0].Length}" Grid.Row="1" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="সিনা" Grid.Row="1" Grid.Column="2" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding PanjabiOrders[0].Sina}" Grid.Row="1" Grid.Column="3" TextColor="{StaticResource Success}" />
 
-                        <Label Text="কমর" Grid.Row="2" />
-                        <Label Text="{Binding PanjabiOrders[0].Komor}" Grid.Row="2" Grid.Column="1" />
-                        <Label Text="হাতা" Grid.Row="2" Grid.Column="2"/>
-                        <Label Text="{Binding PanjabiOrders[0].Hata}" Grid.Row="2" Grid.Column="3" />
+                        <Label Text="কমর" Grid.Row="2" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding PanjabiOrders[0].Komor}" Grid.Row="2" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="হাতা" Grid.Row="2" Grid.Column="2" TextColor="{StaticResource OnSurface}"/>
+                        <Label Text="{Binding PanjabiOrders[0].Hata}" Grid.Row="2" Grid.Column="3" TextColor="{StaticResource Success}" />
 
-                        <Label Text="কফ" Grid.Row="3" />
-                        <Label Text="{Binding PanjabiOrders[0].Cuff}" Grid.Row="3" Grid.Column="1" />
-                        <Label Text="মুহরী" Grid.Row="3"  Grid.Column="2"/>
-                        <Label Text="{Binding PanjabiOrders[0].Mohori}" Grid.Row="3" Grid.Column="3" />
+                        <Label Text="কফ" Grid.Row="3" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding PanjabiOrders[0].Cuff}" Grid.Row="3" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="মুহরী" Grid.Row="3"  Grid.Column="2" TextColor="{StaticResource OnSurface}"/>
+                        <Label Text="{Binding PanjabiOrders[0].Mohori}" Grid.Row="3" Grid.Column="3" TextColor="{StaticResource Success}" />
 
-                        <Label Text="রাকাবা" Grid.Row="4"  />
-                        <Label Text="{Binding PanjabiOrders[0].Rakaba}" Grid.Row="4" Grid.Column="1" />
-                        <Label Text="নোট" Grid.Row="4"  Grid.Column="2"/>
-                        <Label Text="{Binding PanjabiOrders[0].Note}" Grid.Row="4" Grid.Column="3" />
+                        <Label Text="রাকাবা" Grid.Row="4"  TextColor="{StaticResource OnSurface}"/>
+                        <Label Text="{Binding PanjabiOrders[0].Rakaba}" Grid.Row="4" Grid.Column="1" TextColor="{StaticResource Success}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <Border StrokeShape="RoundRectangle 10"
-                    BackgroundColor="White"
-                    StrokeThickness="1"
-                    Stroke="#E0E0E0"
-                    Margin="2"
-                    Padding="15" 
-                    IsVisible="false" x:Name="SelowerOrderLayout">
+            <Border Style="{StaticResource CardBorder}" Margin="2" Padding="15" IsVisible="false" x:Name="SelowerOrderLayout">
                 <VerticalStackLayout>
-                    <Label Text="সালোয়ার অর্ডারের বিস্তারিত" FontSize="22" FontAttributes="Bold" TextColor="#007AFF" />
+                    <Label Text="সালোয়ার অর্ডারের বিস্তারিত" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
                     <Grid ColumnDefinitions="*, *, *, *" RowSpacing="10" Padding="0,12" RowDefinitions="Auto, Auto, Auto, Auto">
-                        <Label Text="Amount" />
-                        <Label Text="{Binding SelowerOrders[0].Amount}" Grid.Column="1" />
-                        <Label Text="Quantity" Grid.Column="2" />
-                        <Label Text="{Binding SelowerOrders[0].Quantity}" Grid.Column="3" />
+                        <Label Text="এমাউণ্ট" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding SelowerOrders[0].Amount}" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="পরিমাণ" TextColor="{StaticResource OnSurface}" Grid.Column="2" />
+                        <Label Text="{Binding SelowerOrders[0].Quantity}" Grid.Column="3" TextColor="{StaticResource Success}" />
 
-                        <Label Text="লম্বা" Grid.Row="1" />
-                        <Label Text="{Binding SelowerOrders[0].Length}" Grid.Row="1" Grid.Column="1" />
-                        <Label Text="হিপ" Grid.Row="1" Grid.Column="2" />
-                        <Label Text="{Binding SelowerOrders[0].Hip}" Grid.Row="1" Grid.Column="3" />
+                        <Label Text="লম্বা" Grid.Row="1" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding SelowerOrders[0].Length}" Grid.Row="1" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="হিপ" Grid.Row="1" Grid.Column="2" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding SelowerOrders[0].Hip}" Grid.Row="1" Grid.Column="3" TextColor="{StaticResource Success}" />
 
-                        <Label Text="কমর" Grid.Row="2" />
-                        <Label Text="{Binding SelowerOrders[0].Komor}" Grid.Row="2" Grid.Column="1" />
-                        <Label Text="নেছ" Grid.Row="2" Grid.Column="2" />
-                        <Label Text="{Binding SelowerOrders[0].Ness}" Grid.Row="2" Grid.Column="3" />
-
-                        <Label Text="নোট" Grid.Row="3" />
-                        <Label Text="{Binding SelowerOrders[0].Note}" Grid.Row="3" Grid.Column="1" />
+                        <Label Text="কমর" Grid.Row="2" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding SelowerOrders[0].Komor}" Grid.Row="2" Grid.Column="1" TextColor="{StaticResource Success}" />
+                        <Label Text="নেছ" Grid.Row="2" Grid.Column="2" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="{Binding SelowerOrders[0].Ness}" Grid.Row="2" Grid.Column="3" TextColor="{StaticResource Success}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>

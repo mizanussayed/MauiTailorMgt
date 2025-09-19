@@ -21,5 +21,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(NewOrderPage), typeof(NewOrderPage));
         Routing.RegisterRoute(nameof(InvoiceQR), typeof(InvoiceQR));
         Routing.RegisterRoute(nameof(NewOrderListPage), typeof(NewOrderListPage));
+        Routing.RegisterRoute(nameof(EditOrderPage), typeof(EditOrderPage));
     }
 }

@@ -6,7 +6,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Shell.NavBarIsVisible="False"
              x:DataType="vm:NewOrderPageViewModel"
-             Background="{StaticResource DarkBg1Transparent}"
+             Background="{StaticResource SurfaceVariant}"
              >
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="#FFF" StatusBarStyle="DarkContent" />
@@ -14,16 +14,13 @@
     <ContentPage.Resources>
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="Default" />
-            <Setter Property="TextColor" Value="Black" />
+            <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
             <Setter Property="FontAttributes" Value="Bold" />
             <Setter Property="HorizontalOptions" Value="Start" />
         </Style>
     </ContentPage.Resources>
     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-        <Border Stroke="LightGray" StrokeThickness="1" BackgroundColor="LightGray" Padding="0, 10">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="10"/>
-            </Border.StrokeShape>
+        <Border Style="{StaticResource CardBorder}" Padding="0, 10">
             <VerticalStackLayout Spacing="15">
                 <VerticalStackLayout>
                     <Label Text="Add Advance Amount" HorizontalOptions="Center" />
@@ -36,8 +33,8 @@
                         <Border 
                             HeightRequest="40"
                             WidthRequest="100"
-                            Background="{StaticResource WhiteBrush}"
-                            Stroke="{StaticResource WhiteBrush }"
+                            Background="{StaticResource SurfaceBrush}"
+                            Stroke="{StaticResource CardStrokeBrush}"
                             StrokeThickness="1">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8"/>
@@ -45,7 +42,7 @@
                             <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
                                  Keyboard="Numeric"
                                  Background="Transparent"
-                                 TextColor="Black"
+                                 TextColor="{StaticResource OnSurface}"
                                  x:Name="PaidEntry"
                                  PlaceholderColor="Transparent"
                                  TextChanged="PaidTextChanged"/>

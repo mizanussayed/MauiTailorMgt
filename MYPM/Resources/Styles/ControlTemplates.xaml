@@ -6,12 +6,12 @@
 
     <ControlTemplate x:Key="ButtonRadioTemplate">
         <Border
-            Stroke="{StaticResource SecondaryBrush}"
-            StrokeThickness="1"
-            BackgroundColor="LightGray"
+            Stroke="{StaticResource CardStrokeBrush}"
+            StrokeThickness="1.5"
+            BackgroundColor="{StaticResource Surface}"
             >
             <Border.StrokeShape>
-                <RoundRectangle CornerRadius="8"/>
+                <RoundRectangle CornerRadius="20"/>
             </Border.StrokeShape>
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroupList>
@@ -21,13 +21,13 @@
                                 <Setter
                                     TargetName="TextLabel"
                                     Property="Label.TextColor"
-                                    Value="{StaticResource White}"/>
+                                    Value="{StaticResource TextOnSolid_Light}"/>
                                 <Setter
                                     Property="Background"
-                                    Value="{StaticResource PrimaryBrush}"/>
+                                    Value="{StaticResource Primary}"/>
                                 <Setter
                                     Property="Stroke"
-                                    Value="{StaticResource PrimaryBrush}"/>
+                                    Value="{StaticResource Primary}"/>
                             </VisualState.Setters>
                         </VisualState>
 
@@ -36,20 +36,20 @@
                                 <Setter
                                     TargetName="TextLabel"
                                     Property="Label.TextColor"
-                                    Value="Black"/>
+                                    Value="{StaticResource OnSurface}"/>
                                 <Setter
                                     Property="Background"
-                                    Value="LightGray"/>
+                                    Value="{StaticResource Surface}"/>
                                 <Setter
                                     Property="Stroke"
-                                    Value="Gray"/>
+                                    Value="{StaticResource OnSurface}"/>
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>
                 </VisualStateGroupList>
             </VisualStateManager.VisualStateGroups>
             <Label Text="{TemplateBinding Content}"
-                    Margin="7,10"
+                    Margin="12,8"
                     HorizontalTextAlignment="{OnPlatform Start, WinUI=Center}"
                     x:Name="TextLabel" />
         </Border>

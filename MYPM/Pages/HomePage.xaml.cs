@@ -13,6 +13,12 @@ public partial class HomePage : ContentPage
         viewModel.RefreshDataCommand.Execute(null);
     }
 
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        _viewModel.RefreshDataCommand.Execute(null);
+    }
+
     private async void AddNewOrderTapped(object sender, TappedEventArgs e)
     {
         await Shell.Current.GoToAsync($"{nameof(NewOrderPage)}?SL={_viewModel?.SL}");

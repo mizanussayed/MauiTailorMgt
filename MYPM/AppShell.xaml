@@ -5,23 +5,27 @@
        xmlns:p="clr-namespace:MYPM.Pages"
        x:Class="MYPM.AppShell"
        Shell.TabBarIsVisible="True"
-       Shell.TabBarBackgroundColor="#FFF"
-       Shell.TabBarForegroundColor="#000"
-       Shell.TabBarTitleColor="#000"
-       Shell.TabBarUnselectedColor="#A0A0A0"
-       Shell.TabBarDisabledColor="#CCCCCC"
+       Shell.TabBarBackgroundColor="{StaticResource SurfaceVariant}"
+       Shell.TabBarForegroundColor="{StaticResource OnSurface}"
+       Shell.TabBarTitleColor="{StaticResource OnSurface}"
+       Shell.TabBarUnselectedColor="{StaticResource TextSecondary}"
+       Shell.TabBarDisabledColor="{StaticResource Neutral}"
        Shell.PresentationMode="Animated"
-       Shell.BackgroundColor="#FFF"
-       Shell.TitleColor="Black"
-       Shell.ForegroundColor="Black"
-       Background="{StaticResource DarkBg1Transparent}"
+       Shell.BackgroundColor="{StaticResource SurfaceVariant}"
+       Shell.TitleColor="{StaticResource OnSurface}"
+       Shell.ForegroundColor="{StaticResource OnSurface}"
        Title="Yousuf Tailor">
 
     <Shell.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource DarkBg1Transparent}" StatusBarStyle="DarkContent" />
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource SurfaceVariant}" StatusBarStyle="DarkContent" />
     </Shell.Behaviors>
 
-    <TabBar>
+    <TabBar
+        Shell.BackgroundColor="{StaticResource SurfaceVariant}"
+        Shell.ForegroundColor="{StaticResource OnSurface}"
+        Shell.TitleColor="{StaticResource OnSurface}"
+        Shell.UnselectedColor="{StaticResource TextSecondary}"
+        Shell.DisabledColor="{StaticResource Neutral}">
         <Tab Title="Home"
              Icon="home.svg">
             <ShellContent ContentTemplate="{DataTemplate p:HomePage}" />

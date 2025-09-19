@@ -1,4 +1,4 @@
-﻿namespace MYPM.Data.Models;
+﻿namespace MYPM.Models;
 public sealed class OrderSummaryVM
 {
     public int TotalOrders { get; set; }

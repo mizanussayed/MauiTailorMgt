@@ -7,6 +7,18 @@ public partial class CustomerOrderPage : ContentPage
 {
     private readonly CustomerViewModel _viewModel;
 
+    public string MobileNumber
+    {
+        get => _viewModel?.MobileNumber ?? string.Empty;
+        set
+        {
+            if (_viewModel is not null)
+            {
+                _viewModel.MobileNumber = value;
+            }
+        }
+    }
+
     public CustomerOrderPage(CustomerViewModel viewModel)
     {
         InitializeComponent();
@@ -23,8 +35,6 @@ public partial class CustomerOrderPage : ContentPage
     {
         if (e.Parameter is not null)
         {
-            var border = sender as Border;
-            border!.Background = Colors.Transparent;
             _viewModel.GetDetailsCommand.Execute(e.Parameter);
         }
     }

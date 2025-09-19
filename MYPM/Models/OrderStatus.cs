@@ -1,4 +1,4 @@
-﻿namespace MYPM.Data.Models;
+﻿namespace MYPM.Models;
 
 public enum OrderStatus
 {

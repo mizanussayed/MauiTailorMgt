@@ -1,5 +1,5 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
-using MYPM.Data.Models;
+using MYPM.Models;
 using MYPM.Pages.Views;
 using MYPM.ViewModels;
 
@@ -33,7 +33,7 @@ public partial class NewOrderPage : ContentPage
             case "arabian":
                 if (context?.ArabianOrder == null)
                 {
-                    context.ArabianOrder = new ArabianOrder();
+                    context!.ArabianOrder = new ArabianOrder();
                     headerText = "এরাবিয়ান এর";
                     createGrid = CreateArabianGrid;
                     orderText = "ArabianOrder";
@@ -43,7 +43,7 @@ public partial class NewOrderPage : ContentPage
             case "panjabi":
                 if (context?.PanjabiOrder == null)
                 {
-                    context.PanjabiOrder = new PanjabiOrder();
+                    context!.PanjabiOrder = new PanjabiOrder();
                     headerText = "পাঞ্জাবির";
                     createGrid = CreatePanjabiGrid;
                     orderText = "PanjabiOrder";
@@ -53,7 +53,7 @@ public partial class NewOrderPage : ContentPage
             case "selowar":
                 if (context?.SelowerOrder == null)
                 {
-                    context.SelowerOrder = new SelowerOrder();
+                    context!.SelowerOrder = new SelowerOrder();
                     headerText = "সেলোয়ার এর";
                     createGrid = CreateSelowarGrid;
                     orderText = "SelowerOrder";

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MYPM.Data.Models;
+namespace MYPM.Models;
 
 public sealed class ArabianOrder
 {

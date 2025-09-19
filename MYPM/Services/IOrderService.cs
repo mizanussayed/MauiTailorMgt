@@ -1,4 +1,4 @@
-using MYPM.Data.Models;
+using MYPM.Models;
 
 namespace MYPM.Services;
 
@@ -9,6 +9,7 @@ public interface IOrderService
     Task<List<CustomerVM>> GetAllCustomers();
     Task<List<NewOrderModel>> GetCustomerOrders(string mobileNumber);
     Task<NewOrderModel> GetOrder(int id);
-    Task<NewOrderModel> UpdateStatus(int id, OrderStatus status);
     Task<OrderSummaryVM> GetOrderSummary();
+    Task<bool> UpdateOrder(NewOrderModel order);
+    Task<bool> DeleteOrder(int id);
 }

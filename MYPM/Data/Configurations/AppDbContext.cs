@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MYPM.Data.Models;
+using MYPM.Models;
 
 namespace MYPM.Data.Configurations;
 

@@ -1,4 +1,4 @@
-﻿using MYPM.Data.Models;
+﻿using MYPM.Models;
 using MYPM.Pages;
 using MYPM.Services;
 
@@ -28,7 +28,7 @@ public partial class CustomerViewModel(IOrderService _orderService) : Observable
             var data = await _orderService.GetOrder(Id);
             var navigationParameter = new Dictionary<string, object>
             {
-                { "Order", data }
+                { "OrderId", data.Id }
             };
             await Shell.Current.GoToAsync($"{nameof(OrderDetailsPage)}", navigationParameter);
         }

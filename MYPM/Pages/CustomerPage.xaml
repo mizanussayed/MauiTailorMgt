@@ -2,21 +2,21 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MYPM.Pages.CustomerPage"
-             xmlns:models="clr-namespace:MYPM.Data.Models;assembly=MYPM.Data"
-             Background="{StaticResource DarkBg1Transparent}"
+             xmlns:models="clr-namespace:MYPM.Models"
              xmlns:vm="clr-namespace:MYPM.ViewModels"
              x:DataType="vm:CustomerViewModel"
-             Shell.TabBarIsVisible="False"
+             Shell.TabBarIsVisible="False"         
+             Background="{StaticResource SurfaceVariant}"
              Title="Customer">
 
     <Grid>
         <Grid RowDefinitions="Auto, *" >
             <SearchBar x:Name="SearchBar"
                 Placeholder="Search by name or phone"
-                BackgroundColor="#EFEFEF"
+                Background="{StaticResource SurfaceVariant}"
                 Margin="10,10,10,0"
                 FontSize="16"
-                TextColor="Black"
+                TextColor="{StaticResource OnSurface}"
                 TextChanged="SearchBar_TextChanged"/>
 
             <CollectionView Grid.Row="1"
@@ -25,23 +25,18 @@
                      Margin="10">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:CustomerVM">
-                        <Border Stroke="#E5E7EB"
-                             StrokeThickness="1"
-                             BackgroundColor="White"
-                             Padding="10"
-                             Margin="5,5,5,10"
-                             StrokeShape="RoundRectangle 12">
+                        <Border Style="{StaticResource CardBorder}"  Margin="5,5,5,10">
                             <VerticalStackLayout Spacing="4">
                                 <Label Text="{Binding CustomerName}"
                                     FontSize="18"
                                     FontAttributes="Bold"
-                                    TextColor="#1F2937" />
+                                    TextColor="{StaticResource OnSurface}" />
                                 <Label Text="{Binding MobileNumber}"
                                     FontSize="14"
-                                    TextColor="#6B7280" />
+                                    TextColor="{StaticResource OnSurface}" />
                                 <Label Text="{Binding Address}"
                                     FontSize="14"
-                                    TextColor="#6B7280" />
+                                    TextColor="{StaticResource OnSurface}" />
                             </VerticalStackLayout>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding MobileNumber}" />
@@ -52,16 +47,11 @@
             </CollectionView>
         </Grid>
         <Button Text="+"
-                FontSize="28"
-                WidthRequest="60"
-                HeightRequest="60"
-                BackgroundColor="#007BFF"
-                TextColor="White"
-                CornerRadius="30"
+                Style="{StaticResource FabButton}"
                 Clicked="OnAddClicked"
                 Margin="0,0,20,30"
                 HorizontalOptions="End"
                 VerticalOptions="End"
-                ZIndex="1" />
+                ZIndex="1" FontSize="Large" />
     </Grid>
 </ContentPage>

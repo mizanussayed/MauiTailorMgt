@@ -1,6 +1,6 @@
 using Microsoft.Maui.Controls.Shapes;
 using MYPM.Common.QRGeneration;
-using MYPM.Data.Models;
+using MYPM.Models;
 using Path = System.IO.Path;
 
 namespace MYPM.Pages.Views;
@@ -67,28 +67,18 @@ public partial class InvoiceQR : ContentPage
         {
             await Share.RequestAsync(new ShareFileRequest
             {
-                Title = "Share Invoice",
+                Title = "Share Order QR-code",
                 File = new ShareFile(_orderModelFilePath)
             }).ConfigureAwait(false);
         }
         else
         {
-            await DisplayActionSheet("Error", "OK", null, "No orderModel to share.").ConfigureAwait(false);
+            await DisplayActionSheet("Error", "OK", null, "No order qrcode to share.").ConfigureAwait(false);
         }
     }
     private async void OnBackClicked(object sender, EventArgs e)
     {
         await Shell.Current.Navigation.PopToRootAsync();
-    }
-
-    private static Task<Label> CreateLabel(string text)
-    {
-        return Task.FromResult(new Label
-        {
-            Text = text,
-            TextColor = Colors.Black,
-            FontSize = 14,
-        });
     }
 
     private static string CreateQRText(NewOrderModel orderModel)

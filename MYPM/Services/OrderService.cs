@@ -1,206 +1,187 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MYPM.Common;
 using MYPM.Data.Configurations;
-using MYPM.Data.Models;
-using MYPM.ViewModels;
+using MYPM.Models;
 
 namespace MYPM.Services;
 
-public class OrderService(AppDbContext _context) : IOrderService
+public class OrderService(IDbContextFactory<AppDbContext> dbFactory) : IOrderService
 {
-    private List<NewOrderModel>? _orderListCache = [];
-    private readonly Dictionary<int, NewOrderModel> _orderDetailsCache = [];
-    private OrderSummaryVM? _orderSummaryCache = null;
+    private async Task<int> GetNextId(CancellationToken ct = default)
+    {
+        await using var db = await dbFactory.CreateDbContextAsync(ct);
+        return db.Orders.Count(o => o.OrderDate.Date == DateTime.UtcNow.Date) + 1;
+    }
 
-    private DateTime _cacheExpiry = DateTime.MinValue;
-    private readonly TimeSpan _cacheDuration = TimeSpan.FromHours(2);
+    private static List<NewOrderModel> Normalize(List<NewOrderModel> orders)
+        => [.. orders.OrderByDescending(o => o.Id)];
 
     public async Task<List<NewOrderModel>> GetAllOrders()
     {
-        if (_orderListCache != null && DateTime.UtcNow < _cacheExpiry)
-            return _orderListCache;
-
         try
         {
-            var orders = await _context.Orders
-                .OrderByDescending(o => o.Id)
+            await using var db = await dbFactory.CreateDbContextAsync();
+            var orders = await db.Orders
                 .AsNoTracking()
+                .AsSplitQuery()
                 .ToListAsync();
-
-            _orderListCache = orders;
-            _cacheExpiry = DateTime.UtcNow.Add(_cacheDuration);
-            return orders;
+            var normalized = Normalize(orders);
+            return normalized;
         }
-        catch (Exception ex)
-        {
-            _ = ex.Message;
-            return [];
-        }
+        catch{ return []; }
     }
 
     public async Task<List<NewOrderModel>> GetCustomerOrders(string mobileNumber)
     {
         try
         {
-            var result = await _context.Orders
-                .Where(c => c.MobileNumber == mobileNumber)
+            await using var db = await dbFactory.CreateDbContextAsync();
+            var orders = await db.Orders
+                .Where(o => o.MobileNumber == mobileNumber)
                 .OrderByDescending(o => o.Id)
                 .AsNoTracking()
-                .ToListAsync();
-            return result;
+                .ToListAsync().ConfigureAwait(false);
+            return orders;
         }
-        catch (Exception ex)
-        {
-            _ = ex.Message;
-            return [];
-        }
+        catch { return []; }
     }
 
     public async Task<NewOrderModel> GetOrder(int id)
     {
-        if (_orderDetailsCache.TryGetValue(id, out var cachedOrder))
-            return cachedOrder;
-
         try
         {
-            var order = await _context.Orders
+            await using var db = await dbFactory.CreateDbContextAsync().ConfigureAwait(false);
+            var order = await db.Orders
                 .Include(o => o.PanjabiOrders)
                 .Include(o => o.ArabianOrders)
                 .Include(o => o.SelowerOrders)
+                .AsSplitQuery()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(o => o.Id == id) ?? new NewOrderModel();
-
-            _orderDetailsCache[id] = order;
             return order;
         }
-        catch (Exception ex)
-        {
-            _ = ex.Message;
-            return new NewOrderModel();
-        }
+        catch { return new NewOrderModel(); }
     }
 
     public async Task<bool> CreateOrder(NewOrderModel order)
     {
         try
         {
+            await using var db = await dbFactory.CreateDbContextAsync();
+            order.SL = GenerateOrderSerial.GetSL(await GetNextId());
             order.OrderDate = order.OrderDate.ToUniversalTime();
             order.DeliveryDate = order.DeliveryDate.ToUniversalTime();
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            // Invalidate caches
-            _orderListCache = null;
-            _orderDetailsCache.Clear();
-            _orderSummaryCache = null;
-
+            db.Orders.Add(order);
+            await db.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
-        catch (Exception ex)
-        {
-            _ = ex.Message;
-            return false;
-        }
-    }
-
-    public async Task<NewOrderModel> UpdateStatus(int id, OrderStatus status)
-    {
-        try
-        {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
-            if (order is null) return new NewOrderModel();
-
-            order.Status = status;
-
-            if (status == OrderStatus.Delivered)
-            {
-                order.DueAmount = 0;
-                order.PaidAmount = order.TotalAmount;
-            }
-
-            await _context.SaveChangesAsync();
-
-            // Invalidate caches
-            _orderListCache = null;
-            _orderDetailsCache.Remove(id);
-            _orderSummaryCache = null;
-
-            return order;
-        }
-        catch (Exception ex)
-        {
-            _ = ex.Message;
-            return new NewOrderModel();
-        }
+        catch { return false; }
     }
 
     public async Task<OrderSummaryVM> GetOrderSummary()
     {
-        if (_orderSummaryCache != null && DateTime.UtcNow < _cacheExpiry)
-            return _orderSummaryCache;
-
         try
         {
-            var month = DateTime.UtcNow.Month;
-            var year = DateTime.UtcNow.Year;
-            var today = DateTime.UtcNow.Date;
-            var completedStatus = (int)OrderStatus.Completed;
-
-            var sql = @"
-                SELECT 
-                    COUNT(*) AS ""TotalOrders"",
-                    COUNT(DISTINCT ""MobileNumber"") AS ""TotalCustomers"",
-                    COUNT(*) FILTER (WHERE DATE_PART('month', ""OrderDate"") = @month AND DATE_PART('year', ""OrderDate"") = @year) AS ""MonthTotalOrders"",
-                    COUNT(*) FILTER (WHERE DATE(""OrderDate"") = @today) AS ""TodayOrders"",
-                    COUNT(*) FILTER (WHERE ""Status"" = @completedStatus) AS ""ReadyToDelivery""
-                FROM ""Orders""";
-
-            var result = await _context.Database.SqlQueryRaw<OrderSummaryVM>(sql,
-                    new Npgsql.NpgsqlParameter("@month", month),
-                    new Npgsql.NpgsqlParameter("@year", year),
-                    new Npgsql.NpgsqlParameter("@today", today),
-                    new Npgsql.NpgsqlParameter("@completedStatus", completedStatus))
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
-            _orderSummaryCache = result ?? new OrderSummaryVM();
-            _cacheExpiry = DateTime.UtcNow.Add(_cacheDuration);
-
-            return _orderSummaryCache;
+            await using var db = await dbFactory.CreateDbContextAsync();
+            var orders = await db.Orders.AsNoTracking().AsSplitQuery().ToListAsync().ConfigureAwait(false);
+            var utcNow = DateTime.UtcNow;
+            var month = utcNow.Month; var year = utcNow.Year; var today = utcNow.Date;
+            var summary = new OrderSummaryVM
+            {
+                TotalOrders = orders.Count,
+                TotalCustomers = orders.Select(o => o.MobileNumber).Distinct().Count(),
+                MonthTotalOrders = orders.Count(o => o.OrderDate.Month == month && o.OrderDate.Year == year),
+                TodayOrders = orders.Count(o => o.OrderDate.Date == today),
+                ReadyToDelivery = orders.Count(o => o.Status == OrderStatus.Completed)
+            };
+            return summary;
         }
-        catch (Exception ex)
+        catch { return new OrderSummaryVM(); }
+    }
+
+    public async Task<bool> UpdateOrder(NewOrderModel incoming)
+    {
+        try
         {
-            _ = ex.Message;
-            return new OrderSummaryVM();
+            await using var db = await dbFactory.CreateDbContextAsync();
+            var existing = await db.Orders
+                .Include(o => o.PanjabiOrders)
+                .Include(o => o.ArabianOrders)
+                .Include(o => o.SelowerOrders)
+                .FirstOrDefaultAsync(o => o.Id == incoming.Id);
+            if (existing is null) return false;
+
+            db.Entry(existing).CurrentValues.SetValues(incoming);
+            existing.OrderDate = incoming.OrderDate.ToUniversalTime();
+            existing.DeliveryDate = incoming.DeliveryDate.ToUniversalTime();
+
+            SyncChildren(db, existing.ArabianOrders, incoming.ArabianOrders, (a, b) => a.Id == b.Id, e => e.OrderId = existing.Id);
+            SyncChildren(db, existing.PanjabiOrders, incoming.PanjabiOrders, (a, b) => a.Id == b.Id, e => e.OrderId = existing.Id);
+            SyncChildren(db, existing.SelowerOrders, incoming.SelowerOrders, (a, b) => a.Id == b.Id, e => e.OrderId = existing.Id);
+
+            await db.SaveChangesAsync().ConfigureAwait(false);
+            return true;
         }
+        catch { return false; }
+    }
+
+    private static void SyncChildren<T>(DbContext db, ICollection<T> tracked, ICollection<T>? incoming, Func<T, T, bool> match, Action<T> assignParent) where T : class
+    {
+        incoming ??= [];
+
+        var toRemove = tracked.Where(t => !incoming.Any(i => match(t, i))).ToList();
+        foreach (var del in toRemove) db.Remove(del);
+
+        foreach (var inc in incoming)
+        {
+            var exist = tracked.FirstOrDefault(t => match(t, inc));
+            if (exist is null)
+            {
+                assignParent(inc);
+                tracked.Add(inc);
+            }
+            else
+            {
+                db.Entry(exist).CurrentValues.SetValues(inc);
+            }
+        }
+    }
+
+    public async Task<bool> DeleteOrder(int id)
+    {
+        try
+        {
+            await using var db = await dbFactory.CreateDbContextAsync();
+            var entity = await db.Orders
+                .Include(o => o.PanjabiOrders)
+                .Include(o => o.ArabianOrders)
+                .Include(o => o.SelowerOrders)
+                .FirstOrDefaultAsync(o => o.Id == id);
+            if (entity is null) return false;
+            db.Remove(entity);
+            await db.SaveChangesAsync().ConfigureAwait(false);
+            return true;
+        }
+        catch { return false; }
     }
 
     public async Task<List<CustomerVM>> GetAllCustomers()
     {
         try
         {
-            var sql = @"
-            SELECT DISTINCT ON (""MobileNumber"") 
-                ""CustomerName"", 
-                ""Address"", 
-                ""MobileNumber""
-            FROM ""Orders""
-            ORDER By ""MobileNumber"", ""Id"" DESC
-        ";
-
-            var customers = await _context
-                .Database
-                .SqlQueryRaw<CustomerVM>(sql)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return customers;
+            await using var db = await dbFactory.CreateDbContextAsync();
+            var orders = await db.Orders.AsNoTracking().AsSplitQuery().ToListAsync().ConfigureAwait(false);
+            return [.. orders
+                .GroupBy(o => o.MobileNumber)
+                .Select(g => g.OrderByDescending(o => o.Id).First())
+                .Select(o => new CustomerVM
+                {
+                    CustomerName = o.CustomerName,
+                    Address = o.Address,
+                    MobileNumber = o.MobileNumber
+                })];
         }
-        catch (Exception ex)
-        {
-            _ = ex.Message;
-            return [];
-        }
+        catch { return []; }
     }
-
 }
