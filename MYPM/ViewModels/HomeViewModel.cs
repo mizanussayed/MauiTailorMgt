@@ -6,7 +6,7 @@ namespace MYPM.ViewModels;
 public partial class HomeViewModel(IOrderService orderService) : ObservableObject
 {
     [ObservableProperty]
-    private int _todayOrders;
+    private int _weekTotalOrders;
 
     [ObservableProperty]
     private int _totalCustomer;
@@ -32,9 +32,9 @@ public partial class HomeViewModel(IOrderService orderService) : ObservableObjec
             TotalOrders = summary.TotalOrders;
             TotalCustomer = summary.TotalCustomers;
             MonthTotalOrders = summary.MonthTotalOrders;
-            TodayOrders = summary.TodayOrders;
+            WeekTotalOrders = summary.WeekTotalOrders;
             ReadyToDelivery = summary.ReadyToDelivery;
-            SL = GenerateOrderSerial.GetSL(summary.TodayOrders + 1);
+            SL = GenerateOrderSerial.GetSL(summary.WeekTotalOrders + 1);
         }
         catch (Exception ex)
         {

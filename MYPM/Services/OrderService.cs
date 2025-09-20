@@ -10,8 +10,18 @@ public class OrderService(IDbContextFactory<AppDbContext> dbFactory) : IOrderSer
     private async Task<int> GetNextId(CancellationToken ct = default)
     {
         await using var db = await dbFactory.CreateDbContextAsync(ct);
-        return db.Orders.Count(o => o.OrderDate.Date == DateTime.UtcNow.Date) + 1;
+
+        var utcNow = DateTime.UtcNow;
+
+        var startOfWeek = utcNow.Date.AddDays(-(int)utcNow.DayOfWeek);
+        var endOfWeek = startOfWeek.AddDays(7); // exclusive
+
+        var weeklyOrderCount = await db.Orders
+            .CountAsync(o => o.OrderDate >= startOfWeek && o.OrderDate < endOfWeek, ct);
+
+        return weeklyOrderCount + 1;
     }
+
 
     private static List<NewOrderModel> Normalize(List<NewOrderModel> orders)
         => [.. orders.OrderByDescending(o => o.Id)];
@@ -85,20 +95,31 @@ public class OrderService(IDbContextFactory<AppDbContext> dbFactory) : IOrderSer
         {
             await using var db = await dbFactory.CreateDbContextAsync();
             var orders = await db.Orders.AsNoTracking().AsSplitQuery().ToListAsync().ConfigureAwait(false);
-            var utcNow = DateTime.UtcNow;
-            var month = utcNow.Month; var year = utcNow.Year; var today = utcNow.Date;
+
+            var utcNow = DateTime.Now;
+            var month = utcNow.Month;
+            var year = utcNow.Year;
+
+            var startOfWeek = utcNow.Date.AddDays(-(int)utcNow.DayOfWeek); 
+            var endOfWeek = startOfWeek.AddDays(7);
+
             var summary = new OrderSummaryVM
             {
                 TotalOrders = orders.Count,
                 TotalCustomers = orders.Select(o => o.MobileNumber).Distinct().Count(),
                 MonthTotalOrders = orders.Count(o => o.OrderDate.Month == month && o.OrderDate.Year == year),
-                TodayOrders = orders.Count(o => o.OrderDate.Date == today),
+                WeekTotalOrders = orders.Count(o => o.OrderDate >= startOfWeek && o.OrderDate < endOfWeek),
                 ReadyToDelivery = orders.Count(o => o.Status == OrderStatus.Completed)
             };
+
             return summary;
         }
-        catch { return new OrderSummaryVM(); }
+        catch
+        {
+            return new OrderSummaryVM();
+        }
     }
+
 
     public async Task<bool> UpdateOrder(NewOrderModel incoming)
     {

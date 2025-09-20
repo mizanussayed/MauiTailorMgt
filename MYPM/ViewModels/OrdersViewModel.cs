@@ -1,3 +1,5 @@
+using Java.Time;
+using Microsoft.Maui.Controls;
 using MYPM.Models;
 using MYPM.Pages;
 using MYPM.Services;
@@ -30,7 +32,7 @@ public partial class OrdersViewModel(IOrderService _orderService) : ObservableOb
         {
             var navigationParameter = new Dictionary<string, object>
             {
-                { "Id", Id }
+                { "OrderId", Id }
             };
             await Shell.Current.GoToAsync($"{nameof(OrderDetailsPage)}", navigationParameter);
         }
@@ -56,7 +58,8 @@ public partial class OrdersViewModel(IOrderService _orderService) : ObservableOb
     {
         try
         {
-            return await _orderService.DeleteOrder(Id).ConfigureAwait(false); }
+            return await _orderService.DeleteOrder(Id).ConfigureAwait(true);
+        }
         catch (Exception)
         {
           return false;
@@ -84,12 +87,16 @@ public partial class OrdersViewModel(IOrderService _orderService) : ObservableOb
         {
             IsRefreshing = true;
             var allOrders = await _orderService.GetAllOrders().ConfigureAwait(false);
+
+            var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+            var endOfWeek = startOfWeek.AddDays(7);
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 DateTime today = DateTime.Today;
                 IEnumerable<NewOrderModel> filtered = selectedFilter switch
                 {
-                    "Week" => allOrders.Where(o => o.OrderDate >= today.AddDays(-7)),
+                    "Week" => allOrders.Where(o => o.OrderDate >= startOfWeek && o.OrderDate < endOfWeek),
                     "Month" => allOrders.Where(o => o.OrderDate.Month == today.Month && o.OrderDate.Year == today.Year),
                     "Year" => allOrders.Where(o => o.OrderDate.Year == today.Year),
                     "All" => allOrders,

@@ -64,7 +64,7 @@
                 <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                     <Image Source="{FontImage  FontFamily=FontAwesome, Glyph={x:Static a:IconFont.AddressBook}, Color={StaticResource Primary}}"
                                />
-                    <Label Text="{Binding TodayOrders, StringFormat='Today Total : {0}'}"   />
+                    <Label Text="{Binding WeekTotalOrders, StringFormat='Weekly Total : {0}'}"   />
                 </StackLayout>
             </Border>
 

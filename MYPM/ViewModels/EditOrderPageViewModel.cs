@@ -50,7 +50,7 @@ public partial class EditOrderPageViewModel(IOrderService orderService) : Observ
     private async Task<bool> Save()
     {
         RecalculateTotals(Order);
-        var ok = await orderService.UpdateOrder(Order).ConfigureAwait(false);
+        var ok = await orderService.UpdateOrder(Order);
         if (ok)
             await Shell.Current.Navigation.PopAsync();
         return ok;
@@ -59,7 +59,7 @@ public partial class EditOrderPageViewModel(IOrderService orderService) : Observ
     [RelayCommand]
     private async Task<bool> Delete()
     {
-        var ok = await orderService.DeleteOrder(Order.Id).ConfigureAwait(false);
+        var ok = await orderService.DeleteOrder(Order.Id);
         if (ok)
         {
             await Shell.Current.Navigation.PopToRootAsync();

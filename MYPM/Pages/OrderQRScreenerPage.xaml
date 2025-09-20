@@ -1,14 +1,84 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-	xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
-	x:Class="MYPM.Pages.OrderQRScreenerPage"
-	>
-    <Grid RowDefinitions="3*,1*" Padding="20" Margin="20" HorizontalOptions="Center">
-        <zxing:CameraBarcodeReaderView
-          WidthRequest="250" HeightRequest="250"
-          Margin="20"
-	      x:Name="barcodeView"
-	      BarcodesDetected="BarcodesDetected"
-	    />
-    </Grid>
+﻿<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+    x:Class="MYPM.Pages.OrderQRScreenerPage"
+    BackgroundColor="{StaticResource SurfaceVariant}"
+    Title="Scan QR Code">
+
+    <StackLayout VerticalOptions="Center" Spacing="0">
+
+        <Grid Grid.Row="0"
+              WidthRequest="300"
+              HeightRequest="300"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              Margin="0">
+
+            <zxing:CameraBarcodeReaderView
+                x:Name="barcodeView"
+                BarcodesDetected="BarcodesDetected"
+                CameraLocation="Rear"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+
+            <Border x:Name="Viewfinder"
+                    Stroke="Transparent"
+                    StrokeThickness="2"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+            </Border>
+            <!-- Top-left -->
+            <BoxView Color="White" WidthRequest="28" HeightRequest="2" HorizontalOptions="Start" VerticalOptions="Start" Margin="12,12,0,0"/>
+            <BoxView Color="White" WidthRequest="2" HeightRequest="28" HorizontalOptions="Start" VerticalOptions="Start" Margin="12,12,0,0"/>
+            <!-- Top-right -->
+            <BoxView Color="White" WidthRequest="28" HeightRequest="2" HorizontalOptions="End" VerticalOptions="Start" Margin="0,12,12,0"/>
+            <BoxView Color="White" WidthRequest="2" HeightRequest="28" HorizontalOptions="End" VerticalOptions="Start" Margin="0,12,12,0"/>
+            <!-- Bottom-left -->
+            <BoxView Color="White" WidthRequest="28" HeightRequest="2" HorizontalOptions="Start" VerticalOptions="End" Margin="12,0,0,12"/>
+            <BoxView Color="White" WidthRequest="2" HeightRequest="28" HorizontalOptions="Start" VerticalOptions="End" Margin="12,0,0,12"/>
+            <!-- Bottom-right -->
+            <BoxView Color="White" WidthRequest="28" HeightRequest="2" HorizontalOptions="End" VerticalOptions="End" Margin="0,0,12,12"/>
+            <BoxView Color="White" WidthRequest="2" HeightRequest="28" HorizontalOptions="End" VerticalOptions="End" Margin="0,0,12,12"/>
+
+            <!-- Animated scan line -->
+            <BoxView x:Name="scanLine"
+                     HeightRequest="2"
+                     HorizontalOptions="Fill"
+                     VerticalOptions="Start"
+                     Opacity="0.9"
+                     Color="{StaticResource Tertiary}"/>
+
+            <!-- Torch Floating Button inside container -->
+            <Border x:Name="TorchFab"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    BackgroundColor="#99000000"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Margin="10">
+                <Border.StrokeShape>
+                    <Ellipse />
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#66000000" Offset="0,3" Opacity="0.8" Radius="10" />
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ToggleTorchClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="⚡" FontSize="20" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
+        </Grid>
+
+        <!-- Status Label: closer to preview but no overlap -->
+        <Label 
+            x:Name="StatusLabel"
+            Text="Point the camera at a QR code"
+            FontSize="14"
+            Background="Yellow"
+            TextColor="{StaticResource OnSurface}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
+
+    </StackLayout>
 </ContentPage>

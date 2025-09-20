@@ -34,6 +34,6 @@ public partial class NewOrderPageViewModel(IOrderService orderService) : Observa
     [RelayCommand]
     private async Task Cancel()
     {
-        await Shell.Current.Navigation.PopAsync();
+        await Shell.Current.Navigation.PopAsync().ConfigureAwait(false);
     }
 }

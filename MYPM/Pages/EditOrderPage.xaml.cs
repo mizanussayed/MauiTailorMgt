@@ -38,23 +38,23 @@ public partial class EditOrderPage : ContentPage
         switch (orderFor)
         {
             case "arabian":
-                vm.Order.ArabianOrders.Add(new ArabianOrder());
+                vm!.Order.ArabianOrders.Add(new ArabianOrder());
                 break;
             case "panjabi":
-                vm.Order.PanjabiOrders.Add(new PanjabiOrder());
+                vm!.Order.PanjabiOrders.Add(new PanjabiOrder());
                 break;
             case "selowar":
             case "selower":
-                vm.Order.SelowerOrders.Add(new SelowerOrder());
+                vm!.Order.SelowerOrders.Add(new SelowerOrder());
                 break;
         }
         AddOrEnsureMeasurementSection(true);
-        vm.RefreshComputed();
+        vm!.RefreshComputed();
     }
 
     private void AddOrEnsureMeasurementSection(bool forceRecreate = false)
     {
-        var selected = vm?.Order.OrderFor?.ToLower();
+        var selected = vm!.Order.OrderFor?.ToLower();
         if (forceRecreate) DynamicFormFields.Children.Clear();
 
         if (!string.IsNullOrWhiteSpace(selected))
