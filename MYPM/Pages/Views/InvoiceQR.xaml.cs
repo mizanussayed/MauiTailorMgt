@@ -15,7 +15,6 @@ public partial class InvoiceQR : ContentPage
         GenerateInvoice().ConfigureAwait(true);
     }
 
-
     private async Task GenerateInvoice()
     {
         Label header = new() { Text = "Yousuf Tailors", FontSize = 24, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
@@ -25,7 +24,7 @@ public partial class InvoiceQR : ContentPage
         var barcode = QrUtils.MakeQrCodeResult(CreateQRText(orderModel)).QrCode;
         barcode.WidthRequest = 200;
         barcode.HeightRequest = 200;
-        barcode.HorizontalOptions = LayoutOptions.End;
+        barcode.HorizontalOptions = LayoutOptions.Center;
 
         var border = new Border
         {
@@ -83,6 +82,6 @@ public partial class InvoiceQR : ContentPage
 
     private static string CreateQRText(NewOrderModel orderModel)
     {
-        return $"Yousuf_Panjabi_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
+        return $"Yousuf_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
     }
 }

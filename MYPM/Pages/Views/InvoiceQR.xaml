@@ -7,10 +7,8 @@
              x:Class="MYPM.Pages.Views.InvoiceQR"
              Shell.NavBarIsVisible="False"
              Background="{StaticResource SurfaceVariant}">
-    <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Light={StaticResource SurfaceVariant}, Dark={StaticResource Black}}" StatusBarStyle="Default" />
-    </ContentPage.Behaviors>
-    <StackLayout Padding="20" HorizontalOptions="Center" Orientation="Vertical" VerticalOptions="Center">
+
+    <StackLayout Padding="8" HorizontalOptions="Center" Orientation="Vertical" VerticalOptions="Center">
         <VerticalStackLayout x:Name="qrBox" />
         <Grid ColumnDefinitions="*,*" ColumnSpacing="40" >
              <Button Text="Back" Grid.Column="0"

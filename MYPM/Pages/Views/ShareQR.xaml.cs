@@ -27,7 +27,7 @@ public partial class ShareQR : Popup
         var barcode = QrUtils.MakeQrCodeResult(CreateQRText(orderModel)).QrCode;
         barcode.WidthRequest = 200;
         barcode.HeightRequest = 200;
-        barcode.HorizontalOptions = LayoutOptions.End;
+        barcode.HorizontalOptions = LayoutOptions.Center;
 
         var border = new Border
         {
@@ -37,7 +37,7 @@ public partial class ShareQR : Popup
             StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10) },
             BackgroundColor = Colors.White,
             HorizontalOptions = LayoutOptions.Center,
-            Content = new VerticalStackLayout { header, info, infoPhone, barcode}
+            Content = new VerticalStackLayout { header, info, infoPhone, barcode }
         };
 
         qrBox.Clear();
@@ -60,10 +60,6 @@ public partial class ShareQR : Popup
         });
     }
 
-    private static string CreateQRText(NewOrderModel orderModel)
-    {
-        return $"Yousuf_Panjabi_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
-    }
     private static async Task<string> SaveInvoiceAsImage(VisualElement visualElement)
     {
         await Task.Delay(100);
@@ -81,9 +77,12 @@ public partial class ShareQR : Popup
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Capture failed: {ex.Message}");
+            _ = ex.Message;
         }
-
         return string.Empty;
+    }
+    private static string CreateQRText(NewOrderModel orderModel)
+    {
+        return $"Yousuf_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
     }
 }
