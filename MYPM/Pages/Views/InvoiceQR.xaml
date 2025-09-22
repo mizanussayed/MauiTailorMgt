@@ -7,25 +7,27 @@
              x:Class="MYPM.Pages.Views.InvoiceQR"
              Shell.NavBarIsVisible="False"
              Background="{StaticResource SurfaceVariant}">
-
-    <StackLayout Padding="8" HorizontalOptions="Center" Orientation="Vertical" VerticalOptions="Center">
-        <VerticalStackLayout x:Name="qrBox" />
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="40" >
+    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+        <VerticalStackLayout x:Name="qrBox" Spacing="15" Padding="15" HorizontalOptions="Center"/>
+        <Grid ColumnDefinitions="Auto,*,Auto">
              <Button Text="Back" Grid.Column="0"
                      Background="{StaticResource Warning}"
-                    Clicked="OnBackClicked">
+                     HorizontalOptions="Start"
+                     Clicked="OnBackClicked">
                 <Button.ImageSource>
                     <FontImageSource Glyph="{x:Static fa:IconFont.CaretLeft}" FontFamily="FontAwesome" Size="20" Color="White"/>
                 </Button.ImageSource>
             </Button>
+            <BoxView Grid.Column="1"/>
            <Button Text="Share"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Background="{StaticResource Info}"
+                    HorizontalOptions="End"
                     Clicked="OnShareInvoiceClicked">
                 <Button.ImageSource>
                     <FontImageSource Glyph="{x:Static fa:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
                 </Button.ImageSource>
             </Button>
         </Grid>
-    </StackLayout>
+    </VerticalStackLayout>
 </ContentPage>

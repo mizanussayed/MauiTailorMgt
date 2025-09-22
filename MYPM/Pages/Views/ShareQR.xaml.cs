@@ -83,6 +83,6 @@ public partial class ShareQR : Popup
     }
     private static string CreateQRText(NewOrderModel orderModel)
     {
-        return $"Yousuf_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
+        return $"Yousuf_Panjabi_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
     }
 }
