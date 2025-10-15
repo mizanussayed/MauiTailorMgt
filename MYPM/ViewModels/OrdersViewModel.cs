@@ -87,13 +87,13 @@ public partial class OrdersViewModel(IOrderService _orderService) : ObservableOb
         {
             IsRefreshing = true;
             var allOrders = await _orderService.GetAllOrders().ConfigureAwait(false);
-
-            var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+            var today = DateTime.UtcNow.Date;
+            int daysSinceSunday = (int)today.DayOfWeek;
+            var startOfWeek = today.AddDays(-daysSinceSunday -1);
             var endOfWeek = startOfWeek.AddDays(7);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                DateTime today = DateTime.Today;
                 IEnumerable<NewOrderModel> filtered = selectedFilter switch
                 {
                     "Week" => allOrders.Where(o => o.OrderDate >= startOfWeek && o.OrderDate < endOfWeek),

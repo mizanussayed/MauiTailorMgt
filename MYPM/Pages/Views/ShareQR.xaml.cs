@@ -31,9 +31,9 @@ public partial class ShareQR : Popup
 
         var border = new Border
         {
-            Stroke = Colors.Orange,
+            Stroke = Colors.Green,
             Padding = new Thickness(2),
-            Margin = new Thickness(0, 1),
+            Margin = new Thickness(0, 10),
             StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10) },
             BackgroundColor = Colors.White,
             HorizontalOptions = LayoutOptions.Center,

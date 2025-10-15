@@ -13,7 +13,7 @@ public class OrderService(IDbContextFactory<AppDbContext> dbFactory) : IOrderSer
 
         var utcNow = DateTime.UtcNow;
 
-        var startOfWeek = utcNow.Date.AddDays(-(int)utcNow.DayOfWeek);
+        var startOfWeek = utcNow.Date.AddDays(-(int)utcNow.DayOfWeek -1);
         var endOfWeek = startOfWeek.AddDays(7); // exclusive
 
         var weeklyOrderCount = await db.Orders
@@ -96,19 +96,20 @@ public class OrderService(IDbContextFactory<AppDbContext> dbFactory) : IOrderSer
             await using var db = await dbFactory.CreateDbContextAsync();
             var orders = await db.Orders.AsNoTracking().AsSplitQuery().ToListAsync().ConfigureAwait(false);
 
-            var utcNow = DateTime.Now;
+            var utcNow = DateTime.UtcNow;
             var month = utcNow.Month;
             var year = utcNow.Year;
 
-            var startOfWeek = utcNow.Date.AddDays(-(int)utcNow.DayOfWeek); 
-            var endOfWeek = startOfWeek.AddDays(7);
-
+            var today = utcNow.Date;
+            int daysSinceSunday = (int)today.DayOfWeek;
+            var startOfWeek = today.AddDays(-daysSinceSunday -1);
+            var endOfWeek = startOfWeek.AddDays(7); 
             var summary = new OrderSummaryVM
             {
                 TotalOrders = orders.Count,
                 TotalCustomers = orders.Select(o => o.MobileNumber).Distinct().Count(),
                 MonthTotalOrders = orders.Count(o => o.OrderDate.Month == month && o.OrderDate.Year == year),
-                WeekTotalOrders = orders.Count(o => o.OrderDate >= startOfWeek && o.OrderDate < endOfWeek),
+                WeekTotalOrders = orders.Count(o => o.OrderDate.Date >= startOfWeek && o.OrderDate.Date < endOfWeek),
                 ReadyToDelivery = orders.Count(o => o.Status == OrderStatus.Completed)
             };
 
