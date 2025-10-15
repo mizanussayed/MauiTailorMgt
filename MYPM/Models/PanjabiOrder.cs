@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MYPM.Models;
+﻿namespace MYPM.Models;
 
 public sealed class PanjabiOrder
 {
@@ -15,9 +13,5 @@ public sealed class PanjabiOrder
     public decimal Mohori { get; set; } = 22;
     public decimal Rakaba { get; set; } = 30;
     public string Note { get; set; } = string.Empty;
-
-    [ForeignKey(nameof(NewOrder))]
     public int OrderId { get; set; }
-    public NewOrderModel NewOrder { get; set; } = null!;
-
 }
