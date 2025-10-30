@@ -298,7 +298,6 @@ public sealed class FirestoreOrderService : IOrderService
 
     private static async Task ReplaceChildrenAsync(FirestoreDb db, NewOrderModel order, CancellationToken ct = default)
     {
-        // Delete existing children
         async Task DeleteAllAsync(string collection)
         {
             var q = db.Collection(collection).WhereEqualTo("OrderId", order.Id);
@@ -313,7 +312,6 @@ public sealed class FirestoreOrderService : IOrderService
         await DeleteAllAsync(ArabianCollection);
         await DeleteAllAsync(SelowerCollection);
 
-        // Ensure OrderId and assign global child Ids if missing
         foreach (var p in order.PanjabiOrders)
         {
             p.OrderId = order.Id;
@@ -330,7 +328,6 @@ public sealed class FirestoreOrderService : IOrderService
             if (s.Id <= 0) s.Id = await GetNextSelowerIdAsync(db, ct);
         }
 
-        // Insert current children
         async Task InsertAsync(string collection, IEnumerable<Dictionary<string, object>> docs, IEnumerable<(int childId, string prefix)> ids)
         {
             using var iterIds = ids.GetEnumerator();
@@ -379,10 +376,8 @@ public sealed class FirestoreOrderService : IOrderService
         {
             var db = await GetDbAsync();
 
-            // Delete children first
             var tmp = new NewOrderModel { Id = id };
-            await ReplaceChildrenAsync(db, tmp); // this will delete children (since lists are empty)
-
+            await ReplaceChildrenAsync(db, tmp);
             var docRef = db.Collection(OrdersCollection).Document(id.ToString());
             await docRef.DeleteAsync();
             return true;
@@ -424,7 +419,6 @@ public sealed class FirestoreOrderService : IOrderService
             foreach (var doc in snap.Documents)
             {
                 var order = FromOrderDoc(doc.ToDictionary());
-                await LoadChildrenAsync(db, order);
                 orders.Add(order);
             }
             return Normalize(orders);
@@ -437,18 +431,22 @@ public sealed class FirestoreOrderService : IOrderService
         try
         {
             var db = await GetDbAsync();
-            var q = db.Collection(OrdersCollection)
-                .WhereEqualTo(nameof(NewOrderModel.MobileNumber), mobileNumber)
-                .OrderByDescending(nameof(NewOrderModel.Id));
-            var snap = await q.GetSnapshotAsync();
-            var orders = new List<NewOrderModel>(snap.Count);
-            foreach (var doc in snap.Documents)
-            {
-                var order = FromOrderDoc(doc.ToDictionary());
-                await LoadChildrenAsync(db, order);
-                orders.Add(order);
-            }
-            return orders;
+            var orders = new List<NewOrderModel>();
+                var allSnap = await db.Collection(OrdersCollection).GetSnapshotAsync();
+                foreach (var doc in allSnap.Documents)
+                {
+                    var dict = doc.ToDictionary();
+                    if (dict.TryGetValue(nameof(NewOrderModel.MobileNumber), out var mnObj))
+                    {
+                        var stored = mnObj?.ToString() ?? string.Empty;
+                        if (stored == mobileNumber)
+                        {
+                            orders.Add(FromOrderDoc(dict));
+                        }
+                    }
+                }
+            
+            return Normalize(orders);
         }
         catch { return []; }
     }
