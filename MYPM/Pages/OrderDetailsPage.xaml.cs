@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Extensions;
 using MYPM.Models;
 using MYPM.Pages.Views;
+using MYPM.Services;
 using MYPM.ViewModels;
 
 namespace MYPM.Pages;
@@ -11,6 +12,8 @@ public partial class OrderDetailsPage : ContentPage
     private int NewId;
     private NewOrderModel? OrderModel;
     private readonly OrdersViewModel _orderViewModel;
+    private readonly IBluetoothPrinterService _printerService;
+
     public int OrderId
     {
         get => NewId;
@@ -21,10 +24,11 @@ public partial class OrderDetailsPage : ContentPage
         }
     }
 
-    public OrderDetailsPage(OrdersViewModel viewModel)
+    public OrderDetailsPage(OrdersViewModel viewModel, IBluetoothPrinterService printerService)
     {
         InitializeComponent();
         _orderViewModel = viewModel;
+        _printerService = printerService;
     }
 
     private async Task LoadData()
@@ -50,7 +54,7 @@ public partial class OrderDetailsPage : ContentPage
             await DisplayAlert("Error", "Order details are not available to share.", "OK");
             return;
         }
-        var popup = new ShareQR(OrderModel);
+        var popup = new ShareQR(OrderModel, _printerService);
         await this.ShowPopupAsync(popup).ConfigureAwait(false);
     }
 
@@ -66,7 +70,7 @@ public partial class OrderDetailsPage : ContentPage
         if (OrderModel is null) return;
         var confirm = await DisplayAlert("Delete", $"Delete order {OrderModel.SL}?", "Yes", "No");
         if (!confirm) return;
-         var isDeleted =  await _orderViewModel.Delete(OrderModel.Id);
+        var isDeleted = await _orderViewModel.Delete(OrderModel.Id);
 
         if (isDeleted)
         {
