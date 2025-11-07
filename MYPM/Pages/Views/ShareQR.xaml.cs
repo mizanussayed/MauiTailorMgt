@@ -26,6 +26,7 @@ public partial class ShareQR : Popup
     {
         Label header = new() { Text = "Yousuf Tailors", FontSize = 24, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
         Label info = new() { Text = orderModel.CustomerName, FontSize = 14, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
+        Label tk = new() { Text = orderModel.DueAmount.ToString(), FontSize = 14, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
         Label infoPhone = new() { Text = orderModel.MobileNumber, FontSize = 14, HorizontalOptions = LayoutOptions.Center, TextColor = Colors.Black };
 
         var barcode = QrUtils.MakeQrCodeResult(CreateQRText(orderModel)).QrCode;
@@ -41,7 +42,7 @@ public partial class ShareQR : Popup
             StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10) },
             BackgroundColor = Colors.White,
             HorizontalOptions = LayoutOptions.Center,
-            Content = new VerticalStackLayout { header, info, infoPhone, barcode }
+            Content = new VerticalStackLayout { header, info, infoPhone, tk, barcode }
         };
 
         qrBox.Clear();
@@ -70,21 +71,23 @@ public partial class ShareQR : Popup
 
         try
         {
-            var devices = _printerService.GetPairedDevices();
+            var devices = await _printerService.GetPairedDevicesAsync();
 
             if (devices.Count == 0)
             {
                 await Application.Current!.Windows[0].Page!.DisplayAlert("Error", "No paired Bluetooth devices found. Please pair your printer first.", "OK");
                 return;
             }
-
-            var selectedDevice = await Application.Current!.Windows[0].Page!.DisplayActionSheet("Select Printer", "Cancel",null, devices.ToArray());
+            var selectedDevice = await Application.Current!.Windows[0].Page!.DisplayActionSheet(
+                "Select Printer",
+                "Cancel",
+                null,
+                devices.ToArray());
 
             if (selectedDevice == "Cancel" || string.IsNullOrEmpty(selectedDevice))
                 return;
 
-            var connectingTask = Application.Current!.Windows[0].Page!.DisplayAlert("Connecting", $"Connecting to {selectedDevice}...", "Cancel");
-
+            var connectingTask = Application.Current.Windows[0].Page!.DisplayAlert("Connecting", $"Connecting to {selectedDevice}...", "Cancel");
             var connected = await _printerService.ConnectAsync(selectedDevice);
 
             await connectingTask;
@@ -159,6 +162,9 @@ public partial class ShareQR : Popup
         return $"Yousuf_Panjabi_tailor~{orderModel.Id}~Customer: {orderModel.CustomerName}Mobile: {orderModel.MobileNumber}";
     }
 }
+
+
+
 
 
 

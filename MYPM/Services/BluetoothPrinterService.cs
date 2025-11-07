@@ -1,8 +1,7 @@
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
-using ESCPOS_NET.Emitters;
-
+using Printing;
 namespace MYPM.Services;
 
 public class BluetoothPrinterService : IBluetoothPrinterService
@@ -22,7 +21,7 @@ public class BluetoothPrinterService : IBluetoothPrinterService
         _adapter = CrossBluetoothLE.Current.Adapter;
     }
 
-    public List<string> GetPairedDevices()
+    public async Task<List<string>> GetPairedDevicesAsync()
     {
         var devices = new List<string>();
 
@@ -36,7 +35,7 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             System.Diagnostics.Debug.WriteLine($"Error getting paired devices: {ex.Message}");
         }
 
-        return devices;
+        return await Task.FromResult(devices);
     }
 
     public async Task<bool> ConnectAsync(string deviceName)
@@ -59,10 +58,10 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             {
                 _adapter.ScanTimeout = 10000;
                 _adapter.DeviceDiscovered += (s, a) =>
-        {
-            if (a.Device.Name == deviceName)
-                _connectedDevice = a.Device;
-        };
+              {
+                  if (a.Device.Name == deviceName)
+                      _connectedDevice = a.Device;
+              };
 
                 await _adapter.StartScanningForDevicesAsync();
                 await _adapter.StopScanningForDevicesAsync();
@@ -84,7 +83,7 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             {
                 var characteristics = await service.GetCharacteristicsAsync();
                 _writeCharacteristic = characteristics.FirstOrDefault(c =>
-                  c.CanWrite || c.Id == _writeCharacteristicUuid);
+                   c.CanWrite || c.Id == _writeCharacteristicUuid);
             }
 
             return _writeCharacteristic != null;
@@ -103,21 +102,28 @@ public class BluetoothPrinterService : IBluetoothPrinterService
 
         try
         {
-            var e = new EPSON();
+            // Initialize printer
+            await _writeCharacteristic.WriteAsync(EscPosCommands.Initialize());
+            await Task.Delay(100);
 
-            var commands = new List<byte[]>{e.Initialize(), e.CenterAlign()};
+            // Center align
+            await _writeCharacteristic.WriteAsync(EscPosCommands.CenterAlign());
+            await Task.Delay(50);
+            var (processedData, width, height) = ImageProcessor.ProcessImage(imageData, 384);
 
-            var imageBytes = e.PrintImage(imageData, true, true, 384);
-            commands.Add(imageBytes);
-
-            commands.Add(e.FeedLines(3));
-            commands.Add(e.FullCut());
-
-            foreach (var cmd in commands)
+            if (processedData.Length > 0)
             {
-                await _writeCharacteristic.WriteAsync(cmd);
-                await Task.Delay(100); // Small delay between commands
+                var imageCommand = EscPosCommands.PrintImage(processedData, width, height);
+                await _writeCharacteristic.WriteAsync(imageCommand);
+                await Task.Delay(200);
             }
+
+            // Feed lines and cut
+            await _writeCharacteristic.WriteAsync(EscPosCommands.FeedLines(3));
+            await Task.Delay(100);
+
+            await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
+            await Task.Delay(100);
 
             return true;
         }
@@ -135,15 +141,24 @@ public class BluetoothPrinterService : IBluetoothPrinterService
 
         try
         {
-            var e = new EPSON();
+            // Initialize printer
+            await _writeCharacteristic.WriteAsync(EscPosCommands.Initialize());
+            await Task.Delay(50);
 
-            var commands = new List<byte[]> { e.Initialize(),e.CenterAlign(), e.PrintLine(text), e.FeedLines(3),e.FullCut()};
+            // Center align
+            await _writeCharacteristic.WriteAsync(EscPosCommands.CenterAlign());
+            await Task.Delay(50);
 
-            foreach (var cmd in commands)
-            {
-                await _writeCharacteristic.WriteAsync(cmd);
-                await Task.Delay(50);
-            }
+            // Print text
+            await _writeCharacteristic.WriteAsync(EscPosCommands.PrintLine(text));
+            await Task.Delay(50);
+
+            // Feed lines and cut
+            await _writeCharacteristic.WriteAsync(EscPosCommands.FeedLines(3));
+            await Task.Delay(50);
+
+            await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
+            await Task.Delay(50);
 
             return true;
         }

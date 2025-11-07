@@ -22,6 +22,11 @@ public static class MauiProgram
         .UseBarcodeReader();
 
 
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+        {
+            handler.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+        });
+
         builder.Services.AddTransient<IOrderService, FirestoreOrderService>();
         builder.Services.AddSingleton<IBluetoothPrinterService, BluetoothPrinterService>();
         builder.Services.AddTransient<HomeViewModel>();

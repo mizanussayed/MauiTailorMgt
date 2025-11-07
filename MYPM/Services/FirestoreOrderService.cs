@@ -1,3 +1,4 @@
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
 using MYPM.Common;
 using MYPM.Models;
@@ -23,11 +24,13 @@ public sealed class FirestoreOrderService : IOrderService
             using var reader = new StreamReader(stream);
             var json = await reader.ReadToEndAsync();
 
+            var serviceCredential = CredentialFactory.FromJson<ServiceAccountCredential>(json);
+            var credential = serviceCredential.ToGoogleCredential();
+
             var db = new FirestoreDbBuilder
             {
-                JsonCredentials = json,
+                GoogleCredential = credential,
                 ProjectId = "mypm-tailor-ffd0f",
-           
             }.Build();
 
             return db;

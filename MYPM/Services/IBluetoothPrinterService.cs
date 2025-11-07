@@ -2,7 +2,7 @@ namespace MYPM.Services;
 
 public interface IBluetoothPrinterService
 {
-    List<string> GetPairedDevices();
+    Task<List<string>> GetPairedDevicesAsync();
     Task<bool> ConnectAsync(string deviceName);
     Task<bool> PrintImageAsync(byte[] imageData);
     Task<bool> PrintTextAsync(string text);
