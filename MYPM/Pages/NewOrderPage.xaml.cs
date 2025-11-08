@@ -1,6 +1,7 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
 using MYPM.Models;
 using MYPM.Pages.Views;
+using MYPM.Services;
 using MYPM.ViewModels;
 
 namespace MYPM.Pages;
@@ -11,10 +12,13 @@ public partial class NewOrderPage : ContentPage
     private int childFormIdCounter = 0;
     public string SL { get; set; } = string.Empty;
     private readonly NewOrderPageViewModel? context;
-    public NewOrderPage(NewOrderPageViewModel viewModel)
+    private readonly IBluetoothPrinterService _printerService;
+
+    public NewOrderPage(NewOrderPageViewModel viewModel, IBluetoothPrinterService printerService)
     {
         InitializeComponent();
         BindingContext = context = viewModel;
+        _printerService = printerService;
     }
 
     private void OnAddMeasurementType(object sender, EventArgs e)
@@ -297,15 +301,15 @@ public partial class NewOrderPage : ContentPage
         if (BindingContext is not NewOrderPageViewModel context) return;
 
         context.Order.TotalAmount =
-            (context.ArabianOrder?.Amount ?? 0) * (context.ArabianOrder?.Quantity ?? 0) +
-            (context.SelowerOrder?.Amount ?? 0) * (context.SelowerOrder?.Quantity ?? 0) +
+   (context.ArabianOrder?.Amount ?? 0) * (context.ArabianOrder?.Quantity ?? 0) +
+      (context.SelowerOrder?.Amount ?? 0) * (context.SelowerOrder?.Quantity ?? 0) +
             (context.PanjabiOrder?.Amount ?? 0) * (context.PanjabiOrder?.Quantity ?? 0);
 
         if (context.Order.TotalAmount > 0)
         {
             context.Order.DueAmount = context.Order.TotalAmount - context.Order.PaidAmount;
             context.Order.SL = SL;
-            await Shell.Current.Navigation.PushModalAsync(new AddAdvanceAmount(context), true);
+            await Shell.Current.Navigation.PushModalAsync(new AddAdvanceAmount(context, _printerService), true);
         }
         else
             await Shell.Current.DisplayAlert("Add Measurement", "Arabian / Panjabi / Selower", "OK");

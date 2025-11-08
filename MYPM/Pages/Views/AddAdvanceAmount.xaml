@@ -4,6 +4,7 @@
              x:Class="MYPM.Pages.Views.AddAdvanceAmount"
              xmlns:vm="clr-namespace:MYPM.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:fa="clr-namespace:MYPM"
              Shell.NavBarIsVisible="False"
              x:DataType="vm:NewOrderPageViewModel"
              Background="{StaticResource SurfaceVariant}"
@@ -19,38 +20,79 @@
             <Setter Property="HorizontalOptions" Value="Start" />
         </Style>
     </ContentPage.Resources>
-    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-        <Border Style="{StaticResource CardBorder}" Padding="0, 10">
-            <VerticalStackLayout Spacing="15">
-                <VerticalStackLayout>
-                    <Label Text="Add Advance Amount" HorizontalOptions="Center" />
+    <Grid>
+        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <Border Style="{StaticResource CardBorder}" Padding="0, 10">
+                <VerticalStackLayout Spacing="15">
+                    <VerticalStackLayout>
+                        <Label Text="Add Advance Amount" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Padding="30, 10" Spacing="10">
+                        <Label Text="{Binding Order.TotalAmount, StringFormat='Total      :  {0}'}" />
+                        <Label Text="{Binding Order.DueAmount, StringFormat='Due          :  {0}'}" x:Name="DueLbl"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="Advance :"/>
+                            <Border 
+  HeightRequest="40"
+            WidthRequest="100"
+       Background="{StaticResource SurfaceBrush}"
+             Stroke="{StaticResource CardStrokeBrush}"
+StrokeThickness="1">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
+     Keyboard="Numeric"
+ Background="Transparent"
+        TextColor="{StaticResource OnSurface}"
+    x:Name="PaidEntry"
+    PlaceholderColor="Transparent"
+      TextChanged="PaidTextChanged"/>
+                            </Border>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Button Text="Add" 
+       Clicked="Button_Clicked" 
+              Padding="30, 10" 
+  FontAttributes="Bold"/>
+                            <Button Text="Print" 
+           Clicked="OnPrintClicked"
+          Background="{StaticResource Info}"
+           Padding="30, 10" 
+              FontAttributes="Bold"
+               x:Name="btnPrint">
+                                <Button.ImageSource>
+                                    <FontImageSource Glyph="{x:Static fa:IconFont.Print}" 
+       FontFamily="FontAwesome" 
+               Size="20" 
+      Color="White"/>
+                                </Button.ImageSource>
+                            </Button>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
-                <VerticalStackLayout Padding="30, 10" Spacing="10">
-                    <Label Text="{Binding Order.TotalAmount, StringFormat='Total        :  {0}'}" />
-                    <Label Text="{Binding Order.DueAmount, StringFormat='Due          :  {0}'}" x:Name="DueLbl"/>
-                    <HorizontalStackLayout Spacing="10">
-                        <Label Text="Advance :"/>
-                        <Border 
-                            HeightRequest="40"
-                            WidthRequest="100"
-                            Background="{StaticResource SurfaceBrush}"
-                            Stroke="{StaticResource CardStrokeBrush}"
-                            StrokeThickness="1">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
-                                 Keyboard="Numeric"
-                                 Background="Transparent"
-                                 TextColor="{StaticResource OnSurface}"
-                                 x:Name="PaidEntry"
-                                 PlaceholderColor="Transparent"
-                                 TextChanged="PaidTextChanged"/>
-                        </Border>
-                    </HorizontalStackLayout>
-                    <Button Text="Add" Clicked="Button_Clicked" HorizontalOptions="Center" Padding="30, 10" FontAttributes="Bold"/>
-                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+
+        <!-- Loading Overlay -->
+        <Grid x:Name="loadingOverlay" 
+              IsVisible="False" 
+          BackgroundColor="#80000000"
+    HorizontalOptions="Fill"
+  VerticalOptions="Fill">
+            <VerticalStackLayout HorizontalOptions="Center" 
+            VerticalOptions="Center" 
+         Spacing="15">
+                <ActivityIndicator IsRunning="True" 
+  Color="White" 
+   HeightRequest="50" 
+  WidthRequest="50"/>
+                <Label x:Name="loadingLabel" 
+              Text="Processing..." 
+           TextColor="White" 
+   FontSize="16" 
+  FontAttributes="Bold"/>
             </VerticalStackLayout>
-        </Border>
-    </VerticalStackLayout>
+        </Grid>
+    </Grid>
 </ContentPage>

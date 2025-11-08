@@ -2,6 +2,7 @@
 using MYPM.Services;
 using MYPM.ViewModels;
 using MYPM.Pages;
+using MYPM.Pages.Views;
 using ZXing.Net.Maui.Controls;
 
 namespace MYPM;
@@ -15,8 +16,8 @@ public static class MauiProgram
          .UseMauiCommunityToolkit()
          .ConfigureFonts(fonts =>
          {
-          fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-          fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemiBold");
+          fonts.AddFont("OpenSansRegular.ttf", "OpenSansRegular");
+          fonts.AddFont("OpenSansSemibold.ttf", "OpenSansSemiBold");
           fonts.AddFont("fa_solid.ttf", "FontAwesome");
          })
         .UseBarcodeReader();
@@ -35,6 +36,8 @@ public static class MauiProgram
         builder.Services.AddTransient<NewOrderPageViewModel>();
         builder.Services.AddTransient<EditOrderPageViewModel>();
         builder.Services.AddTransient<OrderDetailsPage>();
+        builder.Services.AddTransient<AddAdvanceAmount>();
+        builder.Services.AddTransient<NewOrderPage>();
 
         return builder.Build();
     }

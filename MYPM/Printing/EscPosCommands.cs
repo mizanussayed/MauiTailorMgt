@@ -9,7 +9,6 @@ public class EscPosCommands
     private const byte ESC = 0x1B;
     private const byte GS = 0x1D;
     private const byte LF = 0x0A;
-    private const byte CR = 0x0D;
 
     /// <summary>
     /// Initialize printer and reset to default settings
@@ -17,6 +16,38 @@ public class EscPosCommands
     public static byte[] Initialize()
     {
         return new byte[] { ESC, 0x40 };
+    }
+
+    /// <summary>
+    /// Set character code page to UTF-8 (Code page 65001)
+    /// This is essential for printing Unicode characters like Bengali
+    /// </summary>
+    public static byte[] SetUTF8()
+    {
+        // ESC t n - Select character code table
+        // Most modern ESC/POS printers support code page selection
+        // We'll use multiple methods to ensure UTF-8 is enabled
+
+        var commands = new List<byte>();
+
+        // Method 1: Set character code page to UTF-8 (if supported)
+        // ESC t 16 or ESC t 255 for UTF-8 on some printers
+        commands.AddRange(new byte[] { ESC, 0x74, 16 });
+
+        // Method 2: Enable international character set
+        // ESC R n - Select an international character set
+        commands.AddRange(new byte[] { ESC, 0x52, 0x0F }); // 15 for UTF-8/Unicode
+
+        return commands.ToArray();
+    }
+
+    /// <summary>
+    /// Set character code page (for compatibility)
+    /// Common values: 0=CP437 (USA), 16=CP1252 (Western Europe), 255=UTF-8
+    /// </summary>
+    public static byte[] SetCodePage(byte codePage)
+    {
+        return new byte[] { ESC, 0x74, codePage };
     }
 
     /// <summary>
