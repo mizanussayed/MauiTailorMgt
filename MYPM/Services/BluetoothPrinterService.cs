@@ -257,7 +257,7 @@ public class BluetoothPrinterService : IBluetoothPrinterService
     /// Print formatted text with custom font size and alignment
     /// Optimized for English text receipts
     /// </summary>
-    public async Task<bool> PrintFormattedTextAsync(List<string> lines, int fontSize = 12, bool centerAlign = true)
+    public async Task<bool> PrintFormattedTextAsync(List<string> lines, int fontSize = 12, bool centerAlign = true, bool isBody = true)
     {
         if (_connectedDevice == null || _writeCharacteristic == null)
             return false;
@@ -305,16 +305,17 @@ public class BluetoothPrinterService : IBluetoothPrinterService
                 }
             }
 
-            // Feed and cut
-            await Task.Delay(50);
-            await _writeCharacteristic.WriteAsync(EscPosCommands.FeedLines(3));
-            await Task.Delay(50);
-            await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
-            await Task.Delay(50);
-
+            if (isBody)
+            {
+                await Task.Delay(50);
+                await _writeCharacteristic.WriteAsync(EscPosCommands.FeedLines(3));
+                await Task.Delay(50);
+                await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
+                await Task.Delay(50);
+            }
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }

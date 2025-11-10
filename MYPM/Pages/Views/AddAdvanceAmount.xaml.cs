@@ -55,7 +55,8 @@ public partial class AddAdvanceAmount : ContentPage
     private async void Button_Clicked(object sender, EventArgs e)
     {
         _saveCommand.Execute(this);
-        await Navigation.PopToRootAsync();
+        await Navigation.PopModalAsync();
+        await Shell.Current.GoToAsync(nameof(NewOrderListPage));
     }
 
     private async void OnBackgroundTapped(object sender, EventArgs e)
@@ -118,7 +119,8 @@ public partial class AddAdvanceAmount : ContentPage
             if (printed)
             {
                 await DisplayAlert("Success", "Invoice printed successfully!", "OK");
-                await Navigation.PopToRootAsync();
+                await Navigation.PopModalAsync();
+                await Shell.Current.GoToAsync(nameof(NewOrderListPage));
             }
             else
             {
@@ -149,7 +151,7 @@ public partial class AddAdvanceAmount : ContentPage
                 "YOUSUF TAILOR",
             };
 
-            var headerPrinted = await _printerService.PrintFormattedTextAsync(headerLines, fontSize: 18, centerAlign: true);
+            var headerPrinted = await _printerService.PrintFormattedTextAsync(headerLines, fontSize: 18, centerAlign: true, false);
             if (!headerPrinted)
                 return false;
 

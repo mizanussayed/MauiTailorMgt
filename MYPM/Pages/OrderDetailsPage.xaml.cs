@@ -181,7 +181,7 @@ public partial class OrderDetailsPage : ContentPage
         if (isDeleted)
         {
             await _orderViewModel.RefreshCommand.ExecuteAsync(null);
-            await Shell.Current.Navigation.PopToRootAsync();
+            await Shell.Current.GoToAsync(nameof(NewOrderListPage));
         }
         else
         {
