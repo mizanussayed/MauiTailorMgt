@@ -1,6 +1,10 @@
 ﻿using MYPM.Pages;
 using MYPM.Pages.Views;
 
+#if ANDROID
+using MYPM.Platforms.Android;
+#endif
+
 namespace MYPM;
 public partial class AppShell : Shell
 {
@@ -8,6 +12,29 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
         InitRoutes();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        SetupStatusBar();
+    }
+
+    private void SetupStatusBar()
+    {
+        try
+        {
+            if (Application.Current?.MainPage?.Window is Window window &&
+                Application.Current?.Resources.TryGetValue("SurfaceVariant", out var surfaceVariant) == true &&
+                    surfaceVariant is Color statusBarColor)
+            {
+                window.SetStatusBarColor(statusBarColor, darkContent: true);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error setting status bar: {ex.Message}");
+        }
     }
 
     private void InitRoutes()

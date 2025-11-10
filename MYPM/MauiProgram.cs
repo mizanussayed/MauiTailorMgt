@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui;
-using MYPM.Services;
+﻿using MYPM.Services;
 using MYPM.ViewModels;
 using MYPM.Pages;
 using MYPM.Pages.Views;
@@ -13,7 +12,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
 
         builder.UseMauiApp<App>()
-         .UseMauiCommunityToolkit()
          .ConfigureFonts(fonts =>
          {
           fonts.AddFont("OpenSansRegular.ttf", "OpenSansRegular");

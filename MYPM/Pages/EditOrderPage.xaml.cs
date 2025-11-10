@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.Maui.Controls.Shapes;
+﻿using Microsoft.Maui.Controls.Shapes;
 using MYPM.Models;
 using MYPM.ViewModels;
 

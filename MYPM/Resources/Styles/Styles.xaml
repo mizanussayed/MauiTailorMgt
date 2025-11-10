@@ -55,6 +55,15 @@
         <Setter Property="Margin" Value="0"/>
     </Style>
 
+    <!-- SearchBar -->
+    <Style TargetType="SearchBar">
+        <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+     <Setter Property="CancelButtonColor" Value="{StaticResource Primary}"/>
+        <Setter Property="HeightRequest" Value="44"/>
+    </Style>
+
     <!-- Button base -->
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource TextOnSolid_Light}"/>

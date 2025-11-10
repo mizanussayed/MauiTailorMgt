@@ -31,24 +31,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#007BFF" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#6366F1" />
 		<MauiSplashScreen Include="Resources\Images\logop.png" Color="#000" BaseSize="128,128" />
 		<MauiImage Include="Resources\Images\*" />
 		<MauiFont Include="Resources\Fonts\*" />
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Pages\Views\AddAdvanceAmount.xaml.cs.tmp" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Google.Cloud.Firestore" Version="3.12.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="12.3.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="SkiaSharp" Version="3.119.1" />
 		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.6.0" />
 		<PackageReference Include="Plugin.BLE" Version="3.2.0" />
 	</ItemGroup>
