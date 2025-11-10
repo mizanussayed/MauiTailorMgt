@@ -291,7 +291,6 @@ public class BluetoothPrinterService : IBluetoothPrinterService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Chunked write error at offset {offset}/{data.Length}: {ex.Message}");
             return false;
         }
     }
