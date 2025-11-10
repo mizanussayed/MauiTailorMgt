@@ -52,6 +52,7 @@ public partial class AddAdvanceAmount : ContentPage
 
         try
         {
+            context.SaveCommand.Execute(this);
             await Task.Delay(100);
 
             var permissionStatus = await CheckAndRequestBluetoothPermissions();
@@ -76,20 +77,8 @@ public partial class AddAdvanceAmount : ContentPage
             if (selectedDevice == "Cancel" || string.IsNullOrEmpty(selectedDevice))
                 return;
 
-            loadingLabel.Text = "Preparing invoice...";
-            loadingOverlay.IsVisible = true;
-            await Task.Delay(50);
-
-            await GenerateInvoiceImage();
-
-            if (string.IsNullOrEmpty(_invoiceImagePath) || !File.Exists(_invoiceImagePath))
-            {
-                loadingOverlay.IsVisible = false;
-                await DisplayAlert("Error", "Failed to prepare invoice image for printing.", "OK");
-                return;
-            }
-
             loadingLabel.Text = $"Connecting to {selectedDevice}...";
+            loadingOverlay.IsVisible = true;
             await Task.Delay(50);
 
             var connected = await _printerService.ConnectAsync(selectedDevice);
@@ -104,18 +93,19 @@ public partial class AddAdvanceAmount : ContentPage
             loadingLabel.Text = "Printing invoice...";
             await Task.Delay(50);
 
-            var imageBytes = await File.ReadAllBytesAsync(_invoiceImagePath);
+            // OPTION 1: Fast text printing (recommended for text-only invoices)
+            var printed = await PrintInvoiceTextFast();
 
-            if (imageBytes.Length == 0)
-            {
-                loadingOverlay.IsVisible = false;
-                await DisplayAlert("Error", "Invoice image file is empty.", "OK");
-                return;
-            }
-
-            var printStartTime = DateTime.Now;
-            var printed = await _printerService.PrintImageAsync(imageBytes);
-            var printDuration = (DateTime.Now - printStartTime).TotalSeconds;
+            // OPTION 2: Image printing (keep for complex layouts)
+            // await GenerateInvoiceImage();
+            // if (string.IsNullOrEmpty(_invoiceImagePath) || !File.Exists(_invoiceImagePath))
+            // {
+            //     loadingOverlay.IsVisible = false;
+            //     await DisplayAlert("Error", "Failed to prepare invoice image for printing.", "OK");
+            //     return;
+            // }
+            // var imageBytes = await File.ReadAllBytesAsync(_invoiceImagePath);
+            // var printed = await _printerService.PrintImageAsync(imageBytes);
 
             loadingOverlay.IsVisible = false;
 
@@ -143,6 +133,44 @@ public partial class AddAdvanceAmount : ContentPage
         }
     }
 
+    /// <summary>
+    /// Fast text-based invoice printing (5-10x faster than image)
+    /// </summary>
+    private async Task<bool> PrintInvoiceTextFast()
+    {
+        try
+        {
+            var lines = new List<string>
+            {
+             "YOUSUF TAILOR",
+             "Phone: 01730298184",
+             "Brahmanbaria Hawkers Market",
+             "",
+             "--------------------------------",
+             $"Customer: {context.Order.CustomerName}",
+             $"Mobile    : {context.Order.MobileNumber}",
+             $"Order Type: {context.Order.OrderFor}",
+             "",
+             $"Total Amount : {context.Order.TotalAmount}/-",
+             $"Paid Amount  : {context.Order.PaidAmount}/-",
+             $"Due Amount   : {context.Order.DueAmount}/-",
+             $"Delivery Date: {context.Order.DeliveryDate:dd MMM yyyy}",
+             "",
+             "--------------------------------",
+             "",
+             "Thank you! Come again.",
+             "",
+             "",
+             };
+
+            return await _printerService.PrintFormattedTextAsync(lines);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private async Task GenerateInvoiceImage()
     {
         try
@@ -154,21 +182,21 @@ public partial class AddAdvanceAmount : ContentPage
                 BackgroundColor = Colors.White,
                 WidthRequest = 384
             };
-                invoiceLayout.Add(new Label
-                {
-                    Text = "YOUSUF TAILOR",
-                    FontSize = 50,
-                    FontAttributes = FontAttributes.Bold,
-                    HorizontalOptions = LayoutOptions.Center,
-                    TextColor = Color.FromArgb("#1a1a1a")
-                });
-           
+            invoiceLayout.Add(new Label
+            {
+                Text = "YOUSUF TAILOR",
+                FontSize = 50,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.FromArgb("#1a1a1a")
+            });
+
 
             // Contact Info
             invoiceLayout.Add(new Label
             {
                 Text = "Phone: 01730298184",
-                FontSize = 28,
+                FontSize = 25,
                 HorizontalOptions = LayoutOptions.Center,
                 TextColor = Color.FromArgb("#555555")
             });
@@ -176,7 +204,7 @@ public partial class AddAdvanceAmount : ContentPage
             invoiceLayout.Add(new Label
             {
                 Text = "Brahmanbaria Hawkers Market",
-                FontSize = 28,
+                FontSize = 25,
                 HorizontalOptions = LayoutOptions.Center,
                 TextColor = Color.FromArgb("#666666"),
                 Margin = new Thickness(0, 0, 0, 5)
@@ -233,7 +261,7 @@ public partial class AddAdvanceAmount : ContentPage
             amountGrid.Add(new Label
             {
                 Text = "Due Amount:",
-                FontSize = 28,
+                FontSize = 25,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.FromArgb("#d32f2f")
             }, 0, 2);
@@ -241,7 +269,7 @@ public partial class AddAdvanceAmount : ContentPage
             amountGrid.Add(new Label
             {
                 Text = $"{context.Order.DueAmount}/-",
-                FontSize = 28,
+                FontSize = 25,
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.End,
                 TextColor = Color.FromArgb("#d32f2f")
@@ -283,7 +311,7 @@ public partial class AddAdvanceAmount : ContentPage
             invoiceLayout.Add(new Label
             {
                 Text = "Thank you! Come again.",
-                FontSize = 28,
+                FontSize = 25,
                 FontAttributes = FontAttributes.Italic,
                 HorizontalOptions = LayoutOptions.Center,
                 TextColor = Color.FromArgb("#666666"),
@@ -338,9 +366,9 @@ public partial class AddAdvanceAmount : ContentPage
                 var fileInfo = new FileInfo(_invoiceImagePath);
             }
         }
-        catch (Exception ex)
+        catch
         {
-            System.Diagnostics.Debug.WriteLine($"Generate error: {ex.Message}\n{ex.StackTrace}");
+            
         }
     }
 

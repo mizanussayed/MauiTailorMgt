@@ -6,5 +6,6 @@ public interface IBluetoothPrinterService
     Task<bool> ConnectAsync(string deviceName);
     Task<bool> PrintImageAsync(byte[] imageData);
     Task<bool> PrintTextAsync(string text);
+    Task<bool> PrintFormattedTextAsync(List<string> lines, int fontSize = 12, bool centerAlign = true);
     Task DisconnectAsync();
 }

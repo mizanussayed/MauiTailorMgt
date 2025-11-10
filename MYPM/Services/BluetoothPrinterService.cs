@@ -79,11 +79,8 @@ public class BluetoothPrinterService : IBluetoothPrinterService
 
             if (_connectedDevice == null)
                 return false;
-
-            // Check if device is already connected and disconnect first to ensure clean state
             if (_connectedDevice.State == DeviceState.Connected)
             {
-                System.Diagnostics.Debug.WriteLine($"Device {deviceName} already connected. Disconnecting first...");
                 try
                 {
                     await _adapter.DisconnectDeviceAsync(_connectedDevice);
@@ -103,7 +100,6 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             {
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine($"Connection attempt {attempt} of {MaxRetryAttempts} to {deviceName}");
 
                     // Use connection parameters to improve reliability
                     var connectParameters = new ConnectParameters(
@@ -119,7 +115,6 @@ public class BluetoothPrinterService : IBluetoothPrinterService
                     if (_connectedDevice.State == DeviceState.Connected)
                     {
                         connected = true;
-                        System.Diagnostics.Debug.WriteLine($"Successfully connected to {deviceName}");
                         break;
                     }
                     else
@@ -130,18 +125,14 @@ public class BluetoothPrinterService : IBluetoothPrinterService
                 catch (DeviceConnectionException ex)
                 {
                     lastException = ex;
-                    System.Diagnostics.Debug.WriteLine($"Connection attempt {attempt} failed: {ex.Message}");
 
                     if (attempt < MaxRetryAttempts)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Waiting {RetryDelayMilliseconds}ms before retry...");
-
                         // Ensure complete cleanup before retry
                         try
                         {
                             if (_connectedDevice.State != DeviceState.Disconnected)
                             {
-                                System.Diagnostics.Debug.WriteLine($"Cleaning up device state: {_connectedDevice.State}");
                                 await _adapter.DisconnectDeviceAsync(_connectedDevice);
                                 await Task.Delay(DisconnectDelayMilliseconds);
                             }
@@ -153,24 +144,13 @@ public class BluetoothPrinterService : IBluetoothPrinterService
 
                         await Task.Delay(RetryDelayMilliseconds);
                     }
-                    else
-                    {
-                        // On final attempt failure, suggest user action for GATT error 133
-                        if (ex.Message.Contains("133"))
-                        {
-                            System.Diagnostics.Debug.WriteLine("GATT error 133 detected - Bluetooth stack issue");
-                        }
-                    }
                 }
             }
 
             if (!connected)
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to connect after {MaxRetryAttempts} attempts. Last error: {lastException?.Message}");
-
                 string errorMessage = "Could not connect to printer. ";
 
-                // Provide specific guidance for GATT error 133
                 if (lastException?.Message.Contains("133") == true)
                 {
                     errorMessage += "Please try:\n1. Turn the printer off and on\n2. If that doesn't work, forget and re-pair the device in Bluetooth settings\n3. Restart your phone if the issue persists";
@@ -214,7 +194,6 @@ public class BluetoothPrinterService : IBluetoothPrinterService
         }
         catch (DeviceConnectionException ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Connection error: {ex.Message}");
             if (Application.Current!.Windows[0].Page != null)
             {
                 await Application.Current.Windows[0].Page!.DisplayAlert(
@@ -226,7 +205,6 @@ public class BluetoothPrinterService : IBluetoothPrinterService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Unexpected error: {ex.Message}");
             return false;
         }
     }
@@ -247,18 +225,15 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             try
             {
                 _negotiatedMtu = 480; // 512 minus overhead for safety
-                System.Diagnostics.Debug.WriteLine($"Android: Using optimized chunk size: {_negotiatedMtu} bytes");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Android MTU optimization failed: {ex.Message}");
                 _negotiatedMtu = 180; // Fallback
             }
 #endif
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"MTU negotiation failed, using default: {ex.Message}");
             _negotiatedMtu = DefaultChunkSize;
         }
 
@@ -325,14 +300,11 @@ public class BluetoothPrinterService : IBluetoothPrinterService
     {
         if (_connectedDevice == null || _writeCharacteristic == null)
         {
-            System.Diagnostics.Debug.WriteLine("Print failed: Device or characteristic not available");
             return false;
         }
 
         try
         {
-            System.Diagnostics.Debug.WriteLine($"Starting print - Image data size: {imageData.Length} bytes");
-
             // Initialize printer - small commands can be sent directly
             await _writeCharacteristic.WriteAsync(EscPosCommands.Initialize());
             await Task.Delay(50); // Reduced from 100ms
@@ -345,25 +317,19 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             await _writeCharacteristic.WriteAsync(EscPosCommands.CenterAlign());
             await Task.Delay(20); // Reduced from 50ms
 
-            System.Diagnostics.Debug.WriteLine("Processing image...");
             var (processedData, width, height) = ImageProcessor.ProcessImage(imageData, 384);
 
             if (processedData.Length == 0)
             {
-                System.Diagnostics.Debug.WriteLine("Image processing failed - no data returned");
                 return false;
             }
 
-            System.Diagnostics.Debug.WriteLine($"Image processed: {width}x{height}, {processedData.Length} bytes");
-
             var imageCommand = EscPosCommands.PrintImage(processedData, width, height);
-            System.Diagnostics.Debug.WriteLine($"Sending {imageCommand.Length} bytes to printer in optimized chunks...");
 
             bool writeSuccess = await WriteInChunksAsync(imageCommand, delayBetweenChunks: 10);
 
             if (!writeSuccess)
             {
-                System.Diagnostics.Debug.WriteLine("Failed to write image data in chunks");
                 return false;
             }
 
@@ -376,10 +342,9 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
             await Task.Delay(50); // Reduced from 100ms
 
-            System.Diagnostics.Debug.WriteLine("Print command completed successfully");
             return true;
         }
-        catch (Exception ex)
+        catch 
         {
             return false;
         }
@@ -415,6 +380,74 @@ public class BluetoothPrinterService : IBluetoothPrinterService
             await _writeCharacteristic.WriteAsync(EscPosCommands.FeedLines(3));
             await Task.Delay(50);
 
+            await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
+            await Task.Delay(50);
+
+            return true;
+        }
+        catch 
+        {
+            return false;
+        }
+    }
+
+
+    /// <summary>
+    /// Print formatted text with custom font size and alignment
+    /// Optimized for English text receipts
+    /// </summary>
+    public async Task<bool> PrintFormattedTextAsync(List<string> lines, int fontSize = 12, bool centerAlign = true)
+    {
+        if (_connectedDevice == null || _writeCharacteristic == null)
+            return false;
+
+        try
+        {
+            // Initialize printer
+            await _writeCharacteristic.WriteAsync(EscPosCommands.Initialize());
+            await Task.Delay(50);
+
+            // Set alignment
+            if (centerAlign)
+            {
+                await _writeCharacteristic.WriteAsync(EscPosCommands.CenterAlign());
+            }
+            else
+            {
+                await _writeCharacteristic.WriteAsync(EscPosCommands.LeftAlign());
+            }
+            await Task.Delay(20);
+
+            // Set font size based on parameter
+            byte[] fontSizeCommand = fontSize switch
+            {
+                <= 12 => new byte[] { 0x1B, 0x21, 0x00 }, // Normal
+                <= 16 => new byte[] { 0x1B, 0x21, 0x10 }, // Double height
+                <= 24 => new byte[] { 0x1B, 0x21, 0x20 }, // Double width
+                _ => new byte[] { 0x1B, 0x21, 0x30 }      // Double width and height
+            };
+            await _writeCharacteristic.WriteAsync(fontSizeCommand);
+            await Task.Delay(20);
+
+            // Print each line
+            foreach (var line in lines)
+            {
+                if (!string.IsNullOrEmpty(line))
+                {
+                    var lineBytes = System.Text.Encoding.UTF8.GetBytes(line + "\n");
+                    bool writeSuccess = await WriteInChunksAsync(lineBytes, delayBetweenChunks: 5);
+                    if (!writeSuccess)
+                    {
+                        return false;
+                    }
+                    await Task.Delay(10);
+                }
+            }
+
+            // Feed and cut
+            await Task.Delay(50);
+            await _writeCharacteristic.WriteAsync(EscPosCommands.FeedLines(3));
+            await Task.Delay(50);
             await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
             await Task.Delay(50);
 
