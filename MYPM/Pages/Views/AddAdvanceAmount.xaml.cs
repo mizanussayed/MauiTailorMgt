@@ -55,7 +55,7 @@ public partial class AddAdvanceAmount : ContentPage
     private async void Button_Clicked(object sender, EventArgs e)
     {
         _saveCommand.Execute(this);
-        await Navigation.PopModalAsync();
+        await Navigation.PopToRootAsync();
     }
 
     private async void OnBackgroundTapped(object sender, EventArgs e)
@@ -118,7 +118,7 @@ public partial class AddAdvanceAmount : ContentPage
             if (printed)
             {
                 await DisplayAlert("Success", "Invoice printed successfully!", "OK");
-                await Navigation.PopModalAsync();
+                await Navigation.PopToRootAsync();
             }
             else
             {
@@ -143,21 +143,32 @@ public partial class AddAdvanceAmount : ContentPage
     {
         try
         {
-            var lines = new List<string>
+            // Header lines with larger font
+            var headerLines = new List<string>
             {
                 "YOUSUF TAILOR",
+            };
+
+            var headerPrinted = await _printerService.PrintFormattedTextAsync(headerLines, fontSize: 18, centerAlign: true);
+            if (!headerPrinted)
+                return false;
+
+            var bodyLines = new List<string>
+            {
                 "Phone: 01730298184",
                 "Brahmanbaria Hawkers Market",
                 "",
                 "--------------------------------",
+                "          Advance Receipt       ",
+                "--------------------------------",
                 $"Customer: {_order.CustomerName}",
                 $"Mobile    : {_order.MobileNumber}",
-                $"Order Type: {_order.OrderFor}",
+                $"Order Type     : {_order.OrderFor}",
                 "",
-                $"Total Amount : {_order.TotalAmount}/-",
-                $"Paid Amount  : {_order.PaidAmount}/-",
-                $"Due Amount   : {_order.DueAmount}/-",
-                $"Delivery Date: {_order.DeliveryDate:dd MMM yyyy}",
+                $"Total Amount   : {_order.TotalAmount}/-",
+                $"Paid Amount    : {_order.PaidAmount}/-",
+                $"Due Amount     : {_order.DueAmount}/-",
+                $"Delivery Date  : {_order.DeliveryDate:dd MMM yyyy}",
                 "",
                 "--------------------------------",
                 "",
@@ -166,7 +177,7 @@ public partial class AddAdvanceAmount : ContentPage
                 "",
             };
 
-            return await _printerService.PrintFormattedTextAsync(lines);
+            return await _printerService.PrintFormattedTextAsync(bodyLines, fontSize: 12, centerAlign: true);
         }
         catch
         {

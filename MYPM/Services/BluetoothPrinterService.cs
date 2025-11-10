@@ -252,47 +252,6 @@ public class BluetoothPrinterService : IBluetoothPrinterService
         }
     }
 
-    public async Task<bool> PrintTextAsync(string text)
-    {
-        if (_connectedDevice == null || _writeCharacteristic == null)
-            return false;
-
-        try
-        {
-            await _writeCharacteristic.WriteAsync(EscPosCommands.Initialize());
-            await Task.Delay(50);
-
-            await _writeCharacteristic.WriteAsync(EscPosCommands.SetUTF8());
-            await Task.Delay(50);
-
-            // Center align
-            await _writeCharacteristic.WriteAsync(EscPosCommands.CenterAlign());
-            await Task.Delay(50);
-
-            var textCommand = EscPosCommands.PrintLine(text);
-
-            bool writeSuccess = await WriteInChunksAsync(textCommand, delayBetweenChunks: 10);
-            if (!writeSuccess)
-            {
-                return false;
-            }
-
-            await Task.Delay(50);
-
-            await _writeCharacteristic.WriteAsync(EscPosCommands.FeedLines(3));
-            await Task.Delay(50);
-
-            await _writeCharacteristic.WriteAsync(EscPosCommands.FullCut());
-            await Task.Delay(50);
-
-            return true;
-        }
-        catch 
-        {
-            return false;
-        }
-    }
-
 
     /// <summary>
     /// Print formatted text with custom font size and alignment
