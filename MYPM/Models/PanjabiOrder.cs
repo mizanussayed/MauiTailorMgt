@@ -19,5 +19,4 @@ public sealed class PanjabiOrder
     [ForeignKey(nameof(NewOrder))]
     public int OrderId { get; set; }
     public NewOrderModel NewOrder { get; set; } = null!;
-
 }

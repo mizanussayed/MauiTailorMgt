@@ -1,56 +1,190 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MYPM.Pages.Views.AddAdvanceAmount"
-             xmlns:vm="clr-namespace:MYPM.ViewModels"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Shell.NavBarIsVisible="False"
-             x:DataType="vm:NewOrderPageViewModel"
-             Background="{StaticResource SurfaceVariant}"
-             >
-    <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="#FFF" StatusBarStyle="DarkContent" />
-    </ContentPage.Behaviors>
-    <ContentPage.Resources>
-        <Style TargetType="Label">
-            <Setter Property="FontSize" Value="Default" />
-            <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
-            <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="HorizontalOptions" Value="Start" />
-        </Style>
-    </ContentPage.Resources>
-    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-        <Border Style="{StaticResource CardBorder}" Padding="0, 10">
-            <VerticalStackLayout Spacing="15">
-                <VerticalStackLayout>
-                    <Label Text="Add Advance Amount" HorizontalOptions="Center" />
-                </VerticalStackLayout>
-                <VerticalStackLayout Padding="30, 10" Spacing="10">
-                    <Label Text="{Binding Order.TotalAmount, StringFormat='Total        :  {0}'}" />
-                    <Label Text="{Binding Order.DueAmount, StringFormat='Due          :  {0}'}" x:Name="DueLbl"/>
-                    <HorizontalStackLayout Spacing="10">
-                        <Label Text="Advance :"/>
-                        <Border 
-                            HeightRequest="40"
-                            WidthRequest="100"
-                            Background="{StaticResource SurfaceBrush}"
-                            Stroke="{StaticResource CardStrokeBrush}"
-                            StrokeThickness="1">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
-                                 Keyboard="Numeric"
-                                 Background="Transparent"
-                                 TextColor="{StaticResource OnSurface}"
-                                 x:Name="PaidEntry"
-                                 PlaceholderColor="Transparent"
-                                 TextChanged="PaidTextChanged"/>
-                        </Border>
-                    </HorizontalStackLayout>
-                    <Button Text="Add" Clicked="Button_Clicked" HorizontalOptions="Center" Padding="30, 10" FontAttributes="Bold"/>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MYPM.Pages.Views.AddAdvanceAmount"
+    xmlns:fa="clr-namespace:MYPM"
+    BackgroundColor="#80000000">
+
+    <!-- Semi-transparent overlay -->
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnBackgroundTapped"/>
+        </Grid.GestureRecognizers>
+
+        <!-- Bottom Sheet Dialog -->
+        <Border BackgroundColor="White"
+                StrokeThickness="0"
+                VerticalOptions="End"
+                HorizontalOptions="Fill"
+                MaximumHeightRequest="450">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer />
+            </Border.GestureRecognizers>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16,16,0,0" />
+            </Border.StrokeShape>
+
+            <Grid RowDefinitions="Auto,*,Auto" Padding="24">
+                <!-- Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Add Advance Amount" 
+                               FontSize="20"
+                               FontAttributes="Bold" 
+                               TextColor="#1a1a1a"/>
+                        <Label Text="Enter the advance payment amount for this order"
+                               FontSize="14"
+                               TextColor="#666666"
+                               LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1"
+                            Text="✕"
+                            Clicked="OnBackgroundTapped"
+                            BackgroundColor="Transparent"
+                            TextColor="#666666"
+                            FontSize="20"
+                            Padding="0"
+                            WidthRequest="32"
+                            HeightRequest="32"
+                            VerticalOptions="Start"/>
+                </Grid>
+
+                <!-- Form Content -->
+                <ScrollView Grid.Row="1" Margin="0,20,0,0">
+                    <VerticalStackLayout Spacing="20">
+                        <!-- Amount Details -->
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto" RowSpacing="8">
+                                <Label Grid.Column="0"
+                                       Text="Total Amount:"
+                                       FontSize="16"
+                                       TextColor="#333333"
+                                       VerticalOptions="Center"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding Order.TotalAmount, StringFormat='{0}/-'}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="#1a1a1a"
+                                       HorizontalOptions="End"/>
+                            </Grid>
+
+                            <BoxView HeightRequest="1" 
+                                    BackgroundColor="#e0e0e0"/>
+
+                            <Grid ColumnDefinitions="*,Auto" RowSpacing="8">
+                                <Label Grid.Column="0"
+                                       Text="Due Amount:"
+                                       FontSize="16"
+                                       TextColor="#333333"
+                                       VerticalOptions="Center"/>
+                                <Label Grid.Column="1"
+                                       x:Name="DueLbl"
+                                       Text="{Binding Order.DueAmount, StringFormat='{0}/-'}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="#d32f2f"
+                                       HorizontalOptions="End"/>
+                            </Grid>
+
+                            <BoxView HeightRequest="1" 
+                                    BackgroundColor="#e0e0e0"/>
+                        </VerticalStackLayout>
+
+                        <!-- Advance Amount Input -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Advance Amount"
+                                   FontSize="14"
+                                   TextColor="#666666"
+                                   FontAttributes="Bold"/>
+                            <Border HeightRequest="50"
+                                    BackgroundColor="#f5f5f5"
+                                    Stroke="#e0e0e0"
+                                    StrokeThickness="1"
+                                    Padding="12,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Order.PaidAmount, Mode=TwoWay}" 
+                                       Keyboard="Numeric"
+                                       Background="Transparent"
+                                       TextColor="#1a1a1a"
+                                       x:Name="PaidEntry"
+                                       Placeholder="Enter advance amount"
+                                       PlaceholderColor="#999999"
+                                       FontSize="16"
+                                       TextChanged="PaidTextChanged"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <!-- Action Buttons -->
+                <Grid Grid.Row="2" 
+                      ColumnDefinitions="*,*" 
+                      ColumnSpacing="12"
+                      HorizontalOptions="Center"
+                      Margin="0,10,0,0">
+                    <Button Grid.Column="0"
+                            Text="Save"
+                            Clicked="Button_Clicked"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="48"
+                            FontSize="16"
+                            FontAttributes="Bold">
+                        <Button.ImageSource>
+                            <FontImageSource Glyph="{x:Static fa:IconFont.Plus}" 
+                            FontFamily="FontAwesome" 
+                            Size="18" 
+                            Color="White"/>
+                        </Button.ImageSource>
+
+                    </Button>
+
+                    <Button Grid.Column="1"
+                            x:Name="btnPrint"
+                            Text="Print"
+                            Clicked="OnPrintClicked"
+                            BackgroundColor="#2196F3"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="48"
+                            FontSize="16"
+                            FontAttributes="Bold">
+                        <Button.ImageSource>
+                            <FontImageSource Glyph="{x:Static fa:IconFont.Print}" 
+                                           FontFamily="FontAwesome" 
+                                           Size="18" 
+                                           Color="White"/>
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
+            </Grid>
         </Border>
-    </VerticalStackLayout>
+
+        <!-- Loading Overlay -->
+        <Grid x:Name="loadingOverlay" 
+              IsVisible="False" 
+              BackgroundColor="#80000000"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill">
+            <VerticalStackLayout HorizontalOptions="Center" 
+                                VerticalOptions="Center" 
+                                Spacing="15">
+                <ActivityIndicator IsRunning="True" 
+                                  Color="White" 
+                                  HeightRequest="50" 
+                                  WidthRequest="50"/>
+                <Label x:Name="loadingLabel" 
+                       Text="Processing..." 
+                       TextColor="White" 
+                       FontSize="16" 
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
 </ContentPage>

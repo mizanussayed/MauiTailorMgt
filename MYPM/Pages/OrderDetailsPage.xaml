@@ -36,28 +36,71 @@
 
     <ScrollView>
         <VerticalStackLayout Spacing="10" Padding="5">
-            <Grid ColumnDefinitions="Auto,Auto,Auto" HorizontalOptions="Center" ColumnSpacing="12" Padding="5, 0" Margin="5">
-               <Button Text="Delete" BackgroundColor="{StaticResource Danger}" Padding="12"
-                        Clicked="OnDeleteClicked">
+            <!-- Single Row Button Grid -->
+            <Grid ColumnDefinitions="*,*,*,*" 
+            HorizontalOptions="Fill" 
+      ColumnSpacing="8" 
+                  Padding="10,5" 
+         Margin="5">
+
+                <Button Grid.Column="0" 
+   Text="Quick Add" 
+            BackgroundColor="{StaticResource Success}" 
+  Padding="8"
+     FontSize="12"
+     Clicked="OnQuickAddClicked">
                     <Button.ImageSource>
-                        <FontImageSource Glyph="{x:Static a:IconFont.Trash}" FontFamily="FontAwesome" Size="20" Color="White"/>
-                        </Button.ImageSource>
-                </Button>
-                <Button Grid.Column="1" Text="Share" BackgroundColor="{StaticResource Primary}" Padding="12" Clicked="OnShareClicked">
-                    <Button.ImageSource>
-                        <FontImageSource Glyph="{x:Static a:IconFont.ShareAlt}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                        <FontImageSource Glyph="{x:Static a:IconFont.Plus}" 
+          FontFamily="FontAwesome" 
+      Size="16" 
+ Color="White"/>
                     </Button.ImageSource>
                 </Button>
-                <Button Grid.Column="2" Text="Edit" BackgroundColor="{StaticResource Info}"  Padding="12"
-                        Clicked="OnEditClicked">
+
+                <Button Grid.Column="1" 
+     Text="Edit" 
+ BackgroundColor="{StaticResource Info}" 
+ Padding="8"
+      FontSize="12"
+           Clicked="OnEditClicked">
                     <Button.ImageSource>
-                        <FontImageSource Glyph="{x:Static a:IconFont.Edit}" FontFamily="FontAwesome" Size="20" Color="White"/>
+                        <FontImageSource Glyph="{x:Static a:IconFont.Edit}" 
+     FontFamily="FontAwesome" 
+     Size="16" 
+      Color="White"/>
                     </Button.ImageSource>
                 </Button>
-              
+
+                <Button Grid.Column="2" 
+   Text="Delete" 
+   BackgroundColor="{StaticResource Danger}" 
+          Padding="8"
+  FontSize="12"
+      Clicked="OnDeleteClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static a:IconFont.Trash}" 
+           FontFamily="FontAwesome" 
+             Size="16" 
+             Color="White"/>
+                    </Button.ImageSource>
+                </Button>
+
+                <Button Grid.Column="3" 
+    Text="Share" 
+  BackgroundColor="{StaticResource Primary}" 
+    Padding="8"
+        FontSize="12"
+                Clicked="OnShareClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="{x:Static a:IconFont.ShareAlt}" 
+   FontFamily="FontAwesome" 
+     Size="16" 
+      Color="White"/>
+                    </Button.ImageSource>
+                </Button>
             </Grid>
 
-
+            <!-- Order Details Card -->
             <Border Style="{StaticResource CardBorder}" Margin="2" Padding="10">
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
                     <Label Text="{Binding SL}" Style="{StaticResource HeaderLabelStyle}" />
@@ -98,14 +141,15 @@
                 </Grid>
             </Border>
 
+            <!-- Arabian Order Details -->
             <Border Style="{StaticResource CardBorder}" Margin="2" Padding="15" IsVisible="false" x:Name="ArabianOrderLayout">
                 <VerticalStackLayout>
-                    <Label Text="এরাবিয়ান অর্ডারের বিবরণ" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                    <Label Text="এরাবিয়ান অর্ডারের বিবরণ" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
                     <Grid ColumnDefinitions="*,*,*,*" RowSpacing="10" Padding="0,12"
                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
 
                         <!-- Row 0 -->
-                        <Label Text="এমাউণ্ট" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="টাকা" TextColor="{StaticResource OnSurface}" />
                         <Label Text="{Binding ArabianOrders[0].Amount}" Grid.Column="1" TextColor="{StaticResource Success}" />
                         <Label Text="পরিমাণ" TextColor="{StaticResource OnSurface}" Grid.Column="2" />
                         <Label Text="{Binding ArabianOrders[0].Quantity}" Grid.Column="3" TextColor="{StaticResource Success}" />
@@ -143,12 +187,13 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Panjabi Order Details -->
             <Border Style="{StaticResource CardBorder}" Margin="2" Padding="15" IsVisible="false" x:Name="PanjabiOrderLayout">
                 <VerticalStackLayout>
                     <Label Text="পাঞ্জাবি অর্ডারের বিস্তারিত" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
                     <Grid ColumnDefinitions="*, *, *, *" RowSpacing="10" Padding="0,12"
-                          RowDefinitions="Auto,Auto,Auto,Auto, Auto">
-                        <Label Text="এমাউণ্ট" TextColor="{StaticResource OnSurface}" />
+                RowDefinitions="Auto,Auto,Auto,Auto, Auto">
+                        <Label Text="টাকা" TextColor="{StaticResource OnSurface}" />
                         <Label Text="{Binding PanjabiOrders[0].Amount}" Grid.Column="1" TextColor="{StaticResource Success}" />
                         <Label Text="পরিমাণ" TextColor="{StaticResource OnSurface}" Grid.Column="2" />
                         <Label Text="{Binding PanjabiOrders[0].Quantity}" Grid.Column="3" TextColor="{StaticResource Success}" />
@@ -174,11 +219,12 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Selower Order Details -->
             <Border Style="{StaticResource CardBorder}" Margin="2" Padding="15" IsVisible="false" x:Name="SelowerOrderLayout">
                 <VerticalStackLayout>
                     <Label Text="সালোয়ার অর্ডারের বিস্তারিত" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
                     <Grid ColumnDefinitions="*, *, *, *" RowSpacing="10" Padding="0,12" RowDefinitions="Auto, Auto, Auto, Auto">
-                        <Label Text="এমাউণ্ট" TextColor="{StaticResource OnSurface}" />
+                        <Label Text="টাকা" TextColor="{StaticResource OnSurface}" />
                         <Label Text="{Binding SelowerOrders[0].Amount}" Grid.Column="1" TextColor="{StaticResource Success}" />
                         <Label Text="পরিমাণ" TextColor="{StaticResource OnSurface}" Grid.Column="2" />
                         <Label Text="{Binding SelowerOrders[0].Quantity}" Grid.Column="3" TextColor="{StaticResource Success}" />

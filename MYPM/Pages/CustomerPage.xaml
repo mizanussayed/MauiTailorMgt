@@ -11,32 +11,38 @@
 
     <Grid>
         <Grid RowDefinitions="Auto, *" >
-            <SearchBar x:Name="SearchBar"
-                Placeholder="Search by name or phone"
-                Background="{StaticResource SurfaceVariant}"
-                Margin="10,10,10,0"
-                FontSize="16"
-                TextColor="{StaticResource OnSurface}"
-                TextChanged="SearchBar_TextChanged"/>
+            <Border Style="{StaticResource CardBorder}" 
+           Margin="10,10,10,0" 
+            Padding="0"
+     StrokeThickness="1">
+                <SearchBar x:Name="SearchBar"
+                    Placeholder="Search by name or phone"
+      Background="Transparent"
+            FontSize="16"
+          TextColor="{StaticResource OnSurface}"
+    PlaceholderColor="{StaticResource TextSecondary}"
+        CancelButtonColor="{StaticResource Primary}"
+             TextChanged="SearchBar_TextChanged"/>
+            </Border>
 
             <CollectionView Grid.Row="1"
-                     x:Name="CustomerCollection"
-                     ItemsSource="{Binding Customers}"
-                     Margin="10">
+    x:Name="CustomerCollection"
+           ItemsSource="{Binding Customers}"
+ Margin="10">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:CustomerVM">
-                        <Border Style="{StaticResource CardBorder}"  Margin="5,5,5,10">
+                        <Border Style="{StaticResource CardBorder}"  Margin="4">
                             <VerticalStackLayout Spacing="4">
                                 <Label Text="{Binding CustomerName}"
-                                    FontSize="18"
-                                    FontAttributes="Bold"
-                                    TextColor="{StaticResource OnSurface}" />
+           FontSize="18"
+         FontAttributes="Bold"
+   TextColor="{StaticResource OnSurface}" />
                                 <Label Text="{Binding MobileNumber}"
-                                    FontSize="14"
-                                    TextColor="{StaticResource OnSurface}" />
+         FontSize="14"
+     TextColor="{StaticResource OnSurface}" />
                                 <Label Text="{Binding Address}"
-                                    FontSize="14"
-                                    TextColor="{StaticResource OnSurface}" />
+      FontSize="14"
+     TextColor="{StaticResource OnSurface}" />
                             </VerticalStackLayout>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding MobileNumber}" />
@@ -47,11 +53,14 @@
             </CollectionView>
         </Grid>
         <Button Text="+"
-                Style="{StaticResource FabButton}"
-                Clicked="OnAddClicked"
-                Margin="0,0,20,30"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                ZIndex="1" FontSize="Large" />
+     Style="{StaticResource FabButton}"
+          Clicked="OnAddClicked"
+  Margin="0,0,20,30"
+     HorizontalOptions="End"
+        VerticalOptions="End"
+    ZIndex="1" 
+            FontSize="32"
+     FontAttributes="Bold"
+       TextColor="White" />
     </Grid>
 </ContentPage>

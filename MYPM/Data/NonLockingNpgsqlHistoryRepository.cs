@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal;
 
-namespace MYPM.Data.Configurations;
+namespace MYPM.Data;
 
 #pragma warning disable EF1001
 public class NonLockingNpgsqlHistoryRepository(HistoryRepositoryDependencies dependencies)

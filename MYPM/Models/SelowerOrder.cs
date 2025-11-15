@@ -12,6 +12,7 @@ public sealed class SelowerOrder
     public decimal Komor { get; set; } = 35;
     public decimal Ness { get; set; } = 15;
     public string Note { get; set; } = string.Empty;
+
     [ForeignKey(nameof(NewOrder))]
     public int OrderId { get; set; }
     public NewOrderModel NewOrder { get; set; } = null!;

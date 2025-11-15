@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MYPM.Common;
-using MYPM.Data.Configurations;
+using MYPM.Data;
 using MYPM.Models;
 
 namespace MYPM.Services;
